@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://avtar7770132-blip.github.io/proschet-hub/sitemap.xml
