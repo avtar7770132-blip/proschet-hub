@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="ru"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор УСН 6% «доходы» для ИП с учётом взносов — Просчёт</title>
+<meta name="description" content="Рассчитайте налог УСН «доходы» 6% онлайн: фиксированные взносы ИП, вычет из налога (до 50% с сотрудниками, до 100% без), дополнительный взнос 1% с дохода выше 300 тыс. Бесплатно.">
+<link rel="stylesheet" href="styles.css"></head><body>
+<header><div class="wrap bar"><a class="logo" href="index.html">🧮 Просчёт</a>
+<nav><a href="ipoteka.html">Ипотека</a><a href="kredit.html">Кредит</a><a href="vklad.html">Вклад</a><a href="imt.html">ИМТ</a><a href="imt-deti.html">ИМТ детям</a><a href="kalorii.html">Калории</a><a href="npd.html">Самозанятый</a><a href="usn.html">УСН</a></nav></div></header>
+<div class="wrap">
+<h1>Калькулятор УСН 6% «доходы» для ИП</h1>
+<p class="sub">Налог за год с учётом фиксированных взносов и правила вычета: без сотрудников — до 100% налога, с сотрудниками — до 50%.</p>
+<div class="calc"><div class="grid">
+<div><label>Доход за год, ₽</label><input type="number" id="inc" value="3000000"></div>
+<div><label>Взносы ИП за год, ₽</label><input type="number" id="vz" value="49500"></div>
+<div><label>Сотрудники</label><select id="emp"><option value="0">Нет (вычет до 100%)</option><option value="1">Есть (вычет до 50%)</option></select></div>
+</div>
+<button class="btn" onclick="calc()">Рассчитать</button>
+<div class="res" id="res">
+<div class="tiles">
+<div class="tile"><span>Налог 6% до вычета</span><b id="o1"></b></div>
+<div class="tile"><span>Вычет (взносы)</span><b id="o2"></b></div>
+<div class="tile"><span>Налог к уплате</span><b id="o3"></b></div>
+<div class="tile"><span>+ взнос 1% с превышения</span><b id="o4"></b></div>
+</div>
+<p id="note" style="margin-top:12px;color:#66707f;font-size:14px"></p>
+</div></div>
+<div class="seo"><h2>УСН «доходы»: как взносы превращаются в вычет</h2>
+<p>На УСН 6% налог считается с дохода, но фиксированные страховые взносы ИП уменьшают налог: без сотрудников — вплоть до нуля, с сотрудниками — не более чем наполовину. Калькулятор применяет это правило автоматически и отдельно показывает дополнительный взнос 1% с дохода свыше 300 000 ₽ в год, о котором многие забывают до самого уведомления из налоговой.</p>
+<p>Поле «взносы за год» заполнено суммой 49 500 ₽ (фиксированные взносы ИП за 2025 год). Для другого года впишите актуальную сумму: она устанавливается Налоговым кодексом ежегодно и не зависит от дохода, пока доход не превысил 300 тыс. ₽.</p>
+<details><summary>Когда выгодно платить взносы частями в течение года?</summary><p>Всегда. Взнос, уплаченный в первом квартале, сразу уменьшает авансовый платёж: не копите сумму к декабрю, а разбивайте на кварталы — деньги работают как вычет раньше, и не возникает переплаты к концу года.</p></details>
+<details><summary>Считает ли калькулятор торговый сбор и региональные ставки?</summary><p>Нет: в некоторых регионах ставка УСН снижена до 1–4%, а в Москве торговый сбор даёт дополнительный вычет. Если вы в регионе с льготной ставкой — просто умножьте доход на свою ставку и примените вычет вручную по тому же правилу.</p></details>
+<details><summary>Что выбрать: УСН 6% или НПД?</summary><p>НПД проще и дешевле (4–6% без взносов и отчётности), но лимит 2,4 млн ₽ и нельзя перепродавать чужие товары. УСН подходит при доходе выше лимита, найме сотрудников и торговле. Сравните оба расчёта в наших калькуляторах.</p></details>
+</div>
+<footer>© 2026 Просчёт · Расчёт справочный. Уточняйте актуальные суммы взносов на nalog.gov.ru.</footer>
+</div>
+<script>
+function f(n){return Math.round(n).toLocaleString('ru-RU')+' ₽'}
+function calc(){
+ const inc=+document.getElementById('inc').value||0, vz=+document.getElementById('vz').value||0, emp=+document.getElementById('emp').value;
+ if(!inc){alert('Укажите доход');return}
+ const tax=inc*0.06;
+ const maxDed=emp? tax*0.5 : tax;
+ const ded=Math.min(vz,maxDed);
+ const extra=Math.max(0,(inc-300000)*0.01);
+ document.getElementById('o1').textContent=f(tax);
+ document.getElementById('o2').textContent='−'+f(ded);
+ document.getElementById('o3').textContent=f(tax-ded);
+ document.getElementById('o4').textContent=f(extra);
+ document.getElementById('note').textContent='Итого к уплате за год с учётом доп. взноса 1%: '+f(tax-ded+extra)+'. Авансовые платежи вносятся ежеквартально (до 28 числа месяца, следующего за кварталом); уплаченные взносы уменьшают каждый аванс.';
+ document.getElementById('res').classList.add('on');
+}
+</script></body></html>
