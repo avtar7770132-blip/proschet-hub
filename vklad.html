@@ -4,11 +4,13 @@
 <meta name="description" content="Онлайн-калькулятор вклада: сложный процент с капитализацией (месяц, квартал, год), ежемесячное пополнение, итоговая сумма, прибыль и доходность. Бесплатно и без регистрации.">
 <link rel="stylesheet" href="styles.css"></head><body>
 <header><div class="wrap bar"><a class="logo" href="index.html">🧮 Просчёт</a>
-<nav><a href="ipoteka.html">Ипотека</a><a href="vklad.html">Вклад и сложный %</a><a href="imt-deti.html">ИМТ для детей</a></nav></div></header>
+<nav><a href="ipoteka.html">Ипотека</a><a href="kredit.html">Кредит</a><a href="vklad.html">Вклад</a><a href="imt.html">ИМТ</a><a href="imt-deti.html">ИМТ детям</a><a href="kalorii.html">Калории</a><a href="npd.html">Самозанятый</a><a href="usn.html">УСН</a></nav></div></header>
 <div class="wrap">
 <h1>Калькулятор вклада и сложного процента</h1>
-<p class="sub">Покажет, во что превратятся деньги с учётом капитализации и ежемесячных пополнений — по годам и до рубля.</p>
-<div class="calc"><div class="grid">
+<p class="sub">Покажет, во что превратятся деньги с учётом капитализации и пополнений — до рубля и по годам.</p>
+<div class="calc"><div class="split">
+<div>
+<div class="grid">
 <div><label>Начальная сумма, ₽</label><input type="number" id="s" value="300000"></div>
 <div><label>Пополнение в месяц, ₽</label><input type="number" id="top" value="15000"></div>
 <div><label>Срок, месяцев</label><input type="number" id="m" value="36"></div>
@@ -17,27 +19,34 @@
 <div><label>Пополнение вносить</label><select id="when"><option value="s">В начале месяца</option><option value="e">В конце месяца</option></select></div>
 </div>
 <button class="btn" onclick="calc()">Рассчитать</button>
-<div class="res" id="res">
-<div class="tiles">
-<div class="tile"><span>Итоговая сумма</span><b id="o1"></b></div>
-<div class="tile"><span>Прибыль (проценты)</span><b id="o2"></b></div>
-<div class="tile"><span>Внесено всего</span><b id="o3"></b></div>
-<div class="tile"><span>Доходность вложений</span><b id="o4"></b></div>
+</div>
+<div class="panel">
+<div class="lbl">Итоговая сумма</div>
+<div class="big" id="o1">—</div>
+<div class="row"><span>Прибыль (проценты)</span><b id="o2">—</b></div>
+<div class="row"><span>Внесено всего</span><b id="o3">—</b></div>
+<div class="row"><span>Доходность вложений</span><b id="o4">—</b></div>
+<div class="viz" id="viz" style="display:none">
+<div class="track"><div class="seg1" id="v1" style="width:60%"></div><div class="seg2" id="v2" style="width:40%"></div></div>
+<div class="leg"><span><i class="dot" style="background:#6366f1"></i>Ваши деньги <b id="l1"></b></span><span><i class="dot" style="background:#d946ef"></i>Проценты <b id="l2"></b></span></div>
+</div>
+</div>
 </div>
 <div id="sched"></div>
-</div></div>
+</div>
 <div class="cta"><div><b>Хотите ставку выше?</b><br>Банки поднимают ставки по вкладам почти каждый месяц. Сравните актуальные предложения с капитализацией и пополнением.</div><a href="#" id="cpa1">Выбрать вклад →</a></div>
 <div class="seo"><h2>Как работает сложный процент и почему калькулятор точнее «умножить на ставку»</h2>
-<p>Сложный процент означает, что начисленные проценты прибавляются к сумме и дальше работают сами. При капитализации раз в месяц эффект заметен уже на втором году: разница с простым процентом растёт как снежный ком. Калькулятор моделирует вклад помесячно: начисляет процент на текущий остаток, добавляет ваши пополнения в выбранный день месяца и капитализирует по выбранному периоду — ровно так, как это делает банковская выписка.</p>
-<p>Отдельно мы показываем доходность вложений: прибыль, делённую на все внесённые деньги. Это честная цифра для сравнения с другими инструментами, потому что «16% годовых» при ежемесячном пополнении и редкой капитализации по факту дают другую реальную отдачу.</p>
-<details><summary>Что сильнее влияет на итог: ставка или капитализация?</summary><p>На длинном сроке — и то и другое, но капитализация работает незаметно и постоянно. Разница между капитализацией раз в год и раз в месяц на вкладе 16% за 3 года съедает около 1–1,5% годовых прибыли. При равной ставке всегда выбирайте более частую капитализацию.</p></details>
-<details><summary>Пополнение в начале или в конце месяца — есть разница?</summary><p>Есть, и она в вашу пользу при внесении в начале: деньги работают на месяц дольше в каждом цикле. На горизонте 3 года с пополнением 15 000 ₽/мес это даёт несколько тысяч рублей дополнительной прибыли просто за счёт правильной даты.</p></details>
-<details><summary>Учитывает ли калькулятор налог на проценты по вкладам?</summary><p>Нет, показана прибыль до налога. С 2023 года в РФ налогом облагается доход по вкладам сверх необлагаемого лимита (1 млн ₽ × максимальная ключевая ставка за год). Если ваш доход по вкладам выше лимита, заложите 13% с превышения.</p></details>
+<p>Сложный процент означает, что начисленные проценты прибавляются к сумме и дальше работают сами. При капитализации раз в месяц эффект заметен уже на втором году: разница с простым процентом растёт как снежный ком. Калькулятор моделирует вклад помесячно: начисляет процент на текущий остаток, добавляет пополнения в выбранный день месяца и капитализирует по выбранному периоду — ровно так, как банковская выписка.</p>
+<p>Полоса под результатом показывает структуру итоговой суммы: сколько из неё ваших денег и сколько заработанных процентов. На длинном сроке с капитализацией полоса процентов визуально растёт — это и есть сила сложного процента.</p>
+<details><summary>Что сильнее влияет на итог: ставка или капитализация?</summary><p>На длинном сроке — и то и другое, но капитализация работает незаметно и постоянно. Разница между капитализацией раз в год и раз в месяц на вкладе 16% за 3 года съедает около 1–1,5% годовых прибыли. При равной ставке выбирайте более частую капитализацию.</p></details>
+<details><summary>Пополнение в начале или в конце месяца — есть разница?</summary><p>Есть, и она в вашу пользу при внесении в начале: деньги работают на месяц дольше в каждом цикле. На горизонте 3 года с пополнением 15 000 ₽/мес это несколько тысяч рублей дополнительной прибыли просто за счёт правильной даты.</p></details>
+<details><summary>Учитывает ли калькулятор налог на проценты по вкладам?</summary><p>Нет, показана прибыль до налога. С 2023 года в РФ налогом облагается доход по вкладам сверх необлагаемого лимита (1 млн ₽ × максимальная ключевая ставка за год). Если доход по вкладам выше лимита — заложите 13% с превышения.</p></details>
 </div>
 <footer>© 2026 Просчёт · Расчёт справочный, не является офертой.</footer>
 </div>
 <script>
-function f(n){return n.toLocaleString('ru-RU',{maximumFractionDigits:0})+' ₽'}
+function f(n){return Math.round(n).toLocaleString('ru-RU')+' ₽'}
+function sm(n){if(n>=1e6)return (n/1e6).toLocaleString('ru-RU',{maximumFractionDigits:2})+' млн ₽';if(n>=1e4)return Math.round(n/1e3).toLocaleString('ru-RU')+' тыс ₽';return Math.round(n).toLocaleString('ru-RU')+' ₽'}
 function calc(){
  const S=+document.getElementById('s').value||0, TOP=+document.getElementById('top').value||0, M=+document.getElementById('m').value||0;
  const rm=(+document.getElementById('r').value||0)/100/12, cap=document.getElementById('cap').value, when=document.getElementById('when').value;
@@ -50,18 +59,23 @@ function calc(){
   else if(cap==='q'&&i%3===0){bal+=acc;acc=0}
   else if(cap==='y'&&i%12===0){bal+=acc;acc=0}
   if(when==='e'){bal+=TOP;contrib+=TOP;yC+=TOP}
-  if(i%12===0||i===M){rows.push([Math.ceil(i/12), f(yC), f(bal+acc)]); yC=0}
+  if(i%12===0||i===M){rows.push([Math.ceil(i/12),f(yC),f(bal+acc)]);yC=0}
  }
  if(cap==='e'){bal+=acc;acc=0}
- const profit=bal-contrib+S*0+ (bal - contrib);
  const pr=bal-contrib;
  document.getElementById('o1').textContent=f(bal);
- document.getElementById('o2').textContent=f(pr);
- document.getElementById('o3').textContent=f(contrib);
+ document.getElementById('o2').textContent='+'+sm(pr);
+ document.getElementById('o3').textContent=sm(contrib);
  document.getElementById('o4').textContent=(contrib>0?(pr/contrib*100):0).toFixed(1)+'%';
+ const p1=contrib/bal*100;
+ document.getElementById('v1').style.width=p1+'%';
+ document.getElementById('v2').style.width=(100-p1)+'%';
+ document.getElementById('l1').textContent=sm(contrib);
+ document.getElementById('l2').textContent=sm(pr);
+ document.getElementById('viz').style.display='block';
  let h='<table><tr><th>Год</th><th>Внесено за год</th><th>Баланс на конец</th></tr>';
  rows.forEach(r=>h+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>');
  document.getElementById('sched').innerHTML=h+'</table>';
- document.getElementById('res').classList.add('on');
 }
+calc();
 </script></body></html>
