@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="ru"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор ипотеки с досрочным погашением и графиком платежей — Просчёт</title>
+<meta name="description" content="Рассчитайте ипотеку онлайн: аннуитетный или дифференцированный платёж, досрочное погашение (уменьшение платежа или срока), переплата и график платежей по годам. Бесплатно, без регистрации.">
+<link rel="stylesheet" href="styles.css"></head><body>
+<header><div class="wrap bar"><a class="logo" href="index.html">🧮 Просчёт</a>
+<nav><a href="ipoteka.html">Ипотека</a><a href="vklad.html">Вклад и сложный %</a><a href="imt-deti.html">ИМТ для детей</a></nav></div></header>
+<div class="wrap">
+<h1>Калькулятор ипотеки с досрочным погашением</h1>
+<p class="sub">Считает по месяцам, как банк: покажет платёж, переплату, новый срок при досрочном погашении и график по годам.</p>
+<div class="calc"><div class="grid">
+<div><label>Сумма кредита, ₽</label><input type="number" id="s" value="6000000"></div>
+<div><label>Ставка, % годовых</label><input type="number" id="r" value="18" step="0.1"></div>
+<div><label>Срок, лет</label><input type="number" id="y" value="20"></div>
+<div><label>Тип платежа</label><select id="t"><option value="a">Аннуитетный</option><option value="d">Дифференцированный</option></select></div>
+<div><label>Досрочно, ₽ (0 = нет)</label><input type="number" id="ex" value="300000"></div>
+<div><label>В каком месяце</label><input type="number" id="em" value="12"></div>
+<div><label>Режим досрочки</label><select id="mode"><option value="p">Уменьшить платёж</option><option value="t">Уменьшить срок</option></select></div>
+</div>
+<button class="btn" onclick="calc()">Рассчитать</button>
+<div class="res" id="res">
+<div class="tiles">
+<div class="tile"><span>Платёж (первый)</span><b id="o1"></b></div>
+<div class="tile"><span>Переплата</span><b id="o2"></b></div>
+<div class="tile"><span>Всего выплатите</span><b id="o3"></b></div>
+<div class="tile"><span>Фактический срок</span><b id="o4"></b></div>
+</div>
+<div id="sched"></div>
+</div></div>
+<div class="cta"><div><b>Ставки меняются каждую неделю.</b><br>Сравните одобренные ставки в крупных банках — это бесплатно и займёт 5 минут, а экономия может составить сотни тысяч.</div><a href="#" id="cpa1">Подобрать ставку →</a></div>
+<div class="seo"><h2>Как пользоваться калькулятором ипотеки с досрочным погашением</h2>
+<p>Введите сумму, ставку и срок — калькулятор покажет ежемесячный платёж и переплату. Затем добавьте досрочный платёж: сумму и месяц, когда планируете его внести. Выберите режим: «уменьшить платёж» снижает ежемесячную нагрузку, «уменьшить срок» экономит больше процентов — калькулятор покажет разницу в переплате и новый срок в годах и месяцах.</p>
+<p>График по годам помогает планировать: видно, сколько в каждом году уходит на проценты, сколько на тело долга и каким будет остаток к концу года. Это та самая таблица, которую банк даёт в договоре, только с учётом вашей досрочки.</p>
+<details><summary>Какой платёж выгоднее: аннуитетный или дифференцированный?</summary><p>При равных условиях дифференцированный даёт меньшую переплату: тело долга гасится равномерно, проценты начисляются на остаток. Но первые платежи заметно выше. Аннуитет комфортнее по нагрузке: одинаковая сумма каждый месяц, поэтому его выбирают чаще. Калькулятор считает оба — сравните переплату и решайте по своему бюджету.</p></details>
+<details><summary>Что выгоднее: уменьшить платёж или срок?</summary><p>Математически выгоднее уменьшать срок: деньги работают против процентов дольше и сильнее. Уменьшение платежа даёт другое преимущество — страховку: если доход упадёт, низкий платёж легче обслуживать. Частая стратегия: уменьшать срок, но продолжать платить старую сумму, направляя разницу в новые досрочные платежи.</p></details>
+<details><summary>Когда досрочное погашение работает сильнее всего?</summary><p>В первой половине срока, когда в платеже большую долю занимают проценты. Досрочный платёж на 5-м году кредита из 20 сэкономит кратно больше, чем тот же платёж на 15-м году. Поэтому планируйте крупные погашения (налоговый вычет, премия, маткапитал) на ранние годы.</p></details>
+<details><summary>Можно ли верить цифрам калькулятора?</summary><p>Да: расчёт идёт помесячно по формулам ЦБ РФ, включая пересчёт после досрочного платежа. Расхождение с графиком банка возможно на десятки рублей из-за округлений и даты первого платежа — это норма.</p></details>
+</div>
+<footer>© 2026 Просчёт · Расчёт справочный, не является офертой.</footer>
+</div>
+<script>
+function f(n){return n.toLocaleString('ru-RU',{maximumFractionDigits:0})+' ₽'}
+function calc(){
+ const S=+document.getElementById('s').value||0, R=+document.getElementById('r').value/100/12, N=(+document.getElementById('y').value||0)*12;
+ const type=document.getElementById('t').value, EX=+document.getElementById('ex').value||0, EM=+document.getElementById('em').value||0, MODE=document.getElementById('mode').value;
+ if(!S||!N){alert('Укажите сумму и срок');return}
+ let bal=S, pmt = type==='a' ? (R>0? S*R/(1-Math.pow(1+R,-N)) : S/N) : S/N, base=S/N;
+ let paid=0, months=0, rows=[], yP=0,yI=0,yPr=0;
+ const cap=600;
+ for(let i=1;i<=cap&&bal>0.5;i++){
+  let int=bal*R, pay = type==='a'? pmt : base+int;
+  if(pay>bal+int) pay=bal+int;
+  let pr=pay-int; bal-=pr; paid+=pay; months=i; yP+=pay; yI+=int; yPr+=pr;
+  if(i===EM&&EX>0){ bal=Math.max(0,bal-EX); paid+=EX; yP+=EX; yPr+=EX;
+   if(MODE==='p'&&bal>0&&type==='a'){ const rem=N-i; pmt = R>0? bal*R/(1-Math.pow(1+R,-rem)) : bal/rem; }
+   if(MODE==='p'&&bal>0&&type==='d'){ base=bal/(N-i); }
+  }
+  if(i%12===0||bal<=0.5){ rows.push([Math.ceil(i/12), f(yP), f(yI), f(yPr), f(Math.max(0,bal))]); yP=0;yI=0;yPr=0; }
+ }
+ document.getElementById('o1').textContent=f(type==='a'?pmt:base+S*R);
+ document.getElementById('o2').textContent=f(paid-S);
+ document.getElementById('o3').textContent=f(paid);
+ document.getElementById('o4').textContent=Math.floor(months/12)+' г '+(months%12)+' мес';
+ let h='<table><tr><th>Год</th><th>Платежи</th><th>Проценты</th><th>Тело долга</th><th>Остаток</th></tr>';
+ rows.forEach(r=>h+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td></tr>');
+ document.getElementById('sched').innerHTML=h+'</table>';
+ document.getElementById('res').classList.add('on');
+}
+</script></body></html>
