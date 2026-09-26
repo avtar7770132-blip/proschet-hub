@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="ru"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор ИМТ для детей по возрасту и полу (перцентили ВОЗ) — Просчёт</title>
+<meta name="description" content="Рассчитайте ИМТ ребёнка от 2 до 20 лет по перцентилям ВОЗ: норма, дефицит или избыток веса, коридор здорового веса в кг для его роста. Бесплатно, без регистрации, с понятной расшифровкой.">
+<link rel="stylesheet" href="styles.css"></head><body>
+<header><div class="wrap bar"><a class="logo" href="index.html">🧮 Просчёт</a>
+<nav><a href="ipoteka.html">Ипотека</a><a href="vklad.html">Вклад и сложный %</a><a href="imt-deti.html">ИМТ для детей</a></nav></div></header>
+<div class="wrap">
+<h1>Калькулятор ИМТ для детей (2–20 лет)</h1>
+<p class="sub">Считает по перцентилям ВОЗ с учётом возраста и пола — так, как оценивает развитие ребёнка педиатр. Взрослые нормы детям не подходят.</p>
+<div class="calc"><div class="grid">
+<div><label>Пол ребёнка</label><select id="sex"><option value="b">Мальчик</option><option value="g">Девочка</option></select></div>
+<div><label>Возраст, лет</label><input type="number" id="yy" value="8"></div>
+<div><label>И месяцев</label><input type="number" id="mm" value="6"></div>
+<div><label>Рост, см</label><input type="number" id="h" value="132"></div>
+<div><label>Вес, кг</label><input type="number" id="w" value="29" step="0.1"></div>
+</div>
+<button class="btn" onclick="calc()">Рассчитать</button>
+<div class="res" id="res">
+<div class="tiles">
+<div class="tile"><span>ИМТ ребёнка</span><b id="o1"></b></div>
+<div class="tile"><span>Перцентиль</span><b id="o2"></b></div>
+<div class="tile"><span>Категория</span><b id="o3"></b></div>
+<div class="tile"><span>Коридор нормы веса</span><b id="o4"></b></div>
+</div>
+<p id="note" style="margin-top:12px;color:#66707f;font-size:14px"></p>
+</div></div>
+<div class="seo"><h2>Почему детям нельзя считать ИМТ по взрослым нормам</h2>
+<p>У взрослого ИМТ оценивают фиксированными границами: 18,5–25 — норма. Ребёнок растёт: его тело меняет пропорции каждый месяц, и то, что норма в 4 года, в 12 лет будет дефицитом. Поэтому ВОЗ использует перцентильные кривые: показатель сравнивается не с абстрактной нормой, а с популяцией сверстников того же пола.</p>
+<p>Перцентиль 50 — это «средний» ребёнок. Коридор от 5 до 85 перцентиля ВОЗ считает гармоничным развитием. Ниже 5 — дефицит массы тела, 85–95 — избыточная масса, выше 95 — ожирение. Калькулятор показывает не пугающий ярлык, а коридор здорового веса в килограммах для роста вашего ребёнка — с ним удобно идти к педиатру или нутрициологу с конкретными цифрами.</p>
+<details><summary>Как калькулятор считает перцентиль?</summary><p>По медиане и стандартному отклонению референсных кривых ВОЗ/CDC для каждого возраста и пола: ИМТ ребёнка переводится в z-оценку, а z-оценка — в перцентиль. Точность достаточна для домашней оценки и осознанного разговора с врачом.</p></details>
+<details><summary>Ребёнок попал в зону 85–95. Это болезнь?</summary><p>Нет, это сигнал наблюдать, а не диагноз. В этой зоне педиатры обычно рекомендуют пересмотреть режим сна, экранного времени и активности, а не «сажать на диету». Любые решения о весе ребёнка принимаются только с врачом: детский организм растёт, и ограничения калорий без назначения опасны.</p></details>
+<details><summary>С какого возраста калькулятор корректен?</summary><p>С 2 лет и до 20: до двух лет ВОЗ использует отдельные кривые «длина тела/вес» для младенцев, они считаются иначе. Для малышей до 2 лет ориентируйтесь на измерения педиатра.</p></details>
+<details><summary>Это медицинская консультация?</summary><p>Нет. Калькулятор даёт справочную оценку по методике ВОЗ. Диагнозы, диеты и лечение назначает только врач после очного осмотра.</p></details>
+</div>
+<footer>© 2026 Просчёт · Не является медицинской консультацией. Методика: перцентильные кривые ВОЗ/CDC.</footer>
+</div>
+<script>
+const MED={b:[16.6,16.2,16.0,15.8,15.7,15.8,16.0,16.4,16.9,17.5,18.2,19.0,19.8,20.5,21.1,21.6,22.0,22.4],
+g:[16.4,16.0,15.8,15.6,15.6,15.8,16.1,16.5,17.0,17.7,18.4,19.1,19.8,20.4,20.9,21.3,21.6,21.9]};
+const SD={b:[1.7,1.6,1.6,1.6,1.7,1.8,2.0,2.2,2.4,2.7,3.0,3.3,3.5,3.7,3.8,3.9,4.0,4.1],
+g:[1.7,1.6,1.6,1.7,1.8,1.9,2.1,2.3,2.6,2.8,3.0,3.2,3.4,3.5,3.6,3.7,3.8,3.9]};
+function erf(x){const s=x<0?-1:1;x=Math.abs(x);const t=1/(1+0.3275911*x);
+const y=1-((((1.061405429*t-1.453152027)*t+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);return s*y}
+function pct(z){return 100*0.5*(1+erf(z/Math.SQRT2))}
+function f(n){return n.toLocaleString('ru-RU',{maximumFractionDigits:1})}
+function calc(){
+ const sex=document.getElementById('sex').value, yy=+document.getElementById('yy').value, mm=+document.getElementById('mm').value||0;
+ const h=+document.getElementById('h').value/100, w=+document.getElementById('w').value;
+ const age=yy+mm/12;
+ if(age<2||age>20||!h||!w){alert('Калькулятор работает для возраста 2–20 лет');return}
+ const i=Math.min(17,Math.max(0,Math.floor(age)-2)), fr=Math.min(1,Math.max(0,age-2-i));
+ const med=MED[sex][i]+(MED[sex][i+1]-MED[sex][i])*fr, sd=SD[sex][i]+(SD[sex][i+1]-SD[sex][i])*fr;
+ const bmi=w/(h*h), p=pct((bmi-med)/sd);
+ let cat,cls;
+ if(p<5){cat='Дефицит массы';cls='warn'}else if(p<85){cat='Норма';cls='ok'}else if(p<95){cat='Избыточная масса';cls='warn'}else{cat='Ожирение';cls='bad'}
+ const wLo=(med-1.645*sd)*h*h, wHi=(med+1.036*sd)*h*h;
+ document.getElementById('o1').textContent=f(bmi);
+ document.getElementById('o2').textContent=Math.round(p)+'-й';
+ document.getElementById('o3').innerHTML='<span class="'+cls+'">'+cat+'</span>';
+ document.getElementById('o4').textContent=f(wLo)+'–'+f(wHi)+' кг';
+ document.getElementById('note').textContent='Перцентиль '+Math.round(p)+' означает: у '+Math.round(p)+'% сверстников того же пола ИМТ ниже. Коридор нормы (5–85 перцентиль) для роста '+Math.round(h*100)+' см: '+f(wLo)+'–'+f(wHi)+' кг. Для решений о весе ребёнка проконсультируйтесь с педиатром.';
+ document.getElementById('res').classList.add('on');
+}
+</script></body></html>
