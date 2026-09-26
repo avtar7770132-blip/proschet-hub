@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="ru"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор калорий и БЖУ для похудения и набора массы — Просчёт</title>
+<meta name="description" content="Рассчитайте норму калорий по Миффлину-Сан Жеору: базовый обмен, расход с учётом активности, цель для похудения или набора и баланс БЖУ в граммах. Бесплатно, без регистрации.">
+<link rel="stylesheet" href="styles.css"></head><body>
+<header><div class="wrap bar"><a class="logo" href="index.html">🧮 Просчёт</a>
+<nav><a href="ipoteka.html">Ипотека</a><a href="kredit.html">Кредит</a><a href="vklad.html">Вклад</a><a href="imt.html">ИМТ</a><a href="imt-deti.html">ИМТ детям</a><a href="kalorii.html">Калории</a><a href="npd.html">Самозанятый</a><a href="usn.html">УСН</a></nav></div></header>
+<div class="wrap">
+<h1>Калькулятор калорий и БЖУ</h1>
+<p class="sub">Норма калорий по формуле Миффлина-Сан Жеора + цель (похудение, поддержание, набор) и баланс белков, жиров и углеводов в граммах.</p>
+<div class="calc"><div class="grid">
+<div><label>Пол</label><select id="sex"><option value="m">Мужской</option><option value="f">Женский</option></select></div>
+<div><label>Возраст, лет</label><input type="number" id="a" value="32"></div>
+<div><label>Вес, кг</label><input type="number" id="w" value="80" step="0.1"></div>
+<div><label>Рост, см</label><input type="number" id="h" value="178"></div>
+<div><label>Активность</label><select id="act">
+<option value="1.2">Минимальная (сидячая работа)</option>
+<option value="1.375">Лёгкая (1–3 тренировки/нед)</option>
+<option value="1.55" selected>Средняя (3–5 тренировок/нед)</option>
+<option value="1.725">Высокая (6–7 тренировок/нед)</option>
+<option value="1.9">Экстремальная (физ. труд + спорт)</option></select></div>
+<div><label>Цель</label><select id="goal">
+<option value="-0.15">Похудение (−15%)</option>
+<option value="-0.25">Активное похудение (−25%)</option>
+<option value="0" selected>Поддержание</option>
+<option value="0.15">Набор массы (+15%)</option></select></div>
+</div>
+<button class="btn" onclick="calc()">Рассчитать</button>
+<div class="res" id="res">
+<div class="tiles">
+<div class="tile"><span>Базовый обмен</span><b id="o1"></b></div>
+<div class="tile"><span>Расход с активностью</span><b id="o2"></b></div>
+<div class="tile"><span>Цель по калориям</span><b id="o3"></b></div>
+</div>
+<div class="tiles" style="margin-top:12px">
+<div class="tile"><span>Белки</span><b id="o4"></b></div>
+<div class="tile"><span>Жиры</span><b id="o5"></b></div>
+<div class="tile"><span>Углеводы</span><b id="o6"></b></div>
+</div>
+<p id="note" style="margin-top:12px;color:#66707f;font-size:14px"></p>
+</div></div>
+<div class="seo"><h2>Как считается норма калорий и почему Миффлин-Сан Жеор</h2>
+<p>Формула Миффлина-Сан Жеора — стандарт доказательной диетологии с 2005 года: она точнее старых формул (Харриса-Бенедикта) оценивает базовый обмен для современного человека. Калькулятор считает базовый обмен по полу, возрасту, весу и росту, умножает на коэффициент активности и применяет выбранный дефицит или профицит.</p>
+<p>Баланс БЖУ собран по принципу 30/30/40: достаточно белка для сохранения мышц, достаточно жиров для гормонов и остальные калории из углеводов. При похудении дефицит 15% даёт комфортный темп около 0,5 кг в неделю без срывов и потери мышц; 25% — агрессивный режим, который не рекомендуют держать дольше 6–8 недель.</p>
+<details><summary>Почему вес встал, хотя я держу норму?</summary><p>Вода, стресс, сон и цикл дают колебания ±1–2 кг в неделю. Оценивайте тренд по среднему за 7 дней, а не по ежедневным цифрам, и пересчитывайте норму каждые сброшенные 5 кг: расход падает вместе с весом.</p></details>
+<details><summary>Нужно ли есть строго по граммам БЖУ?</summary><p>Нет, это ориентир. Главное — калории и достаточный белок (1,6–2 г на кг веса при похудении). Жиры не опускайте ниже 0,8 г/кг: это гормональная безопасность.</p></details>
+<details><summary>Можно ли считать калории детям и беременным?</summary><p>Нет, дефициты калорий для этих групп назначает только врач. Калькулятор предназначен для здоровых взрослых.</p></details>
+</div>
+<footer>© 2026 Просчёт · Не является медицинской консультацией.</footer>
+</div>
+<script>
+function f(n){return Math.round(n).toLocaleString('ru-RU')}
+function calc(){
+ const sex=document.getElementById('sex').value, a=+document.getElementById('a').value, w=+document.getElementById('w').value, h=+document.getElementById('h').value;
+ const act=+document.getElementById('act').value, goal=+document.getElementById('goal').value;
+ if(!a||!w||!h){alert('Заполните все поля');return}
+ const bmr=sex==='m'?10*w+6.25*h-5*a+5:10*w+6.25*h-5*a-161;
+ const tdee=bmr*act, target=tdee*(1+goal);
+ document.getElementById('o1').textContent=f(bmr)+' ккал';
+ document.getElementById('o2').textContent=f(tdee)+' ккал';
+ document.getElementById('o3').textContent=f(target)+' ккал';
+ document.getElementById('o4').textContent=f(target*0.3/4)+' г';
+ document.getElementById('o5').textContent=f(target*0.3/9)+' г';
+ document.getElementById('o6').textContent=f(target*0.4/4)+' г';
+ document.getElementById('note').textContent='Пересчитывайте норму каждые ±5 кг изменившегося веса: расход калорий падает вместе с массой тела. Темп похудения 0,4–0,7 кг в неделю — безопасный и устойчивый.';
+ document.getElementById('res').classList.add('on');
+}
+</script></body></html>
