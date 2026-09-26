@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="ru"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор налога самозанятого (НПД) 4% и 6% с лимитом — Просчёт</title>
+<meta name="description" content="Посчитайте налог самозанятого онлайн: 4% с доходов от физлиц, 6% от юрлиц, налоговый вычет 10 000 ₽ и контроль лимита дохода 2,4 млн ₽ в год. Бесплатно и мгновенно.">
+<link rel="stylesheet" href="styles.css"></head><body>
+<header><div class="wrap bar"><a class="logo" href="index.html">🧮 Просчёт</a>
+<nav><a href="ipoteka.html">Ипотека</a><a href="kredit.html">Кредит</a><a href="vklad.html">Вклад</a><a href="imt.html">ИМТ</a><a href="imt-deti.html">ИМТ детям</a><a href="kalorii.html">Калории</a><a href="npd.html">Самозанятый</a><a href="usn.html">УСН</a></nav></div></header>
+<div class="wrap">
+<h1>Калькулятор налога самозанятого (НПД)</h1>
+<p class="sub">Считает налог за месяц и за год по ставкам 4% и 6%, учитывает вычет 10 000 ₽ и предупреждает о лимите дохода.</p>
+<div class="calc"><div class="grid">
+<div><label>Доход за месяц, ₽</label><input type="number" id="inc" value="120000"></div>
+<div><label>От кого доход</label><select id="rate"><option value="4">Физлица — 4%</option><option value="6">Юрлица и ИП — 6%</option></select></div>
+<div><label>Месяцев работы в году</label><input type="number" id="mo" value="12"></div>
+<div><label>Вычет 10 000 ₽</label><select id="ded"><option value="1">Учесть (если не исчерпан)</option><option value="0">Не учитывать</option></select></div>
+</div>
+<button class="btn" onclick="calc()">Рассчитать</button>
+<div class="res" id="res">
+<div class="tiles">
+<div class="tile"><span>Налог за месяц</span><b id="o1"></b></div>
+<div class="tile"><span>Налог за год</span><b id="o2"></b></div>
+<div class="tile"><span>Доход за год</span><b id="o3"></b></div>
+<div class="tile"><span>На руки за месяц</span><b id="o4"></b></div>
+</div>
+<p id="note" style="margin-top:12px;color:#66707f;font-size:14px"></p>
+</div></div>
+<div class="seo"><h2>НПД прост, но в нём три подводных камня</h2>
+<p>Самозанятый платит 4% с доходов от физических лиц и 6% — от юридических лиц и ИП. Никаких страховых взносов обязательно: только налог и добровольные взносы в СФР по желанию. Калькулятор считает налог за месяц и за год, а также показывает сумму «на руки» после налога.</p>
+<p>Первый камень — лимит дохода 2,4 млн ₽ в год: при превышении слетаете с НПД задним числом за год. Калькулятор подсвечивает приближение к лимиту. Второй — вычет 10 000 ₽: он уменьшает налог в первые месяцы (фактически первые 250 тыс. дохода от физлиц идут почти без налога), но даётся один раз за всю жизнь. Третий — доходы от бывшего работодателя в течение двух лет после увольнения облагаются по ставке 6%, а не 4%.</p>
+<details><summary>Нужно ли платить страховые взносы?</summary><p>Обязательно — нет. Пенсия у самозанятого без добровольных взносов не формируется. Можно платить взносы в СФР добровольно (полностью или частично) — калькулятор их не учитывает, это отдельное решение.</p></details>
+<details><summary>Что будет при превышении лимита 2,4 млн?</summary><p>Право на НПД теряется с даты превышения: доходы пересчитываются по УСН или НДФЛ задним числом. Поэтому лимит контролируют помесячно, а не в декабре.</p></details>
+<details><summary>Можно ли совмещать самозанятость и работу по найму?</summary><p>Да, можно. Но доходы от зарплаты облагаются НДФЛ как обычно, а НПД применяется только к доходам от своей деятельности. Нельзя оказывать услуги своему текущему работодателю как самозанятый.</p></details>
+</div>
+<footer>© 2026 Просчёт · Расчёт справочный, ставки НПД: 4% / 6%, лимит 2,4 млн ₽/год.</footer>
+</div>
+<script>
+function f(n){return Math.round(n).toLocaleString('ru-RU')+' ₽'}
+function calc(){
+ const inc=+document.getElementById('inc').value||0, rate=+document.getElementById('rate').value/100, mo=Math.min(12,+document.getElementById('mo').value||12), ded=+document.getElementById('ded').value;
+ if(!inc){alert('Укажите доход');return}
+ let taxM=inc*rate, dedLeft=ded?10000:0, yearTax=0;
+ for(let i=0;i<mo;i++){
+  let t=inc*rate;
+  if(dedLeft>0){const use=Math.min(dedLeft,t);t-=use;dedLeft-=use}
+  yearTax+=t;
+ }
+ document.getElementById('o1').textContent=f(taxM);
+ document.getElementById('o2').textContent=f(yearTax);
+ document.getElementById('o3').textContent=f(inc*mo);
+ document.getElementById('o4').textContent=f(inc-taxM);
+ const yr=inc*mo;
+ document.getElementById('note').textContent= yr>2400000 ? '⚠️ Годовой доход '+f(yr)+' превышает лимит НПД 2,4 млн ₽: при превышении право на режим теряется. Разделите доход или рассмотрите УСН.' : 'Годовой доход '+f(yr)+' — в пределах лимита НПД 2,4 млн ₽. Чек формируйте в приложении «Мой налог» по каждому поступлению.';
+ document.getElementById('res').classList.add('on');
+}
+</script></body></html>
