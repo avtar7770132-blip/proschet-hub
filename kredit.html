@@ -7,27 +7,35 @@
 <nav><a href="ipoteka.html">Ипотека</a><a href="kredit.html">Кредит</a><a href="vklad.html">Вклад</a><a href="imt.html">ИМТ</a><a href="imt-deti.html">ИМТ детям</a><a href="kalorii.html">Калории</a><a href="npd.html">Самозанятый</a><a href="usn.html">УСН</a></nav></div></header>
 <div class="wrap">
 <h1>Калькулятор кредита с переплатой и графиком</h1>
-<p class="sub">Покажет реальную стоимость кредита: платёж, переплату и разбивку по годам — до того, как вы подпишете договор.</p>
-<div class="calc"><div class="grid">
+<p class="sub">Покажет реальную стоимость кредита до того, как вы подпишете договор.</p>
+<div class="calc"><div class="split">
+<div>
+<div class="grid">
 <div><label>Сумма кредита, ₽</label><input type="number" id="s" value="500000"></div>
 <div><label>Ставка, % годовых</label><input type="number" id="r" value="24" step="0.1"></div>
 <div><label>Срок, месяцев</label><input type="number" id="m" value="36"></div>
 <div><label>Тип платежа</label><select id="t"><option value="a">Аннуитетный</option><option value="d">Дифференцированный</option></select></div>
 </div>
 <button class="btn" onclick="calc()">Рассчитать</button>
-<div class="res" id="res">
-<div class="tiles">
-<div class="tile"><span>Платёж в месяц</span><b id="o1"></b></div>
-<div class="tile"><span>Переплата</span><b id="o2"></b></div>
-<div class="tile"><span>Всего выплатите</span><b id="o3"></b></div>
-<div class="tile"><span>Переплата, % от суммы</span><b id="o4"></b></div>
+</div>
+<div class="panel">
+<div class="lbl">Платёж в месяц</div>
+<div class="big" id="o1">—</div>
+<div class="row"><span>Переплата</span><b id="o2">—</b></div>
+<div class="row"><span>Всего выплатите</span><b id="o3">—</b></div>
+<div class="row"><span>Переплата от суммы</span><b id="o4">—</b></div>
+<div class="viz" id="viz" style="display:none">
+<div class="track"><div class="seg1" id="v1" style="width:60%"></div><div class="seg2" id="v2" style="width:40%"></div></div>
+<div class="leg"><span><i class="dot" style="background:#6366f1"></i>Тело кредита <b id="l1"></b></span><span><i class="dot" style="background:#d946ef"></i>Проценты <b id="l2"></b></span></div>
+</div>
+</div>
 </div>
 <div id="sched"></div>
-</div></div>
+</div>
 <div class="cta"><div><b>Одобрили дороже, чем ожидали?</b><br>Сравните ставки по потребительскому кредиту в нескольких банках за одну заявку — разница в 2–3% на трёх годах это десятки тысяч рублей.</div><a href="#" id="cpa1">Сравнить ставки →</a></div>
 <div class="seo"><h2>Как не переплатить за кредит: что показывает калькулятор</h2>
-<p>Банки рекламируют «платёж от N рублей», но умалчивают о переплате. Калькулятор считает полную стоимость: сколько вы вернёте сверх суммы кредита за весь срок и как эта переплата распределяется по годам. В первые месяцы любого кредита большая часть платежа уходит на проценты, а не на долг — таблица наглядно это показывает.</p>
-<p>Сравните два типа платежа. Аннуитетный — одинаковая сумма каждый месяц, удобен для планирования бюджета. Дифференцированный — переплата меньше, но первые платежи выше. Введите одни и те же условия в обоих режимах и посмотрите разницу в переплате: часто она составляет 10–15% от тела кредита.</p>
+<p>Банки рекламируют «платёж от N рублей», но умалчивают о переплате. Калькулятор считает полную стоимость: сколько вы вернёте сверх суммы кредита за весь срок и как переплата распределяется по годам. В первые месяцы любого кредита большая часть платежа уходит на проценты, а не на долг — таблица наглядно это показывает.</p>
+<p>Полоса под результатом показывает структуру выплат: тело кредита против процентов банку. Сравните два типа платежа: аннуитетный удобен одинаковой суммой, дифференцированный даёт меньшую переплату, но выше первые платежи. Введите одни условия в обоих режимах — разница в переплате часто составляет 10–15% от тела кредита.</p>
 <details><summary>Почему реальная ставка выше рекламной?</summary><p>Рекламная ставка действует только для идеального заёмщика: с зарплатной картой, страхованием жизни и подтверждённым доходом. Без страховки банк поднимает ставку на 3–7%. Считайте кредит по ставке из вашего предварительного решения, а не с баннера.</p></details>
 <details><summary>Выгодно ли гасить потребительский кредит досрочно?</summary><p>Да, почти всегда выгоднее, чем держать деньги на вкладе: ставка кредита 20–30% против ставки вклада 14–16%. Любая свободная сумма, внесённая досрочно в первой половине срока, экономит заметные проценты.</p></details>
 <details><summary>Что такое полная стоимость кредита (ПСК)?</summary><p>Это ставка с учётом всех обязательных платежей: страховок, комиссий, платных услуг. По закону банк обязан указывать ПСК в рамке на первой странице договора. Если ПСК сильно выше ставки из рекламы — ищите, какие услуги вам добавили.</p></details>
@@ -35,7 +43,8 @@
 <footer>© 2026 Просчёт · Расчёт справочный, не является офертой.</footer>
 </div>
 <script>
-function f(n){return n.toLocaleString('ru-RU',{maximumFractionDigits:0})+' ₽'}
+function f(n){return Math.round(n).toLocaleString('ru-RU')+' ₽'}
+function sm(n){if(n>=1e6)return (n/1e6).toLocaleString('ru-RU',{maximumFractionDigits:2})+' млн ₽';if(n>=1e4)return Math.round(n/1e3).toLocaleString('ru-RU')+' тыс ₽';return Math.round(n).toLocaleString('ru-RU')+' ₽'}
 function calc(){
  const S=+document.getElementById('s').value||0, R=+document.getElementById('r').value/100/12, N=+document.getElementById('m').value||0;
  const type=document.getElementById('t').value;
@@ -47,12 +56,18 @@ function calc(){
   if(i%12===0||i===N){rows.push([Math.ceil(i/12),f(yP),f(yI),f(yPr),f(Math.max(0,bal))]);yP=0;yI=0;yPr=0}
  }
  document.getElementById('o1').textContent=f(type==='a'?pmt:base+S*R);
- document.getElementById('o2').textContent=f(paid-S);
- document.getElementById('o3').textContent=f(paid);
+ document.getElementById('o2').textContent='+'+sm(paid-S);
+ document.getElementById('o3').textContent=sm(paid);
  document.getElementById('o4').textContent=((paid-S)/S*100).toFixed(1)+'%';
+ const p1=S/paid*100;
+ document.getElementById('v1').style.width=p1+'%';
+ document.getElementById('v2').style.width=(100-p1)+'%';
+ document.getElementById('l1').textContent=sm(S);
+ document.getElementById('l2').textContent=sm(paid-S);
+ document.getElementById('viz').style.display='block';
  let h='<table><tr><th>Год</th><th>Платежи</th><th>Проценты</th><th>Тело долга</th><th>Остаток</th></tr>';
  rows.forEach(r=>h+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td></tr>');
  document.getElementById('sched').innerHTML=h+'</table>';
- document.getElementById('res').classList.add('on');
 }
+calc();
 </script></body></html>
