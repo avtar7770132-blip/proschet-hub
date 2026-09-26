@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="ru"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор ИМТ для взрослых с нормой веса — Просчёт</title>
+<meta name="description" content="Рассчитайте индекс массы тела онлайн: категория по ВОЗ, идеальный диапазон веса для вашего роста и понятная расшифровка. Бесплатно, без регистрации, с телефона.">
+<link rel="stylesheet" href="styles.css"></head><body>
+<header><div class="wrap bar"><a class="logo" href="index.html">🧮 Просчёт</a>
+<nav><a href="ipoteka.html">Ипотека</a><a href="kredit.html">Кредит</a><a href="vklad.html">Вклад</a><a href="imt.html">ИМТ</a><a href="imt-deti.html">ИМТ детям</a><a href="kalorii.html">Калории</a><a href="npd.html">Самозанятый</a><a href="usn.html">УСН</a></nav></div></header>
+<div class="wrap">
+<h1>Калькулятор ИМТ для взрослых</h1>
+<p class="sub">Индекс массы тела по формуле ВОЗ: категория, диапазон здорового веса для вашего роста и что с этим делать.</p>
+<div class="calc"><div class="grid">
+<div><label>Рост, см</label><input type="number" id="h" value="175"></div>
+<div><label>Вес, кг</label><input type="number" id="w" value="82" step="0.1"></div>
+</div>
+<button class="btn" onclick="calc()">Рассчитать</button>
+<div class="res" id="res">
+<div class="tiles">
+<div class="tile"><span>Ваш ИМТ</span><b id="o1"></b></div>
+<div class="tile"><span>Категория</span><b id="o2"></b></div>
+<div class="tile"><span>Здоровый диапазон веса</span><b id="o3"></b></div>
+<div class="tile"><span>До границы нормы</span><b id="o4"></b></div>
+</div>
+<p id="note" style="margin-top:12px;color:#66707f;font-size:14px"></p>
+</div></div>
+<div class="seo"><h2>Что такое ИМТ и как читать результат</h2>
+<p>Индекс массы тела — отношение веса к квадрату роста в метрах. ВОЗ использует его как быстрый скрининг: 18,5–25 — норма, 25–30 — избыточная масса, выше 30 — ожирение. Калькулятор показывает не только категорию, но и диапазон здорового веса именно для вашего роста, а также сколько килограммов отделяет вас от границы нормы.</p>
+<p>Важно помнить: ИМТ не различает мышцы и жир. У спортсмена с большой мышечной массой ИМТ покажет «избыток» при минимальном проценте жира. Поэтому цифра — повод задуматься и при необходимости дообследоваться (обхват талии, состав тела), а не приговор.</p>
+<details><summary>Какие границы нормы у ВОЗ?</summary><p>Ниже 18,5 — дефицит массы; 18,5–24,9 — норма; 25–29,9 — избыточная масса; 30–34,9 — ожирение I степени; 35–39,9 — II степени; 40 и выше — III степени. Риск осложнений растёт начиная с категории «избыточная масса», особенно при обхвате талии выше 94 см у мужчин и 80 см у женщин.</p></details>
+<details><summary>ИМТ подходит всем?</summary><p>Нет. Для детей и подростков нужны перцентильные таблицы — у нас есть отдельный калькулятор ИМТ для детей. Для беременных, пожилых и спортсменов ИМТ трактуется с поправками: оценивайте его вместе с врачом.</p></details>
+<details><summary>Что делать, если ИМТ выше нормы?</summary><p>Начните с малого: дефицит 300–500 ккал в день и 8–10 тысяч шагов дают устойчивое снижение веса без срывов. Наш калькулятор калорий посчитает вашу норму и цель автоматически.</p></details>
+</div>
+<footer>© 2026 Просчёт · Не является медицинской консультацией. Методика: ВОЗ.</footer>
+</div>
+<script>
+function f(n){return n.toLocaleString('ru-RU',{maximumFractionDigits:1})}
+function calc(){
+ const h=+document.getElementById('h').value/100, w=+document.getElementById('w').value;
+ if(!h||!w){alert('Укажите рост и вес');return}
+ const bmi=w/(h*h), lo=18.5*h*h, hi=25*h*h;
+ let cat,cls;
+ if(bmi<18.5){cat='Дефицит массы';cls='warn'}
+ else if(bmi<25){cat='Норма';cls='ok'}
+ else if(bmi<30){cat='Избыточная масса';cls='warn'}
+ else if(bmi<35){cat='Ожирение I ст.';cls='bad'}
+ else if(bmi<40){cat='Ожирение II ст.';cls='bad'}
+ else{cat='Ожирение III ст.';cls='bad'}
+ let diff='';
+ if(w<lo)diff=f(lo-w)+' кг до нормы';
+ else if(w>hi)diff='−'+f(w-hi)+' кг до нормы';
+ else diff='вы в норме 🎉';
+ document.getElementById('o1').textContent=f(bmi);
+ document.getElementById('o2').innerHTML='<span class="'+cls+'">'+cat+'</span>';
+ document.getElementById('o3').textContent=f(lo)+'–'+f(hi)+' кг';
+ document.getElementById('o4').textContent=diff;
+ document.getElementById('note').textContent='ИМТ не различает мышцы и жир: у спортсменов и беременных результат трактуется с поправками. Для детей 2–20 лет используйте калькулятор ИМТ по перцентилям ВОЗ.';
+ document.getElementById('res').classList.add('on');
+}
+</script></body></html>
