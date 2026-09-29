@@ -16,6 +16,21 @@ ym(113103717, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true,
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/113103717" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Яндекс.Метрика -->
+<style>
+.res-box { background:#f8fafc; border-left:4px solid #4f46e5; padding:16px; margin-top:16px; border-radius:0 8px 8px 0; }
+.big { font-size:24px; color:#1e293b; font-weight:bold; display:block; margin:8px 0; }
+.hint { font-size:14px; color:#64748b; margin-top:8px; }
+.btn-calc { background:#4f46e5; color:white; border:none; padding:12px 24px; font-size:16px; border-radius:8px; cursor:pointer; width:100%; margin-top:16px; transition:.2s; }
+.btn-calc:hover { background:#4338ca; transform:translateY(-1px); }
+input, select { width:100%; padding:10px; margin:8px 0; border:1px solid #cbd5e1; border-radius:6px; box-sizing:border-box; }
+label { font-weight:600; color:#334155; display:block; margin-bottom:4px; }
+.seo-block { margin-top:40px; line-height:1.6; }
+.seo-block h2 { color:#1e293b; }
+.seo-block ul li { margin-bottom:8px; }
+.site-header nav a { text-decoration:none; color:#4f46e5; font-weight:600; }
+.wrap { max-width:600px; margin:0 auto; padding:20px; }
+.calc-card { background:white; padding:24px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,.05); }
+</style>
 </head>
 <body>
 <header class="site-header"><nav><a href="index.html">← Все калькуляторы</a></nav></header>
@@ -95,29 +110,33 @@ return tax;
 }
 
 function g_to_n(gross_monthly, period) {
-const annual = gross_monthly * (period === 'year' ? 1 : 12);
+// Если период 'year', то gross_monthly содержит годовую сумму. 
+// Но мы всегда приводим к месячной базе для внутренней логики, если это месяц.
+// Лучше переделать так: вход всегда месячный gross.
+// Исправление: функция принимает ТОЛЬКО месячный gross. Период влияет только на вывод.
+const annual = gross_monthly * 12;
 const tax_annual = calcNDFL(annual);
 const net_annual = annual - tax_annual;
 return {
-gross: annual,
-ndfl: tax_annual,
-net: net_annual,
+gross_annual: annual,
+ndfl_annual: tax_annual,
+net_annual: net_annual,
 eff_rate: (tax_annual / annual * 100).toFixed(2),
-per_period: period === 'year' ? net_annual : net_annual / 12
 };
 }
 
 function n_to_g(net_monthly) {
-// Ищем gross методом перебора (быстрый enough)
+// Ищем gross методом бинарного поиска (быстро и точно)
 let lo = 0, hi = net_monthly * 3; // upper bound
 for (let i = 0; i < 50; i++) {
 const mid = (lo + hi) / 2;
-const res = g_to_n(mid, 'month');
-if (res.per_period < net_monthly) lo = mid; else hi = mid;
+const res = g_to_n(mid, 'month'); // считаем годовой нетто от месячного гросса
+const monthly_net = res.net_annual / 12;
+if (monthly_net < net_monthly) lo = mid; else hi = mid;
 }
 const gross_needed = (lo + hi) / 2;
 const r = g_to_n(gross_needed, 'month');
-return {gross: r.gross, ndfl: r.ndfl, net: r.net, eff_rate: r.eff_rate, per_period: gross_needed};
+return {gross_monthly: gross_needed, ndfl_annual: r.ndfl_annual, net_annual: r.net_annual, eff_rate: r.eff_rate};
 }
 
 function calcNPD(income, rate_pct, has_deduction) {
@@ -149,25 +168,44 @@ function calculate() {
 const mode = document.getElementById('mode').value;
 let html = '';
 if (mode === 'g2n') {
-const g = parseFloat(document.getElementById('gross').value);
-if (!g || g <= 0) return alert('Введите сумму больше нуля');
+const input_val = parseFloat(document.getElementById('gross').value);
+if (!input_val || input_val <= 0) return alert('Введите сумму больше нуля');
 const p = document.getElementById('period').value;
-const r = g_to_n(p==='year'?g:g, p);
-html = `<div class="res-box">
-<p><b>Зарплата gross (${p==='year'?'в год':'в месяц'}):</b> ${r.gross.toLocaleString('ru')} ₽</p>
-<p><b>НДФЛ к уплате:</b> ${r.ndfl.toLocaleString('ru')} ₽</p>
-<p><b>На руки (net):</b> <span class="big">${r.net.toLocaleString('ru')} ₽</span></p>
-<p><b>Эффективная ставка:</b> ${r.eff_rate}%</p>
-${p==='month'?`<p class="hint">За год получите на руки: ${(r.net*12).toLocaleString('ru')} ₽</p>`:''}
-</div>`;
+
+// Входное значение всегда трактуем как МЕСЯЧНОЕ для расчета шкалы
+// Пользователь вводит 60000 -> это 60к в месяц.
+const gross_m = input_val; 
+const result = g_to_n(gross_m, 'month'); 
+
+if (p === 'month') {
+    const disp_gross = gross_m;
+    const disp_ndfl = result.ndfl_annual / 12;
+    const disp_net = result.net_annual / 12;
+    
+    html = `<div class="res-box">
+        <p><b>Зарплата gross (в месяц):</b> ${Math.round(disp_gross).toLocaleString('ru')} ₽</p>
+        <p><b>НДФЛ к уплате (в месяц):</b> ${Math.round(disp_ndfl).toLocaleString('ru')} ₽</p>
+        <p><b>На руки (net, в месяц):</b> <span class="big">${Math.round(disp_net).toLocaleString('ru')} ₽</span></p>
+        <p><b>Эффективная ставка:</b> ${result.eff_rate}%</p>
+        <p class="hint">За год получите на руки: ${Math.round(result.net_annual).toLocaleString('ru')} ₽</p>
+    </div>`;
+} else { // year
+    html = `<div class="res-box">
+        <p><b>Зарплата gross (в год):</b> ${Math.round(result.gross_annual).toLocaleString('ru')} ₽</p>
+        <p><b>НДФЛ к уплате (в год):</b> ${Math.round(result.ndfl_annual).toLocaleString('ru')} ₽</p>
+        <p><b>На руки (net, в год):</b> <span class="big">${Math.round(result.net_annual).toLocaleString('ru')} ₽</span></p>
+        <p><b>Эффективная ставка:</b> ${result.eff_rate}%</p>
+        <p class="hint">В среднем в месяц выходит: ${Math.round(result.net_annual/12).toLocaleString('ru')} ₽</p>
+    </div>`;
+}
 } else if (mode === 'n2g') {
 const n = parseFloat(document.getElementById('net_want').value);
 if (!n || n <= 0) return alert('Введите сумму больше нуля');
 const r = n_to_g(n);
 html = `<div class="res-box">
 <p><b>Чтобы получать ${n.toLocaleString('ru')} ₽ на руки:</b></p>
-<p><b>Нужен gross:</b> <span class="big">${Math.round(r.per_period).toLocaleString('ru')} ₽/мес</span></p>
-<p><b>НДФЛ составит:</b> ${Math.round(r.ndfl/12).toLocaleString('ru')} ₽/мес</p>
+<p><b>Нужен gross:</b> <span class="big">${Math.round(r.gross_monthly).toLocaleString('ru')} ₽/мес</span></p>
+<p><b>НДФЛ составит:</b> ${Math.round(r.ndfl_annual/12).toLocaleString('ru')} ₽/мес</p>
 <p><b>Эффективная ставка:</b> ${r.eff_rate}%</p>
 </div>`;
 } else {
