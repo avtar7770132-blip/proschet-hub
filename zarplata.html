@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Калькулятор зарплаты и налогов 2026: gross→net, расчёт НДФЛ онлайн</title>
+<meta name="description" content="Бесплатный калькулятор: зарплата gross→net с прогрессивной шкалой НДФЛ 2026, обратный расчёт net→gross, налог самозанятого НПД 4/6%. Точный расчёт до копейки без регистрации.">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<!-- Яндекс.Метрика -->
+<script type="text/javascript" >
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+ym(113103717, "init", {clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/113103717" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Яндекс.Метрика -->
+</head>
+<body>
+<header class="site-header"><nav><a href="index.html">← Все калькуляторы</a></nav></header>
+<main class="wrap">
+<h1>Калькулятор зарплаты и налогов 2026</h1>
+<p class="sub">Считает зарплату gross→net по прогрессивной шкале НДФЛ (13–22%), обратный расчёт net→gross и налог самозанятого НПД. Без регистрации, результат мгновенно.</p>
+
+<div class="calc-card">
+<label>Тип расчёта:</label>
+<select id="mode">
+<option value="g2n">Зарплата gross → net (на руки)</option>
+<option value="n2g">Обратный: хочу net → какой нужен gross?</option>
+<option value="npd">Самозанятый: налог НПД с дохода</option>
+</select>
+
+<div id="block-g2n">
+<label>Зарплата gross (до вычета), ₽/мес:</label>
+<input type="number" id="gross" placeholder="Например: 120000" min="0">
+<label>Период:</label>
+<select id="period"><option value="month">Месяц</option><option value="year">Год</option></select>
+</div>
+
+<div id="block-n2g" style="display:none">
+<label>Желаемая сумма на руки (net), ₽/мес:</label>
+<input type="number" id="net_want" placeholder="Например: 100000" min="0">
+</div>
+
+<div id="block-npd" style="display:none">
+<label>Доход за квартал, ₽:</label>
+<input type="number" id="npd_income" placeholder="Например: 300000" min="0">
+<label>Тип клиентов:</label>
+<select id="npd_type"><option value="4">Физлица (4%)</option><option value="6">Юрлица (6%)</option></select>
+<label>Использован вычет 10 000 ₽?</label>
+<select id="npd_deduction"><option value="no">Нет, ещё есть остаток вычета</option><option value="yes">Да, вычет исчерпан</option></select>
+</div>
+
+<button onclick="calculate()" class="btn-calc">Рассчитать</button>
+<div id="result"></div>
+</div>
+
+<section class="seo-block">
+<h2>Как работает прогрессивная шкала НДФЛ 2026</h2>
+<p>С 2025 года в России действует пятиступенчатая шкала: 13% до 2,4 млн ₽/год, 15% от 2,4 до 5 млн, 18% от 5 до 20 млн, 20% от 20 до 50 млн, 22% свыше 50 млн. Налог считается отдельно по каждому диапазону — не вся сумма облагается максимальной ставкой.</p>
+<h3>Примеры расчёта</h3>
+<ul>
+<li>Gross 80 000 ₽/мес → НДФЛ 10 400 ₽ → <b>net 69 600 ₽</b> (эффективная ставка 13%)</li>
+<li>Gross 200 000 ₽/мес → годовой доход 2,4 млн → НДФЛ 312 000 ₽ → <b>net 174 000 ₽/мес</b> (ставка ровно 13%)</li>
+<li>Gross 350 000 ₽/мес → годовой 4,2 млн → первые 2,4 млн под 13% (312 тыс) + 1,8 млн под 15% (270 тыс) = 582 тыс НДФЛ → <b>net 301 500 ₽/мес</b> (эффективная 13,86%)</li>
+<li>Gross 500 000 ₽/мес → годовой 6 млн → 2,4×13% + 2,6×15% + 1×18% = 312+390+180 = 882 тыс → <b>net 426 500 ₽/мес</b> (эффективная 14,7%)</li>
+</ul>
+<h3>Налог самозанятого (НПД)</h3>
+<p>Ставка 4% при работе с физлицами, 6% с юрлицами. Государство даёт стартовый вычет 10 000 ₽, который временно снижает effective rate до 3% или 4,5%, пока не исчерпается. Лимит дохода — 2,4 млн ₽/год, при превышении теряете статус.</p>
+</section>
+</main>
+<footer class="site-footer"><p>© 2026 Просчёт · Калькуляторы носят информационный характер и не являются индивидуальной финансовой рекомендацией.</p></footer>
+
+<script>
+// Шкала НДФЛ 2025–2026
+const BRACKETS = [
+{limit: 2400000, rate: 0.13},
+{limit: 5000000, rate: 0.15},
+{limit: 20000000, rate: 0.18},
+{limit: 50000000, rate: 0.20},
+{limit: Infinity, rate: 0.22}
+];
+
+function calcNDFL(annual_gross) {
+let tax = 0, remaining = annual_gross, prev_limit = 0;
+for (const b of BRACKETS) {
+if (remaining <= 0) break;
+const bracket_size = Math.min(remaining, b.limit - prev_limit);
+tax += bracket_size * b.rate;
+remaining -= bracket_size;
+prev_limit = b.limit;
+}
+return tax;
+}
+
+function g_to_n(gross_monthly, period) {
+const annual = gross_monthly * (period === 'year' ? 1 : 12);
+const tax_annual = calcNDFL(annual);
+const net_annual = annual - tax_annual;
+return {
+gross: annual,
+ndfl: tax_annual,
+net: net_annual,
+eff_rate: (tax_annual / annual * 100).toFixed(2),
+per_period: period === 'year' ? net_annual : net_annual / 12
+};
+}
+
+function n_to_g(net_monthly) {
+// Ищем gross методом перебора (быстрый enough)
+let lo = 0, hi = net_monthly * 3; // upper bound
+for (let i = 0; i < 50; i++) {
+const mid = (lo + hi) / 2;
+const res = g_to_n(mid, 'month');
+if (res.per_period < net_monthly) lo = mid; else hi = mid;
+}
+const gross_needed = (lo + hi) / 2;
+const r = g_to_n(gross_needed, 'month');
+return {gross: r.gross, ndfl: r.ndfl, net: r.net, eff_rate: r.eff_rate, per_period: gross_needed};
+}
+
+function calcNPD(income, rate_pct, has_deduction) {
+const base_rate = rate_pct / 100;
+let tax_full = income * base_rate;
+let deduction_used = 0, tax_actual = tax_full;
+if (!has_deduction) {
+// Вычет снижает ставку: для 4% -> 3%, для 6% -> 4%
+const reduced_rate = rate_pct === 4 ? 0.03 : 0.04;
+tax_actual = income * reduced_rate;
+deduction_used = tax_full - tax_actual;
+if (deduction_used > 10000) {
+// частично исчерпан
+const max_reduction = 10000;
+const normal_part = income - (max_reduction / (base_rate - reduced_rate));
+tax_actual = (normal_part * base_rate) + ((income - normal_part) * reduced_rate);
+deduction_used = max_reduction;
+}
+}
+return {income, tax: tax_actual.toFixed(0), deduction: deduction_used.toFixed(0), net: (income - tax_actual).toFixed(0)};
+}
+
+document.getElementById('mode').addEventListener('change', function() {
+['g2n','n2g','npd'].forEach(id => document.getElementById('block-'+id).style.display='none');
+document.getElementById('block-'+this.value).style.display='block';
+});
+
+function calculate() {
+const mode = document.getElementById('mode').value;
+let html = '';
+if (mode === 'g2n') {
+const g = parseFloat(document.getElementById('gross').value);
+if (!g || g <= 0) return alert('Введите сумму больше нуля');
+const p = document.getElementById('period').value;
+const r = g_to_n(p==='year'?g:g, p);
+html = `<div class="res-box">
+<p><b>Зарплата gross (${p==='year'?'в год':'в месяц'}):</b> ${r.gross.toLocaleString('ru')} ₽</p>
+<p><b>НДФЛ к уплате:</b> ${r.ndfl.toLocaleString('ru')} ₽</p>
+<p><b>На руки (net):</b> <span class="big">${r.net.toLocaleString('ru')} ₽</span></p>
+<p><b>Эффективная ставка:</b> ${r.eff_rate}%</p>
+${p==='month'?`<p class="hint">За год получите на руки: ${(r.net*12).toLocaleString('ru')} ₽</p>`:''}
+</div>`;
+} else if (mode === 'n2g') {
+const n = parseFloat(document.getElementById('net_want').value);
+if (!n || n <= 0) return alert('Введите сумму больше нуля');
+const r = n_to_g(n);
+html = `<div class="res-box">
+<p><b>Чтобы получать ${n.toLocaleString('ru')} ₽ на руки:</b></p>
+<p><b>Нужен gross:</b> <span class="big">${Math.round(r.per_period).toLocaleString('ru')} ₽/мес</span></p>
+<p><b>НДФЛ составит:</b> ${Math.round(r.ndfl/12).toLocaleString('ru')} ₽/мес</p>
+<p><b>Эффективная ставка:</b> ${r.eff_rate}%</p>
+</div>`;
+} else {
+const inc = parseFloat(document.getElementById('npd_income').value);
+const rt = parseInt(document.getElementById('npd_type').value);
+const ded = document.getElementById('npd_deduction').value === 'yes';
+if (!inc || inc <= 0) return alert('Введите доход больше нуля');
+const r = calcNPD(inc, rt, ded);
+html = `<div class="res-box">
+<p><b>Доход за квартал:</b> ${r.income.toLocaleString('ru')} ₽</p>
+<p><b>Налог НПД (${rt}%):</b> <span class="big">${Number(r.tax).toLocaleString('ru')} ₽</span></p>
+${Number(r.deduction)>0?`<p class="hint">Использовано из вычета 10 000 ₽: ${Number(r.deduction).toLocaleString('ru')} ₽</p>`:''}
+<p><b>Останется вам:</b> ${Number(r.net).toLocaleString('ru')} ₽</p>
+</div>`;
+}
+document.getElementById('result').innerHTML = html;
+}
+</script>
+</body>
+</html>
