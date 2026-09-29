@@ -109,11 +109,8 @@ prev_limit = b.limit;
 return tax;
 }
 
-function g_to_n(gross_monthly, period) {
-// Если период 'year', то gross_monthly содержит годовую сумму. 
-// Но мы всегда приводим к месячной базе для внутренней логики, если это месяц.
-// Лучше переделать так: вход всегда месячный gross.
-// Исправление: функция принимает ТОЛЬКО месячный gross. Период влияет только на вывод.
+// Эта функция принимает ТОЛЬКО месячный gross и всегда возвращает ГОДОВЫЕ значения
+function g_to_n(gross_monthly) {
 const annual = gross_monthly * 12;
 const tax_annual = calcNDFL(annual);
 const net_annual = annual - tax_annual;
@@ -126,16 +123,16 @@ eff_rate: (tax_annual / annual * 100).toFixed(2),
 }
 
 function n_to_g(net_monthly) {
-// Ищем gross методом бинарного поиска (быстро и точно)
+// Ищем gross методом бинарного поиска
 let lo = 0, hi = net_monthly * 3; // upper bound
 for (let i = 0; i < 50; i++) {
 const mid = (lo + hi) / 2;
-const res = g_to_n(mid, 'month'); // считаем годовой нетто от месячного гросса
+const res = g_to_n(mid); // считаем годовой нетто от месячного гросса
 const monthly_net = res.net_annual / 12;
 if (monthly_net < net_monthly) lo = mid; else hi = mid;
 }
 const gross_needed = (lo + hi) / 2;
-const r = g_to_n(gross_needed, 'month');
+const r = g_to_n(gross_needed);
 return {gross_monthly: gross_needed, ndfl_annual: r.ndfl_annual, net_annual: r.net_annual, eff_rate: r.eff_rate};
 }
 
@@ -173,12 +170,10 @@ if (!input_val || input_val <= 0) return alert('Введите сумму бол
 const p = document.getElementById('period').value;
 
 // Входное значение всегда трактуем как МЕСЯЧНОЕ для расчета шкалы
-// Пользователь вводит 60000 -> это 60к в месяц.
-const gross_m = input_val; 
-const result = g_to_n(gross_m, 'month'); 
+const result = g_to_n(input_val); 
 
 if (p === 'month') {
-    const disp_gross = gross_m;
+    const disp_gross = input_val; // Показываем то, что ввёл пользователь
     const disp_ndfl = result.ndfl_annual / 12;
     const disp_net = result.net_annual / 12;
     
