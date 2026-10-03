@@ -106,10 +106,33 @@
             </div>
         </div>
 
-        <div class="mt-1 mb-1" style="background: rgba(56, 189, 248, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid var(--color-accent-blue);">
-            <strong>💡 Важно:</strong> Это ориентировочная цена. Итоговая сумма может отличаться на ±15% в зависимости от сложности углов, ниш и наличия оборудования. 
-            <br><br>
-            <a href="#" onclick="alert('Здесь должна быть ссылка на WhatsApp менеджера')" style="color: var(--color-accent-blue); font-weight: bold;">Пригласить инженера на бесплатный замер →</a>
+        <!-- БЛОК КОНТАКТОВ И ВЫЕЗДА (СКРЫТЫЙ НОМЕР) -->
+        <div class="mt-1 mb-1 card" style="background: rgba(30, 41, 59, 0.6); border-left: 4px solid var(--color-accent-blue);">
+            <h3 style="margin-bottom: 10px;">📍 География выезда</h3>
+            <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+                Бесплатный выезд инженера для точных замеров возможен <strong>только по Москве и Московской области</strong>. Для других регионов доступна удаленная консультация по фото/видео.
+            </p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <!-- WhatsApp -->
+                <button onclick="openContact('wa')" class="btn-contact" style="flex: 1; min-width: 120px; background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: transform 0.2s;">
+                    WhatsApp
+                </button>
+                
+                <!-- Telegram -->
+                <button onclick="openContact('tg')" class="btn-contact" style="flex: 1; min-width: 120px; background: #0088cc; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: transform 0.2s;">
+                    Telegram
+                </button>
+
+                <!-- MAX Messenger -->
+                <button onclick="openContact('max')" class="btn-contact" style="flex: 1; min-width: 120px; background: #FF5C00; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: transform 0.2s;">
+                    MAX
+                </button>
+            </div>
+            
+            <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-top: 15px; text-align: center;">
+                *Нажмите кнопку, чтобы открыть чат. Номер скрыт от автоматических сборщиков.
+            </p>
         </div>
     </div>
 
@@ -120,10 +143,48 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // === СКРЫТЫЕ ДАННЫЕ ДЛЯ СВЯЗИ ===
+    // Мы храним номер здесь, чтобы он не светился в HTML коде напрямую как ссылка tel:...
+    const CONTACT_PHONE_RAW = "+79064143916"; 
+    const CONTACT_PHONE_CLEAN = "79064143916"; // Без плюса и пробелов для URL
+    
+    function openContact(type) {
+        let url = "";
+        
+        if (type === 'wa') {
+            // Формат ссылки для WhatsApp API
+            url = `https://wa.me/${CONTACT_PHONE_CLEAN}?text=${encodeURIComponent("Здравствуйте! Рассчитал кухню на сайте, хочу вызвать замерщика.")}`;
+        } else if (type === 'tg') {
+            // Формат ссылки для Telegram (username или phone)
+            // Так как username неизвестен, используем формат t.me/+phone
+            url = `https://t.me/+${CONTACT_PHONE_CLEAN}`;
+        } else if (type === 'max') {
+            // Формат для мессенджера MAX (VK WorkSpace / TamTam successor logic usually uses deep links or web clients)
+            // Поскольку прямой публичный API у MAX пока ограничен для внешних ссылок вида wa.me, 
+            // чаще всего используют просто копирование номера или ссылку на профиль VK, если он привязан.
+            // Но самый надежный способ для "Max" сейчас - это попытка открыть приложение через universal link или просто скопировать номер.
+            // Для универсальности сделаем так: пробуем открыть ссылку, если нет - копируем номер.
+            
+            // ВАРИАНТ А: Если есть известный паттерн ссылок (пока нет официального wa.me аналога для Max для всех устройств)
+            // Используем fallback: Копируем номер в буфер обмена и показываем уведомление.
+            
+            navigator.clipboard.writeText(CONTACT_PHONE_RAW).then(() => {
+                alert("Номер телефона скопирован!\n\nОткройте приложение MAX, найдите этот контакт и напишите:\n\"Замер мебели\"\n\n(Выезд только Москва и МО)");
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert("Не удалось скопировать номер автоматически.\nПожалуйста, наберите вручную: " + CONTACT_PHONE_RAW);
+            });
+            return; // Прерываем выполнение, так как мы уже показали алерт
+        }
+
+        if (url) {
+            window.open(url, '_blank');
+        }
+    }
+
+    // --- ЛОГИКА КАЛЬКУЛЯТОРА (БЕЗ ИЗМЕНЕНИЙ) ---
     const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
 
-    // Базовые коэффициенты цены за погонный метр (условные, для демо)
-    // Реальные цифры зависят от твоего прайса, здесь заложена средняя рыночная вилка
     const BASE_PRICES = {
         kitchen: { body: 12000, facadeFactor: 1.0, hardwareStd: 3000, hardwarePrem: 8000, work: 5000 },
         wardrobe: { body: 15000, facadeFactor: 1.2, hardwareStd: 4000, hardwarePrem: 10000, work: 6000 },
@@ -131,15 +192,15 @@
     };
 
     const FACADE_MULTIPLIERS = {
-        ldsp: 1.0,       // ЛДСП дешевле всего
-        'mdf-film': 1.4, // МДФ пленка дороже
-        'mdf-emaile': 2.2 // Эмаль/пластик сильно дороже
+        ldsp: 1.0,       
+        'mdf-film': 1.4, 
+        'mdf-emaile': 2.2 
     };
 
     const COUNTERTOP_PRICE_PER_METER = {
         none: 0,
-        postforming: 4500, // Постформинг ~4.5к за метр
-        acrylic: 12000     // Акрил ~12к за метр
+        postforming: 4500, 
+        acrylic: 12000     
     };
 
     document.getElementById('furnitureForm').addEventListener('submit', function(e) {
@@ -155,29 +216,21 @@
 
         const baseConfig = BASE_PRICES[type];
         
-        // 1. Корпус (Базовая цена * Длина)
         const costBody = baseConfig.body * length;
-        
-        // 2. Фасады (Зависят от материала и длины)
-        // Коэффициент заполнения фасадами примерно 0.6 от площади корпуса для упрощения
         const facadeAreaRatio = 0.6; 
         const rawFacadeCost = costBody * facadeAreaRatio * FACADE_MULTIPLIERS[facadeMat];
         const costFacade = Math.round(rawFacadeCost);
 
-        // 3. Фурнитура (На метр погонный)
         const hwCostPerMeter = hwLevel === 'premium' ? baseConfig.hardwarePrem : baseConfig.hardwareStd;
         const costHardware = Math.round(hwCostPerMeter * length);
 
-        // 4. Столешница (если применимо)
         const costCountertop = Math.round(COUNTERTOP_PRICE_PER_METER[ctOption] * length);
 
-        // 5. Работа и монтаж (% от общей стоимости материалов + фикс)
         const materialsTotal = costBody + costFacade + costHardware + costCountertop;
-        const costWork = Math.round(baseConfig.work * length + (materialsTotal * 0.15)); // 15% на сборку/логистику сверху
+        const costWork = Math.round(baseConfig.work * length + (materialsTotal * 0.15)); 
 
         const totalPrice = materialsTotal + costWork;
 
-        // Вывод
         document.getElementById('resultsArea').style.display = 'block';
         document.getElementById('finalPrice').innerText = fmt.format(totalPrice) + ' ₽';
         document.getElementById('costBody').innerText = fmt.format(costBody) + ' ₽';
@@ -201,11 +254,7 @@
                     label: 'Стоимость, ₽',
                     data: dataArray,
                     backgroundColor: [
-                        '#334155', // Серый темный
-                        '#38bdf8', // Голубой
-                        '#818cf8', // Фиолетовый
-                        '#fbbf24', // Желтый
-                        '#ef4444'  // Красный
+                        '#334155', '#38bdf8', '#818cf8', '#fbbf24', '#ef4444'
                     ],
                     borderRadius: 4
                 }]
