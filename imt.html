@@ -1,70 +1,99 @@
-<!DOCTYPE html><html lang="ru"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Калькулятор ИМТ для взрослых с нормой веса — Просчёт</title>
-<meta name="description" content="Рассчитайте индекс массы тела онлайн: категория по ВОЗ, идеальный диапазон веса для вашего роста и понятная расшифровка. Бесплатно, без регистрации, с телефона.">
-<link rel="stylesheet" href="styles.css"><link rel="icon" type="image/svg+xml" href="/favicon.svg"></head><!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113103717', 'ym');
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор индекса массы тела (ИМТ) — Просчёт</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <!-- Метрика -->
+    <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
+</head>
+<body>
 
-    ym(113103717, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/113103717" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter --><body>
-<header><div class="wrap bar"><a class="logo" href="index.html">🧮 Просчёт</a>
-<nav><a href="ipoteka.html">Ипотека</a><a href="kredit.html">Кредит</a><a href="vklad.html">Вклад</a><a href="imt.html">ИМТ</a><a href="imt-deti.html">ИМТ детям</a><a href="kalorii.html">Калории</a><a href="npd.html">Самозанятый</a><a href="usn.html">УСН</a></nav></div></header>
-<div class="wrap">
-<h1>Калькулятор ИМТ для взрослых</h1>
-<p class="sub">Индекс массы тела по формуле ВОЗ: категория, диапазон здорового веса для вашего роста и что с этим делать.</p>
-<div class="calc"><div class="grid">
-<div><label>Рост, см</label><input type="number" id="h" value="175"></div>
-<div><label>Вес, кг</label><input type="number" id="w" value="82" step="0.1"></div>
+<div class="container">
+    <header style="margin-bottom: 30px;"><a href="index.html" style="font-weight: bold;">← Назад к списку</a></header>
+    <h1>Калькулятор ИМТ (для взрослых)</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Быстрая оценка соответствия веса росту по стандартам ВОЗ.</p>
+
+    <div class="card">
+        <form id="imtForm">
+            <div class="form-group"><label for="height">Рост, см</label><input type="number" id="height" value="175" required min="120" max="250"></div>
+            <div class="form-group"><label for="weight">Вес, кг</label><input type="number" id="weight" value="75" required min="30" max="300" step="0.1"></div>
+            <button type="submit" class="btn-calc">Рассчитать индекс</button>
+        </form>
+    </div>
+
+    <div id="resultsArea" style="display:none;">
+        <div class="result-box mt-1">
+            <h3>Ваш результат</h3>
+            <div style="text-align:center; margin-top:15px;">
+                <span style="color:var(--color-text-muted)">Индекс массы тела:</span><br>
+                <span class="big-number" id="bmiValue" style="font-size: 3rem;">0</span>
+            </div>
+             <div style="margin-top:10px; text-align:center;">
+                <strong id="bmiCategory" style="font-size: 1.2rem;"></strong>
+            </div>
+        </div>
+
+        <!-- ВИЗУАЛИЗАЦИЯ ШКАЛЫ ИМТ -->
+        <div class="card mt-1">
+            <h3>Где вы находитесь?</h3>
+            <div style="position:relative; height: 40px; background: linear-gradient(to right, #38bdf8 0%, #38bdf8 18.5%, #22c55e 18.5%, #22c55e 25%, #fbbf24 25%, #fbbf24 30%, #f97316 30%, #f97316 35%, #ef4444 35%, #ef4444 100%); border-radius: 8px; margin-top: 20px;">
+                <!-- Маркер положения -->
+                <div id="bmiMarker" style="position:absolute; top:-10px; left:50%; width:4px; height:60px; background:white; box-shadow:0 0 5px black; transform:translateX(-50%); transition:left 0.5s ease;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--color-text-muted); margin-top:10px;">
+                <span>Дефицит<br>&lt;18.5</span>
+                <span>Норма<br>18.5–24.9</span>
+                <span>Избыток<br>25–29.9</span>
+                <span>Ожирение I<br>30–34.9</span>
+                <span>Ожирение II+<br>&gt;35</span>
+            </div>
+        </div>
+        
+        <div class="mt-1 mb-1 card" style="border-left: 4px solid var(--color-accent-blue);">
+            <p style="font-size: 0.95rem; color: var(--color-text-secondary);">
+                <strong>💡 Важно:</strong> ИМТ не учитывает состав тела (мышцы vs жир). Спортсмены могут иметь высокий ИМТ при низком проценте жира. Используйте этот показатель лишь как ориентир.
+            </p>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem;">© 2026 Просчёт · Не является медицинской консультацией.</footer>
 </div>
-<button class="btn" onclick="calc()">Рассчитать</button>
-<div class="res" id="res">
-<div class="tiles">
-<div class="tile"><span>Ваш ИМТ</span><b id="o1"></b></div>
-<div class="tile"><span>Категория</span><b id="o2"></b></div>
-<div class="tile"><span>Здоровый диапазон веса</span><b id="o3"></b></div>
-<div class="tile"><span>До границы нормы</span><b id="o4"></b></div>
-</div>
-<p id="note" style="margin-top:12px;color:#66707f;font-size:14px"></p>
-</div></div>
-<div class="seo"><h2>Что такое ИМТ и как читать результат</h2>
-<p>Индекс массы тела — отношение веса к квадрату роста в метрах. ВОЗ использует его как быстрый скрининг: 18,5–25 — норма, 25–30 — избыточная масса, выше 30 — ожирение. Калькулятор показывает не только категорию, но и диапазон здорового веса именно для вашего роста, а также сколько килограммов отделяет вас от границы нормы.</p>
-<p>Важно помнить: ИМТ не различает мышцы и жир. У спортсмена с большой мышечной массой ИМТ покажет «избыток» при минимальном проценте жира. Поэтому цифра — повод задуматься и при необходимости дообследоваться (обхват талии, состав тела), а не приговор.</p>
-<details><summary>Какие границы нормы у ВОЗ?</summary><p>Ниже 18,5 — дефицит массы; 18,5–24,9 — норма; 25–29,9 — избыточная масса; 30–34,9 — ожирение I степени; 35–39,9 — II степени; 40 и выше — III степени. Риск осложнений растёт начиная с категории «избыточная масса», особенно при обхвате талии выше 94 см у мужчин и 80 см у женщин.</p></details>
-<details><summary>ИМТ подходит всем?</summary><p>Нет. Для детей и подростков нужны перцентильные таблицы — у нас есть отдельный калькулятор ИМТ для детей. Для беременных, пожилых и спортсменов ИМТ трактуется с поправками: оценивайте его вместе с врачом.</p></details>
-<details><summary>Что делать, если ИМТ выше нормы?</summary><p>Начните с малого: дефицит 300–500 ккал в день и 8–10 тысяч шагов дают устойчивое снижение веса без срывов. Наш калькулятор калорий посчитает вашу норму и цель автоматически.</p></details>
-</div>
-<footer>© 2026 Просчёт · Не является медицинской консультацией. Методика: ВОЗ.</footer>
-</div>
+
 <script>
-function f(n){return n.toLocaleString('ru-RU',{maximumFractionDigits:1})}
-function calc(){
- const h=+document.getElementById('h').value/100, w=+document.getElementById('w').value;
- if(!h||!w){alert('Укажите рост и вес');return}
- const bmi=w/(h*h), lo=18.5*h*h, hi=25*h*h;
- let cat,cls;
- if(bmi<18.5){cat='Дефицит массы';cls='warn'}
- else if(bmi<25){cat='Норма';cls='ok'}
- else if(bmi<30){cat='Избыточная масса';cls='warn'}
- else if(bmi<35){cat='Ожирение I ст.';cls='bad'}
- else if(bmi<40){cat='Ожирение II ст.';cls='bad'}
- else{cat='Ожирение III ст.';cls='bad'}
- let diff='';
- if(w<lo)diff=f(lo-w)+' кг до нормы';
- else if(w>hi)diff='−'+f(w-hi)+' кг до нормы';
- else diff='вы в норме 🎉';
- document.getElementById('o1').textContent=f(bmi);
- document.getElementById('o2').innerHTML='<span class="'+cls+'">'+cat+'</span>';
- document.getElementById('o3').textContent=f(lo)+'–'+f(hi)+' кг';
- document.getElementById('o4').textContent=diff;
- document.getElementById('note').textContent='ИМТ не различает мышцы и жир: у спортсменов и беременных результат трактуется с поправками. Для детей 2–20 лет используйте калькулятор ИМТ по перцентилям ВОЗ.';
- document.getElementById('res').classList.add('on');
-}
-</script></body></html>
+    document.getElementById('imtForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const h = parseFloat(document.getElementById('height').value) / 100; // метры
+        const w = parseFloat(document.getElementById('weight').value);
+        
+        if (!h || !w) return alert("Заполните поля");
+
+        const bmi = w / (h * h);
+        let category = "";
+        let color = "";
+
+        if (bmi < 18.5) { category = "Недостаточный вес"; color = "#38bdf8"; }
+        else if (bmi < 25) { category = "Нормальный вес"; color = "#22c55e"; }
+        else if (bmi < 30) { category = "Избыточный вес"; color = "#fbbf24"; }
+        else if (bmi < 35) { category = "Ожирение I степени"; color = "#f97316"; }
+        else { category = "Ожирение II-III степени"; color = "#ef4444"; }
+
+        document.getElementById('resultsArea').style.display = 'block';
+        document.getElementById('bmiValue').innerText = bmi.toFixed(1);
+        document.getElementById('bmiValue').style.color = color;
+        document.getElementById('bmiCategory').innerText = category;
+        document.getElementById('bmiCategory').style.color = color;
+
+        // Позиционирование маркера (от 15 до 40 условный диапазон шкалы)
+        let percentPos = ((bmi - 15) / (40 - 15)) * 100;
+        if (percentPos < 0) percentPos = 0;
+        if (percentPos > 100) percentPos = 100;
+        document.getElementById('bmiMarker').style.left = percentPos + '%';
+        
+        document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>
