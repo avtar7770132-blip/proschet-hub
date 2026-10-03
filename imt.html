@@ -6,44 +6,57 @@
     <title>Калькулятор индекса массы тела (ИМТ) — Просчёт</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <!-- Метрика -->
+    
+    <!-- Яндекс Метрика -->
     <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
 </head>
 <body>
 
 <div class="container">
-    <header style="margin-bottom: 30px;"><a href="index.html" style="font-weight: bold;">← Назад к списку</a></header>
+    <header style="margin-bottom: 30px;">
+        <a href="index.html" style="font-weight: bold; color: var(--color-accent-blue); text-decoration: none;">← Назад к списку калькуляторов</a>
+    </header>
+
     <h1>Калькулятор ИМТ (для взрослых)</h1>
     <p style="color: var(--color-text-muted); margin-bottom: 30px;">Быстрая оценка соответствия веса росту по стандартам ВОЗ.</p>
 
     <div class="card">
         <form id="imtForm">
-            <div class="form-group"><label for="height">Рост, см</label><input type="number" id="height" value="175" required min="120" max="250"></div>
-            <div class="form-group"><label for="weight">Вес, кг</label><input type="number" id="weight" value="75" required min="30" max="300" step="0.1"></div>
+            <div class="form-group">
+                <label for="heightInput">Рост, см</label>
+                <input type="number" id="heightInput" value="175" required min="120" max="250" step="1">
+            </div>
+            
+            <div class="form-group">
+                <label for="weightInput">Вес, кг</label>
+                <input type="number" id="weightInput" value="75" required min="30" max="300" step="0.1">
+            </div>
+
             <button type="submit" class="btn-calc">Рассчитать индекс</button>
         </form>
     </div>
 
-    <div id="resultsArea" style="display:none;">
-        <div class="result-box mt-1">
+    <div id="resultsArea" style="display:none; margin-top: 20px;">
+        
+        <div class="result-box">
             <h3>Ваш результат</h3>
             <div style="text-align:center; margin-top:15px;">
                 <span style="color:var(--color-text-muted)">Индекс массы тела:</span><br>
-                <span class="big-number" id="bmiValue" style="font-size: 3rem;">0</span>
+                <span class="big-number" id="bmiResultValue" style="font-size: 3rem; transition: color 0.3s;">0</span>
             </div>
              <div style="margin-top:10px; text-align:center;">
-                <strong id="bmiCategory" style="font-size: 1.2rem;"></strong>
+                <strong id="bmiStatusText" style="font-size: 1.2rem; transition: color 0.3s;"></strong>
             </div>
         </div>
 
         <!-- ВИЗУАЛИЗАЦИЯ ШКАЛЫ ИМТ -->
         <div class="card mt-1">
             <h3>Где вы находитесь?</h3>
-            <div style="position:relative; height: 40px; background: linear-gradient(to right, #38bdf8 0%, #38bdf8 18.5%, #22c55e 18.5%, #22c55e 25%, #fbbf24 25%, #fbbf24 30%, #f97316 30%, #f97316 35%, #ef4444 35%, #ef4444 100%); border-radius: 8px; margin-top: 20px;">
+            <div style="position:relative; height: 40px; background: linear-gradient(to right, #38bdf8 0%, #38bdf8 18.5%, #22c55e 18.5%, #22c55e 25%, #fbbf24 25%, #fbbf24 30%, #f97316 30%, #f97316 35%, #ef4444 35%, #ef4444 100%); border-radius: 8px; margin-top: 20px; overflow: hidden;">
                 <!-- Маркер положения -->
-                <div id="bmiMarker" style="position:absolute; top:-10px; left:50%; width:4px; height:60px; background:white; box-shadow:0 0 5px black; transform:translateX(-50%); transition:left 0.5s ease;"></div>
+                <div id="bmiPointerMarker" style="position:absolute; top:-10px; left:50%; width:4px; height:60px; background:white; box-shadow:0 0 10px rgba(0,0,0,0.8); transform:translateX(-50%); transition:left 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 10;"></div>
             </div>
-            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:var(--color-text-muted); margin-top:10px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--color-text-muted); margin-top:10px; padding: 0 5px;">
                 <span>Дефицит<br>&lt;18.5</span>
                 <span>Норма<br>18.5–24.9</span>
                 <span>Избыток<br>25–29.9</span>
@@ -53,46 +66,88 @@
         </div>
         
         <div class="mt-1 mb-1 card" style="border-left: 4px solid var(--color-accent-blue);">
-            <p style="font-size: 0.95rem; color: var(--color-text-secondary);">
-                <strong>💡 Важно:</strong> ИМТ не учитывает состав тела (мышцы vs жир). Спортсмены могут иметь высокий ИМТ при низком проценте жира. Используйте этот показатель лишь как ориентир.
+            <p style="font-size: 0.95rem; color: var(--color-text-secondary); line-height: 1.6;">
+                <strong>💡 Важно знать:</strong> Индекс массы тела (ИМТ) — это скрининговый инструмент. Он не учитывает состав тела (соотношение мышц и жира). У спортсменов и людей с плотной костной структурой ИМТ может быть повышенным даже при нормальном уровне подкожного жира. Для точной диагностики используйте биоимпендансный анализ и консультации врача.
             </p>
         </div>
     </div>
 
-    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem;">© 2026 Просчёт · Не является медицинской консультацией.</footer>
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        © 2026 Просчёт · Все расчёты справочные, не являются медицинской рекомендацией.<br>
+        <small>Используйте данные для общего понимания ситуации перед визитом к специалисту.</small>
+    </footer>
 </div>
 
 <script>
-    document.getElementById('imtForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const h = parseFloat(document.getElementById('height').value) / 100; // метры
-        const w = parseFloat(document.getElementById('weight').value);
-        
-        if (!h || !w) return alert("Заполните поля");
+    // Ждем полной загрузки DOM перед навешиванием обработчиков
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('imtForm');
+        const resultsArea = document.getElementById('resultsArea');
+        const bmiValEl = document.getElementById('bmiResultValue');
+        const statusTextEl = document.getElementById('bmiStatusText');
+        const markerEl = document.getElementById('bmiPointerMarker');
 
-        const bmi = w / (h * h);
-        let category = "";
-        let color = "";
+        if (!form) return; // Защита от ошибки, если форма не найдена
 
-        if (bmi < 18.5) { category = "Недостаточный вес"; color = "#38bdf8"; }
-        else if (bmi < 25) { category = "Нормальный вес"; color = "#22c55e"; }
-        else if (bmi < 30) { category = "Избыточный вес"; color = "#fbbf24"; }
-        else if (bmi < 35) { category = "Ожирение I степени"; color = "#f97316"; }
-        else { category = "Ожирение II-III степени"; color = "#ef4444"; }
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Отменяем стандартную отправку формы
+            
+            const h_cm = parseFloat(document.getElementById('heightInput').value);
+            const w_kg = parseFloat(document.getElementById('weightInput').value);
+            
+            // Валидация данных
+            if (isNaN(h_cm) || isNaN(w_kg) || h_cm <= 0 || w_kg <= 0) {
+                alert("Пожалуйста, введите корректные значения роста и веса.");
+                return;
+            }
 
-        document.getElementById('resultsArea').style.display = 'block';
-        document.getElementById('bmiValue').innerText = bmi.toFixed(1);
-        document.getElementById('bmiValue').style.color = color;
-        document.getElementById('bmiCategory').innerText = category;
-        document.getElementById('bmiCategory').style.color = color;
+            const h_m = h_cm / 100; // Переводим сантиметры в метры
+            const bmi = w_kg / (h_m * h_m);
+            
+            let category = "";
+            let colorHex = "";
 
-        // Позиционирование маркера (от 15 до 40 условный диапазон шкалы)
-        let percentPos = ((bmi - 15) / (40 - 15)) * 100;
-        if (percentPos < 0) percentPos = 0;
-        if (percentPos > 100) percentPos = 100;
-        document.getElementById('bmiMarker').style.left = percentPos + '%';
-        
-        document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+            // Определение категории и цвета согласно диапазону ВОЗ
+            if (bmi < 18.5) { 
+                category = "Недостаточный вес"; 
+                colorHex = "#38bdf8"; // Голубой
+            } else if (bmi < 25) { 
+                category = "Нормальный вес"; 
+                colorHex = "#22c55e"; // Зеленый
+            } else if (bmi < 30) { 
+                category = "Избыточный вес"; 
+                colorHex = "#fbbf24"; // Желтый
+            } else if (bmi < 35) { 
+                category = "Ожирение I степени"; 
+                colorHex = "#f97316"; // Оранжевый
+            } else { 
+                category = "Ожирение II-III степени"; 
+                colorHex = "#ef4444"; // Красный
+            }
+
+            // Обновление интерфейса
+            resultsArea.style.display = 'block';
+            bmiValEl.innerText = bmi.toFixed(1);
+            bmiValEl.style.color = colorHex;
+            
+            statusTextEl.innerText = category;
+            statusTextEl.style.color = colorHex;
+
+            // Расчет позиции маркера на шкале (диапазон от 15 до 40)
+            // Формула: ((Текущее значение - Минимум шкалы) / (Максимум - Минимум)) * 100%
+            let percentPos = ((bmi - 15) / (40 - 15)) * 100;
+            
+            // Ограничиваем позицию краями шкалы
+            if (percentPos < 0) percentPos = 0;
+            if (percentPos > 100) percentPos = 100;
+            
+            markerEl.style.left = percentPos + '%';
+            
+            // Плавная прокрутка к результатам
+            setTimeout(() => {
+                resultsArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        });
     });
 </script>
 </body>
