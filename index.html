@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Просчёт — Деньги, налоги и калькуляторы без обмана</title>
-    <meta name="description" content="Бесплатные онлайн-калькуляторы: ипотека, кредиты, зарплата, вклады, самозанятость. Точные расчеты без скрытых комиссий.">
+    <meta name="description" content="Бесплатные онлайн-калькуляторы: ипотека, кредиты, зарплата, вклады, самозанятость, ремонт и мебель. Точные расчеты без скрытых комиссий.">
     
-    <!-- Подключение стилей -->
+    <!-- Подключение нашего премиального CSS -->
     <link rel="stylesheet" href="styles.css">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
     <!-- Яндекс Метрика (Код счетчика) -->
-    <!-- BEGIN YANDEX_METRIKA_COUNTER -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
         m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
@@ -21,11 +20,11 @@
         ym(113103717, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true });
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/113103717" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- END YANDEX_METRIKA_COUNTER -->
 </head>
 <body>
 
 <div class="container">
+    <!-- Шапка / Hero Section -->
     <header style="margin-bottom: 40px; text-align: center;">
         <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Точные расчёты<br><span style="color: var(--color-accent-blue);">без обмана</span></h1>
         <p style="font-size: 1.1rem; color: var(--color-text-muted); max-width: 600px; margin: 0 auto;">
@@ -33,7 +32,9 @@
         </p>
     </header>
 
+    <!-- Сетка инструментов -->
     <div class="grid-container">
+        
         <!-- Карточка 1: Кредит -->
         <a href="kredit.html" class="card" style="text-decoration: none; display: block;">
             <h3 class="card-title">💳 Кредит и Переплата</h3>
@@ -69,19 +70,36 @@
             <span style="color: var(--color-accent-blue); font-weight: bold;">Открыть →</span>
         </a>
         
-         <!-- Карточка 6: Мебель (Заглушка или ссылка на статью) -->
-         <a href="#" class="card" style="text-decoration: none; display: block; opacity: 0.7;">
-            <h3 class="card-title">🛋️ Расчёт кухни</h3>
-            <p class="card-desc">Инструмент в разработке. Пока читайте наши статьи о том, как сэкономить на фасадах и фурнитуре.</p>
-            <span style="color: var(--color-text-muted); font-weight: bold;">Скоро...</span>
+        <!-- Карточка 6: Ремонт -->
+        <a href="remont.html" class="card" style="text-decoration: none; display: block;">
+            <h3 class="card-title">🔨 Ремонт и Материалы</h3>
+            <p class="card-desc">Расчет плитки, обоев, краски. Узнайте точный расход и бюджет на закупку.</p>
+            <span style="color: var(--color-accent-blue); font-weight: bold;">Открыть →</span>
         </a>
-    </div>
 
+        <!-- Карточка 7: Мебель -->
+        <a href="mebel.html" class="card" style="text-decoration: none; display: block;">
+            <h3 class="card-title">🛋️ Мебель на Заказ</h3>
+            <p class="card-desc">Примерная стоимость кухни или шкафа по метражу. Выберите фасад и фурнитуру.</p>
+            <span style="color: var(--color-accent-blue); font-weight: bold;">Открыть →</span>
+        </a>
+
+        <!-- Карточка 8: БЛОГ (Новая ссылка) -->
+        <a href="blog/index.html" class="card" style="text-decoration: none; display: block; border-color: var(--color-accent-purple);">
+            <h3 class="card-title">📖 Статьи и Гайды</h3>
+            <p class="card-desc">Читаем про налоги, ремонт и экономию. Учимся считать деньги грамотно.</p>
+            <span style="color: var(--color-accent-purple); font-weight: bold;">Перейти в блог →</span>
+        </a>
+
+    </div> <!-- ЗАКРЫТИЕ GRID CONTAINER -->
+
+    <!-- Футер -->
     <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border-top: 1px solid var(--color-border); padding-top: 20px;">
         © 2026 Просчёт · Все расчёты справочные, не являются финансовой рекомендацией.<br>
         <small>Используйте данные для общего понимания ситуации перед визитом к специалисту.</small>
     </footer>
-</div>
+
+</div> <!-- ЗАКРЫТИЕ MAIN CONTAINER -->
 
 </body>
 </html>
