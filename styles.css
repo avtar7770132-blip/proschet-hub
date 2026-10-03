@@ -1,121 +1,312 @@
-/* === ПРОСЧЁТ PREMIUM THEME === */
+--- src/styles.css (原始)
+
+
++++ src/styles.css (修改后)
+/* ============================================
+   PREMIUM FINTECH — DARK MODE CALCULATOR THEME
+   ============================================ */
+
+/* 1. CSS Custom Properties */
 :root {
-    --bg-main: #0f172a;       /* Глубокий темно-синий фон */
-    --bg-card: #1e293b;       /* Фон карточек чуть светлее */
-    --accent-blue: #38bdf8;   /* Неоновый голубой для кнопок/ссылок */
-    --accent-purple: #818cf8; /* Фиолетовый для градиентов */
-    --text-primary: #f8fafc;  /* Белый текст заголовков */
-    --text-secondary: #94a3b8;/* Серый текст подписей */
-    --border-color: #334155;  /* Цвет рамок */
-    --shadow-glow: 0 0 15px rgba(56, 189, 248, 0.2); /* Эффект свечения */
+  --color-bg: #0f172a;
+  --color-card: #1e293b;
+  --color-accent-blue: #38bdf8;
+  --color-accent-purple: #818cf8;
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-border: #334155;
+  --color-input-bg: #0f172a;
+  --radius-card: 16px;
+  --radius-input: 10px;
+  --shadow-glow: 0 4px 24px rgba(56, 189, 248, 0.08), 0 1px 4px rgba(0, 0, 0, 0.3);
+  --shadow-glow-hover: 0 8px 40px rgba(56, 189, 248, 0.18), 0 2px 8px rgba(129, 140, 248, 0.12);
+  --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* 2. Body */
 body {
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-    font-family: 'Inter', system-ui, sans-serif;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
+  background-color: var(--color-bg);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* 3. Container */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
+/* 4. Card */
 .card {
-    background-color: var(--bg-card);
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: var(--shadow-glow);
-    transition: all 0.3s ease;
-    border: 1px solid var(--border-color);
+  background-color: var(--color-card);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow-glow);
+  border: 1px solid var(--color-border);
+  transition: var(--transition-base);
 }
 
 .card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
-    border-color: var(--accent-blue);
+  transform: scale(1.02);
+  box-shadow: var(--shadow-glow-hover);
+  border-color: rgba(56, 189, 248, 0.3);
 }
 
-h1, h2, h3 {
-    color: var(--text-primary);
-    font-weight: 700;
-}
-
-p.sub {
-    color: var(--text-secondary);
-}
-
+/* 5. Button */
 button.btn-calc {
-    background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 16px;
-    transition: .2s;
-    font-weight: bold;
+  background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple));
+  color: #ffffff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: var(--radius-input);
+  padding: 14px 32px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.3);
 }
 
 button.btn-calc:hover {
-    filter: brightness(1.1);
-    transform: translateY(-2px);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(56, 189, 248, 0.45);
 }
 
-input, select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    box-sizing: border-box;
-    background-color: #0f172a;
-    color: var(--text-primary);
+button.btn-calc:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.25);
 }
 
-input:focus, select:focus {
-    outline: none;
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+button.btn-calc::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.5s ease;
 }
 
+button.btn-calc:hover::before {
+  left: 100%;
+}
+
+/* 6. Inputs, Selects, Textareas */
+input,
+select,
+textarea {
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  padding: 12px 16px;
+  color: var(--color-text);
+  font-size: 15px;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  transition: var(--transition-base);
+  outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-accent-blue);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15), 0 0 16px rgba(56, 189, 248, 0.1);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+select option {
+  background-color: var(--color-card);
+  color: var(--color-text);
+}
+
+/* 7. Labels */
 label {
-    font-weight: 600;
-    color: var(--text-secondary);
-    display: block;
-    margin-bottom: 4px;
+  color: var(--color-text-muted);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.res-box {
-    background: rgba(30, 41, 59, 0.8);
-    border-left: 4px solid var(--accent-blue);
-    padding: 16px;
-    margin-top: 16px;
-    border-radius: 0 8px 8px 0;
-    animation: fadeInUp 0.5s ease forwards;
+/* 8. Result Box */
+.result-box {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(8px);
+  border-left: 4px solid var(--color-accent-blue);
+  border-radius: 0 var(--radius-input) var(--radius-input) 0;
+  padding: 20px 24px;
+  margin-top: 20px;
+  animation: fadeInUp 0.5s ease-out forwards;
 }
 
-.big {
-    font-size: 24px;
-    color: var(--accent-blue);
-    font-weight: bold;
-    display: block;
-    margin: 8px 0;
+/* 9. Big Number */
+.big-number {
+  font-size: 36px;
+  color: var(--color-accent-blue);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
-.hint {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-top: 8px;
+/* 10. Payment Schedule Table */
+table.payment-schedule {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  font-size: 14px;
 }
 
+table.payment-schedule th {
+  background-color: var(--color-card);
+  color: var(--color-text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 2px solid var(--color-border);
+  position: sticky;
+  top: 0;
+}
+
+table.payment-schedule td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  transition: var(--transition-base);
+}
+
+table.payment-schedule tr:hover td {
+  background-color: rgba(56, 189, 248, 0.05);
+  color: var(--color-accent-blue);
+}
+
+table.payment-schedule tr:last-child td {
+  border-bottom: none;
+}
+
+/* 11. Keyframe Animation */
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
+/* ============================================
+   ADDITIONAL UTILITY STYLES
+   ============================================ */
+
+/* Grid layout for calculator forms */
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* Form group spacing */
+.form-group {
+  margin-bottom: 18px;
+}
+
+/* Section headings */
+h1, h2, h3 {
+  color: var(--color-text);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 32px;
+  background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .big-number {
+    font-size: 28px;
+  }
+
+  table.payment-schedule {
+    font-size: 12px;
+  }
+
+  table.payment-schedule th,
+  table.payment-schedule td {
+    padding: 8px 10px;
+  }
+}
+
