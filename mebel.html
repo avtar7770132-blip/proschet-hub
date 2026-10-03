@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор мебели: примерная стоимость кухни и шкафов — Просчёт</title>
+    <meta name="description" content="Быстрый расчет стоимости изготовления мебели на заказ. Выберите тип фасада, длину изделия и фурнитуру.">
+    
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Яндекс Метрика -->
+    <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/113103717" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+</head>
+<body>
+
+<div class="container">
+    <header style="margin-bottom: 30px;">
+        <a href="index.html" style="font-weight: bold;">← Назад к списку</a>
+    </header>
+
+    <h1>Калькулятор мебели (Пресайт)</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Ориентировочная стоимость изготовления. Точную цену рассчитает инженер после замеров.</p>
+
+    <div class="card">
+        <form id="furnitureForm">
+            <div class="form-group">
+                <label for="itemType">Тип изделия</label>
+                <select id="itemType">
+                    <option value="kitchen">Кухня (Г-образная/Прямая)</option>
+                    <option value="wardrobe">Шкаф-купе / Гардеробная</option>
+                    <option value="dresser">Комод / Туалетный столик</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="lengthMeters">Длина/Ширина изделия, метры</label>
+                <input type="number" id="lengthMeters" value="3" required min="0.5" step="0.1">
+            </div>
+
+            <div class="form-group">
+                <label for="facadeType">Материал фасадов</label>
+                <select id="facadeType">
+                    <option value="ldsp">ЛДСП (Эконом)</option>
+                    <option value="mdf-film">МДФ + Пленка ПВХ (Стандарт)</option>
+                    <option value="mdf-emaile">МДФ + Эмаль/Пластик (Премиум)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="hardwareLevel">Уровень фурнитуры</label>
+                <select id="hardwareLevel">
+                    <option value="standard">Standard (Boyard/GTV)</option>
+                    <option value="premium">Premium (Blum/Hettich)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="countertop">Столешница (для кухни)</label>
+                <select id="countertop">
+                    <option value="none">Нет / Другая комната</option>
+                    <option value="postforming">Постформинг (ЛДСП-HPL)</option>
+                    <option value="acrylic">Искусственный камень (Акрил)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-calc">Рассчитать смету</button>
+        </form>
+    </div>
+
+    <div id="resultsArea" style="display:none;">
+        <div class="result-box mt-1">
+            <h3>Предварительная стоимость</h3>
+            <div style="text-align:center; margin-top:15px;">
+                <span style="color:var(--color-text-muted)">Цена «под ключ» (без техники):</span><br>
+                <span class="big-number" id="finalPrice" style="font-size: 3rem;">0 ₽</span>
+            </div>
+            
+            <div style="margin-top:20px; padding-top:15px; border-top:1px dashed var(--color-border); display:flex; justify-content:space-around; flex-wrap:wrap; gap:10px;">
+                <div style="text-align:center;">
+                    <small style="color:var(--color-text-muted)">Корпус & Каркас</small><br>
+                    <strong id="costBody">0 ₽</strong>
+                </div>
+                <div style="text-align:center;">
+                    <small style="color:var(--color-text-muted)">Фасады</small><br>
+                    <strong id="costFacade">0 ₽</strong>
+                </div>
+                <div style="text-align:center;">
+                    <small style="color:var(--color-text-muted)">Фурнитура</small><br>
+                    <strong id="costHardware">0 ₽</strong>
+                </div>
+                 <div style="text-align:center;">
+                    <small style="color:var(--color-text-muted)">Работа & Монтаж</small><br>
+                    <strong id="costWork">0 ₽</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- ГРАФИК РАСПРЕДЕЛЕНИЯ ЗАТРАТ -->
+        <div class="card mt-1 text-center">
+            <h3>Из чего складывается цена?</h3>
+            <div style="height: 250px; width: 100%;">
+                <canvas id="costBarChart"></canvas>
+            </div>
+        </div>
+
+        <div class="mt-1 mb-1" style="background: rgba(56, 189, 248, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid var(--color-accent-blue);">
+            <strong>💡 Важно:</strong> Это ориентировочная цена. Итоговая сумма может отличаться на ±15% в зависимости от сложности углов, ниш и наличия оборудования. 
+            <br><br>
+            <a href="#" onclick="alert('Здесь должна быть ссылка на WhatsApp менеджера')" style="color: var(--color-accent-blue); font-weight: bold;">Пригласить инженера на бесплатный замер →</a>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem;">
+        © 2026 Просчёт · Расчет справочный. Не является офертой.
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+
+    // Базовые коэффициенты цены за погонный метр (условные, для демо)
+    // Реальные цифры зависят от твоего прайса, здесь заложена средняя рыночная вилка
+    const BASE_PRICES = {
+        kitchen: { body: 12000, facadeFactor: 1.0, hardwareStd: 3000, hardwarePrem: 8000, work: 5000 },
+        wardrobe: { body: 15000, facadeFactor: 1.2, hardwareStd: 4000, hardwarePrem: 10000, work: 6000 },
+        dresser: { body: 8000, facadeFactor: 0.8, hardwareStd: 2000, hardwarePrem: 5000, work: 3000 }
+    };
+
+    const FACADE_MULTIPLIERS = {
+        ldsp: 1.0,       // ЛДСП дешевле всего
+        'mdf-film': 1.4, // МДФ пленка дороже
+        'mdf-emaile': 2.2 // Эмаль/пластик сильно дороже
+    };
+
+    const COUNTERTOP_PRICE_PER_METER = {
+        none: 0,
+        postforming: 4500, // Постформинг ~4.5к за метр
+        acrylic: 12000     // Акрил ~12к за метр
+    };
+
+    document.getElementById('furnitureForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const type = document.getElementById('itemType').value;
+        const length = parseFloat(document.getElementById('lengthMeters').value);
+        const facadeMat = document.getElementById('facadeType').value;
+        const hwLevel = document.getElementById('hardwareLevel').value;
+        const ctOption = document.getElementById('countertop').value;
+
+        if (!length) return alert("Введите длину");
+
+        const baseConfig = BASE_PRICES[type];
+        
+        // 1. Корпус (Базовая цена * Длина)
+        const costBody = baseConfig.body * length;
+        
+        // 2. Фасады (Зависят от материала и длины)
+        // Коэффициент заполнения фасадами примерно 0.6 от площади корпуса для упрощения
+        const facadeAreaRatio = 0.6; 
+        const rawFacadeCost = costBody * facadeAreaRatio * FACADE_MULTIPLIERS[facadeMat];
+        const costFacade = Math.round(rawFacadeCost);
+
+        // 3. Фурнитура (На метр погонный)
+        const hwCostPerMeter = hwLevel === 'premium' ? baseConfig.hardwarePrem : baseConfig.hardwareStd;
+        const costHardware = Math.round(hwCostPerMeter * length);
+
+        // 4. Столешница (если применимо)
+        const costCountertop = Math.round(COUNTERTOP_PRICE_PER_METER[ctOption] * length);
+
+        // 5. Работа и монтаж (% от общей стоимости материалов + фикс)
+        const materialsTotal = costBody + costFacade + costHardware + costCountertop;
+        const costWork = Math.round(baseConfig.work * length + (materialsTotal * 0.15)); // 15% на сборку/логистику сверху
+
+        const totalPrice = materialsTotal + costWork;
+
+        // Вывод
+        document.getElementById('resultsArea').style.display = 'block';
+        document.getElementById('finalPrice').innerText = fmt.format(totalPrice) + ' ₽';
+        document.getElementById('costBody').innerText = fmt.format(costBody) + ' ₽';
+        document.getElementById('costFacade').innerText = fmt.format(costFacade) + ' ₽';
+        document.getElementById('costHardware').innerText = fmt.format(costHardware) + ' ₽';
+        document.getElementById('costWork').innerText = fmt.format(costWork) + ' ₽';
+
+        drawCostChart([costBody, costFacade, costHardware, costCountertop, costWork]);
+        document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function drawCostChart(dataArray) {
+        const ctx = document.getElementById('costBarChart').getContext('2d');
+        if (window.myFurnChart) window.myFurnChart.destroy();
+
+        window.myFurnChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Корпус', 'Фасады', 'Фурнитура', 'Столешница', 'Работа'],
+                datasets: [{
+                    label: 'Стоимость, ₽',
+                    data: dataArray,
+                    backgroundColor: [
+                        '#334155', // Серый темный
+                        '#38bdf8', // Голубой
+                        '#818cf8', // Фиолетовый
+                        '#fbbf24', // Желтый
+                        '#ef4444'  // Красный
+                    ],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, ticks: { callback: function(v) { return fmt.format(v); }, color: '#94a3b8' }, grid: { color: '#334155' } },
+                    x: { ticks: { color: '#f8fafc' }, grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + fmt.format(context.parsed.y) + ' ₽';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
