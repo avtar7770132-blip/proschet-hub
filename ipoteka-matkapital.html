@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор ипотеки с маткапиталом и господдержкой — Просчёт</title>
+    <meta name="description" content="Рассчитайте ежемесячный платеж по ипотеке с использованием материнского капитала. Сравнение программ: Семейная (6%), IT (5%), Рыночная.">
+    
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Яндекс Метрика -->
+    <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
+</head>
+<body>
+
+<div class="container">
+    <header style="margin-bottom: 30px;">
+        <a href="index.html" style="font-weight: bold; color: var(--color-accent-blue); text-decoration: none;">← Назад к списку калькуляторов</a>
+    </header>
+
+    <h1>Калькулятор ипотеки с маткапиталом</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Узнайте свой реальный платеж с учетом государственной поддержки и сертификата.</p>
+
+    <div class="card">
+        <form id="mortgageForm">
+            <!-- Блок 1: Параметры кредита -->
+            <div class="form-group">
+                <label for="programType">Тип программы кредитования</label>
+                <select id="programType">
+                    <option value="family">Семейная ипотека (ставка ~6%)</option>
+                    <option value="it">IT-ипотека (ставка ~5%)</option>
+                    <option value="market">Рыночная программа (ставка ~18-20%)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="propertyPrice">Стоимость недвижимости, ₽</label>
+                <input type="number" id="propertyPrice" value="8000000" required min="1000000" step="100000">
+            </div>
+
+            <div class="form-group">
+                <label for="downPaymentPercent">Первоначальный взнос (%)</label>
+                <input type="number" id="downPaymentPercent" value="20" required min="15" max="90" step="1">
+                <small style="color:var(--color-text-muted)">Минимум 15% для большинства госпрограмм.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="loanTermYears">Срок кредита, лет</label>
+                <input type="number" id="loanTermYears" value="20" required min="1" max="30">
+            </div>
+
+            <!-- Блок 2: Материнский капитал -->
+            <fieldset style="border: 1px solid var(--color-border); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                <legend style="font-size: 0.9rem; color: var(--color-accent-purple); font-weight: bold;">МАТЕРИНСКИЙ КАПИТАЛ</legend>
+                
+                <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <input type="checkbox" id="useMatCap" checked style="width:auto;">
+                    <label for="useMatCap" style="margin:0; cursor:pointer;">Использовать сертификат в качестве части взноса</label>
+                </div>
+
+                <div class="form-group" id="matCapAmountGroup">
+                    <label for="matCapAmount">Сумма маткапитала, ₽</label>
+                    <input type="number" id="matCapAmount" value="630000" required min="0" step="10000">
+                    <small style="color:var(--color-text-muted)">Актуальная сумма на 2026 год (проверьте в личном кабинете Госуслуг).</small>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn-calc mt-1">Рассчитать доступность</button>
+        </form>
+    </div>
+
+    <!-- РЕЗУЛЬТАТЫ РАСЧЕТА -->
+    <div id="resultsArea" style="display:none;">
+        
+        <div class="result-box mt-1 fade-in-up">
+            <h3>Ваши финансовые показатели</h3>
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; margin-top:15px;">
+                <div>
+                    <span style="color:var(--color-text-muted)">Ежемесячный платеж:</span><br>
+                    <span class="big-number" id="monthlyPayment" style="font-size: 2.5rem;">0 ₽</span>
+                </div>
+                <div>
+                    <span style="color:var(--color-text-muted)">Необходимый доход (30% от платежа):</span><br>
+                    <span class="big-number" id="requiredIncome" style="color:var(--color-accent-blue); font-size: 1.5rem;">0 ₽</span>
+                </div>
+            </div>
+            
+            <div style="margin-top:20px; padding-top:15px; border-top: 1px dashed var(--color-border); display:flex; justify-content:space-around; flex-wrap:wrap; gap:15px; font-size: 0.95rem;">
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Тело кредита</small><br><strong id="principalLoan">0 ₽</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Общая переплата</small><br><strong id="totalOverpay" style="color:#ef4444">0 ₽</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Всего выплатите</small><br><strong id="totalPayout">0 ₽</strong></div>
+            </div>
+        </div>
+
+        <!-- СРАВНИТЕЛЬНАЯ ТАБЛИЦА ПРОГРАММ -->
+        <div class="card mt-1">
+            <h3>💡 Совет эксперта: Сравнение программ</h3>
+            <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 15px;">
+                Если ваша ставка выше 6%, рассмотрите возможность рефинансирования через год или использование субсидий региональных программ.
+            </p>
+            <table class="payment-schedule" style="width:100%; font-size: 0.9rem;">
+                <thead>
+                    <tr>
+                        <th>Программа</th>
+                        <th>Ставка</th>
+                        <th>Платеж (пример)</th>
+                        <th>Экономия vs Рынок</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonTableBody">
+                    <!-- Заполняется динамически -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ГРАФИК ДОЛЕВОГО УЧАСТИЯ -->
+        <div class="card mt-1 text-center">
+            <h3>Структура первоначального взноса</h3>
+            <div style="max-width: 350px; margin: 20px auto;">
+                <canvas id="downPaymentChart"></canvas>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 10px;">
+                *Показывает соотношение ваших личных средств и государственной поддержки (маткапитала).
+            </p>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        © 2026 Просчёт · Расчет справочный. Не является офертой банка.<br>
+        <small>Итоговые условия зависят от одобрения заявки и актуальных ставок ЦБ РФ.</small>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+
+    // Базовые ставки для демо (реальные могут меняться)
+    const PROGRAM_RATES = {
+        family: 0.06,
+        it: 0.05,
+        market: 0.19 // Средняя рыночная ставка 2026
+    };
+
+    document.getElementById('mortgageForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const programKey = document.getElementById('programType').value;
+        const price = parseFloat(document.getElementById('propertyPrice').value);
+        const dpPercent = parseFloat(document.getElementById('downPaymentPercent').value) / 100;
+        const years = parseInt(document.getElementById('loanTermYears').value);
+        const useMatCap = document.getElementById('useMatCap').checked;
+        const matCapSum = parseFloat(document.getElementById('matCapAmount').value);
+
+        if (!price || !years) return alert("Заполните основные поля");
+
+        // 1. Расчет тела кредита
+        let downPaymentTotal = price * dpPercent;
+        let personalFunds = downPaymentTotal;
+        let stateSupport = 0;
+
+        if (useMatCap && matCapSum > 0) {
+            // Маткапитал уменьшает сумму личного взноса, но не увеличивает общий размер ПВ сверх лимита
+            // Логика: Государство дает деньги, ты их кидаешь в банк как часть взноса.
+            // Но если ты хотел внести 20%, а маткап покрыл только 10%, то разницу надо доплатить из кармана.
+            // Для простоты демо: считаем, что маткап полностью идет в зачет взноса.
+            
+            if (matCapSum >= downPaymentTotal) {
+                stateSupport = downPaymentTotal; // Весь взнос закрыт государством
+                personalFunds = 0;
+            } else {
+                stateSupport = matCapSum;
+                personalFunds = downPaymentTotal - matCapSum;
+            }
+        }
+
+        const loanPrincipal = price - downPaymentTotal;
+        const annualRate = PROGRAM_RATES[programKey];
+        const monthlyRate = annualRate / 12;
+        const monthsCount = years * 12;
+
+        // 2. Формула аннуитета
+        let monthlyPay = 0;
+        if (monthlyRate === 0) {
+            monthlyPay = loanPrincipal / monthsCount;
+        } else {
+            const powVal = Math.pow(1 + monthlyRate, monthsCount);
+            monthlyPay = loanPrincipal * (monthlyRate * powVal) / (powVal - 1);
+        }
+
+        const totalPayout = monthlyPay * monthsCount;
+        const totalInterest = totalPayout - loanPrincipal;
+        const reqIncome = monthlyPay / 0.3; // Требование банков: платеж не более 30-40% дохода
+
+        // Вывод основных результатов
+        document.getElementById('resultsArea').style.display = 'block';
+        document.getElementById('monthlyPayment').innerText = fmt.format(Math.round(monthlyPay)) + ' ₽';
+        document.getElementById('requiredIncome').innerText = fmt.format(Math.round(reqIncome)) + ' ₽';
+        document.getElementById('principalLoan').innerText = fmt.format(Math.round(loanPrincipal)) + ' ₽';
+        document.getElementById('totalOverpay').innerText = '+' + fmt.format(Math.round(totalInterest)) + ' ₽';
+        document.getElementById('totalPayout').innerText = fmt.format(Math.round(totalPayout)) + ' ₽';
+
+        // 3. Таблица сравнения
+        generateComparisonTable(price, dpPercent, years, programKey);
+
+        // 4. График взноса
+        drawDownPaymentChart(personalFunds, stateSupport, loanPrincipal);
+        
+        document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function generateComparisonTable(price, dpPct, termYears, currentProgram) {
+        const tbody = document.getElementById('comparisonTableBody');
+        tbody.innerHTML = '';
+        
+        const programs = [
+            { key: 'family', name: 'Семейная', rate: 0.06 },
+            { key: 'it', name: 'IT-ипотека', rate: 0.05 },
+            { key: 'market', name: 'Рыночная', rate: 0.19 }
+        ];
+
+        programs.forEach(prog => {
+            const loanPrinc = price * (1 - dpPct);
+            const mRate = prog.rate / 12;
+            const nMonths = termYears * 12;
+            let pay = 0;
+            if (mRate === 0) pay = loanPrinc / nMonths;
+            else {
+                const p = Math.pow(1 + mRate, nMonths);
+                pay = loanPrinc * (mRate * p) / (p - 1);
+            }
+            
+            // Экономия относительно текущей выбранной программы (или рынка)
+            // Для демо покажем просто цифры
+            
+            const tr = document.createElement('tr');
+            if (prog.key === currentProgram) tr.style.backgroundColor = 'rgba(56, 189, 248, 0.1)'; // Подсветка текущей
+            
+            tr.innerHTML = `
+                <td>${prog.name}</td>
+                <td>${(prog.rate*100).toFixed(1)}%</td>
+                <td><b>${fmt.format(Math.round(pay))} ₽</b></td>
+                <td style="color:${prog.rate < 0.1 ? '#22c55e' : '#ef4444'}">${prog.rate < 0.1 ? 'Выгодно' : 'Дорого'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function drawDownPaymentChart(funds, support, debt) {
+        const ctx = document.getElementById('downPaymentChart').getContext('2d');
+        if (window.myMortgageChart) window.myMortgageChart.destroy();
+
+        window.myMortgageChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Ваши личные средства', 'Материнский капитал', 'Кредитные средства (Банк)'],
+                datasets: [{
+                    data: [funds, support, debt],
+                    backgroundColor: ['#38bdf8', '#818cf8', '#334155'], // Синий, Фиолетовый, Темно-серый
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '70%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#f8fafc' } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + fmt.format(context.parsed) + ' ₽';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
