@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор ремонта ванной комнаты: стоимость материалов и работ — Просчёт</title>
+    <meta name="description" content="Рассчитайте бюджет ремонта ванной комнаты онлайн. Демонтаж, гидроизоляция, укладка плитки, замена сантехники. С графиками расходов.">
+    
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Яндекс Метрика -->
+    <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
+</head>
+<body>
+
+<div class="container">
+    <header style="margin-bottom: 30px;">
+        <a href="index.html" style="font-weight: bold; color: var(--color-accent-blue); text-decoration: none;">← Назад к списку калькуляторов</a>
+    </header>
+
+    <h1>Калькулятор ремонта ванной комнаты</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Узнайте реальную стоимость «под ключ»: от демонтажа старой плитки до установки унитаза.</p>
+
+    <div class="card">
+        <form id="bathForm">
+            <!-- Блок 1: Геометрия помещения -->
+            <fieldset style="border: 1px solid var(--color-border); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                <legend style="font-size: 0.9rem; color: var(--color-accent-blue); font-weight: bold;">ПАРАМЕТРЫ ПОМЕЩЕНИЯ</legend>
+                
+                <div class="form-group">
+                    <label for="roomWidth">Ширина стены, м</label>
+                    <input type="number" id="roomWidth" value="1.6" required min="0.5" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="roomLength">Длина стены, м</label>
+                    <input type="number" id="roomLength" value="1.7" required min="0.5" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="ceilingHeight">Высота потолка, м</label>
+                    <input type="number" id="ceilingHeight" value="2.7" required min="2.0" max="3.5" step="0.1">
+                </div>
+            </fieldset>
+
+            <!-- Блок 2: Уровень отделки -->
+            <div class="form-group mt-1">
+                <label for="finishLevel">Уровень чистовой отделки</label>
+                <select id="finishLevel">
+                    <option value="economy">Эконом (Керамогранит Китай / Плитка Керама)</option>
+                    <option value="standard" selected>Стандарт (Испанская плитка Italon/Kerama Marazzi)</option>
+                    <option value="premium">Премиум (Итальянская плитка/Fioranese/Marazzi)</option>
+                </select>
+            </div>
+
+            <!-- Блок 3: Сантехника -->
+            <fieldset style="border: 1px solid var(--color-border); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                <legend style="font-size: 0.9rem; color: var(--color-accent-purple); font-weight: bold;">САНТЕХНИКА И МЕБЕЛЬ</legend>
+                
+                <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <input type="checkbox" id="optBathtub" checked style="width:auto;">
+                    <label for="optBathtub" style="margin:0; cursor:pointer;">Замена ванны (чугун/сталь/acryl)</label>
+                </div>
+                <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <input type="checkbox" id="optToilet" checked style="width:auto;">
+                    <label for="optToilet" style="margin:0; cursor:pointer;">Замена унитаза + инсталляция</label>
+                </div>
+                <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+                    <input type="checkbox" id="optShower" style="width:auto;">
+                    <label for="optShower" style="margin:0; cursor:pointer;">Обустройство душевой кабины (трап/экран)</label>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn-calc mt-1">Рассчитать смету ремонта</button>
+        </form>
+    </div>
+
+    <!-- РЕЗУЛЬТАТЫ РАСЧЕТА -->
+    <div id="resultsArea" style="display:none;">
+        
+        <div class="result-box mt-1 fade-in-up">
+            <h3>Предварительный бюджет ремонта</h3>
+            <div style="text-align:center; margin-top:15px;">
+                <span style="color:var(--color-text-muted)">Стоимость «под ключ» (материалы + работы):</span><br>
+                <span class="big-number" id="finalPrice" style="font-size: 3rem; letter-spacing: -1px;">0 ₽</span>
+            </div>
+            
+            <div style="margin-top:20px; padding-top:15px; border-top: 1px dashed var(--color-border); display:flex; justify-content:space-around; flex-wrap:wrap; gap:15px; font-size: 0.95rem;">
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Площадь стен</small><br><strong id="wallAreaDisplay">0 м²</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Площадь пола</small><br><strong id="floorAreaDisplay">0 м²</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Расход плитки (с запасом)</small><br><strong id="tileUsageDisplay">0 м²</strong></div>
+            </div>
+        </div>
+
+        <!-- ДЕТАЛЬНАЯ РАЗБИВКА ПО ЭТАПАМ -->
+        <div class="card mt-1">
+            <h3>Из чего складывается цена?</h3>
+            <table class="payment-schedule" style="width:100%; font-size: 0.9rem;">
+                <thead>
+                    <tr>
+                        <th>Этап работ</th>
+                        <th>Описание</th>
+                        <th>Стоимость, ₽</th>
+                    </tr>
+                </thead>
+                <tbody id="breakdownTableBody">
+                    <!-- Заполняется динамически -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ГРАФИК СТРУКТУРЫ ЗАТРАТ -->
+        <div class="card mt-1 text-center">
+            <h3>Доли этапов в общем бюджете</h3>
+            <div style="height: 300px; width: 100%; max-width: 500px; margin: 0 auto;">
+                <canvas id="bathCostChart"></canvas>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 10px;">
+                *Черновые материалы и работы обычно занимают 40-50% бюджета. Чистовая отделка и сантехника — остальное.
+            </p>
+        </div>
+
+        <!-- БЛОК КОНТАКТОВ -->
+        <div class="mt-1 mb-1 card" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--color-accent-blue); box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);">
+            <h3 style="color: var(--color-accent-blue); margin-bottom: 10px;"> Нужен точный проект?</h3>
+            <p style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 20px; line-height: 1.5;">
+                Этот расчет является предварительным. Для составления детальной сметы с учетом разводки труб, электрики и выбора конкретной модели плитки требуется выезд мастера-замерщика.
+            </p>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                <button onclick="openContact('wa')" class="btn-contact" style="flex: 1; min-width: 120px; background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    WhatsApp
+                </button>
+                <button onclick="openContact('tg')" class="btn-contact" style="flex: 1; min-width: 120px; background: #0088cc; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    Telegram
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        © 2026 Просчёт · Расчет справочный. Не является офертой строительной компании.<br>
+        <small>Цены актуальны для Москвы и Московской области на октябрь 2026 года.</small>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+    const MY_WHATSAPP_NUMBER = "79064143916"; 
+
+    function openContact(type) {
+        let url = "";
+        if (type === 'wa') {
+            url = `https://wa.me/${MY_WHATSAPP_NUMBER}?text=${encodeURIComponent("Здравствуйте! Рассчитал ремонт ванной на сайте, хочу заказать замер.")}`;
+        } else if (type === 'tg') {
+            url = `https://t.me/+${MY_WHATSAPP_NUMBER}`;
+        }
+        if (url) window.open(url, '_blank');
+    }
+
+    // Базовые ставки за м2 (Москва, осень 2026)
+    // Формат: [Материалы, Работы]
+    const RATES = {
+        economy: { tileMat: 1200, tileWork: 2500, waterproofing: 800, plaster: 600 },
+        standard: { tileMat: 2500, tileWork: 3500, waterproofing: 1200, plaster: 900 },
+        premium: { tileMat: 5000, tileWork: 5000, waterproofing: 1800, plaster: 1500 }
+    };
+
+    // Цены на сантехнику (усредненные комплекты с установкой)
+    const PLUMBING_COSTS = {
+        bathtub_econ: 25000, bathtub_std: 45000, bathtub_prem: 80000,
+        toilet_econ: 15000, toilet_std: 25000, toilet_prem: 45000,
+        shower_base: 35000 // Душевая кабина базовая
+    };
+
+    document.getElementById('bathForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const w = parseFloat(document.getElementById('roomWidth').value);
+        const l = parseFloat(document.getElementById('roomLength').value);
+        const h = parseFloat(document.getElementById('ceilingHeight').value);
+        const level = document.getElementById('finishLevel').value;
+        
+        const hasBathtub = document.getElementById('optBathtub').checked;
+        const hasToilet = document.getElementById('optToilet').checked;
+        const hasShower = document.getElementById('optShower').checked;
+
+        if (!w || !l || !h) return alert("Введите размеры помещения");
+
+        // 1. Расчет площадей
+        const floorArea = w * l;
+        // Периметр минус дверной проем (примерно 0.8м ширина двери)
+        const perimeter = 2 * (w + l) - 0.8; 
+        const wallArea = perimeter * h;
+        
+        // Коэффициент запаса на подрезку плитки (обычно 10-15%)
+        const wasteFactor = 1.15;
+        const totalTileNeededWall = wallArea * wasteFactor;
+        const totalTileNeededFloor = floorArea * wasteFactor;
+
+        // 2. Расчет стоимости по уровням
+        const rates = RATES[level];
+        
+        // Черновые работы и материалы (Гидроизоляция + Штукатурка выравнивание)
+        const costWaterproofing = (wallArea + floorArea) * rates.waterproofing;
+        const costPlastering = wallArea * rates.plaster; // Стены под плитку часто требуют выравнивания
+        
+        // Укладка плитки (Работы + Материалы)
+        const costTileMaterials = (totalTileNeededWall + totalTileNeededFloor) * rates.tileMat;
+        const costTileWorks = (totalTileNeededWall + totalTileNeededFloor) * rates.tileWork;
+
+        // 3. Сантехника
+        let costSanitary = 0;
+        let sanitaryDetails = [];
+
+        if (hasBathtub) {
+            const bathCost = level === 'economy' ? PLUMBING_COSTS.bathtub_econ : (level === 'standard' ? PLUMBING_COSTS.bathtub_std : PLUMBING_COSTS.bathtub_prem);
+            costSanitary += bathCost;
+            sanitaryDetails.push({ name: "Ванна + Слив/Перелив", price: bathCost });
+        }
+        if (hasToilet) {
+            const toiletcost = level === 'economy' ? PLUMBING_COSTS.toilet_econ : (level === 'standard' ? PLUMBING_COSTS.toilet_std : PLUMBING_COSTS.toilet_prem);
+            costSanitary += toiletcost;
+            sanitaryDetails.push({ name: "Унитаз + Инсталляция/Бачок", price: toiletcost });
+        }
+        if (hasShower) {
+            costSanitary += PLUMBING_COSTS.shower_base;
+            sanitaryDetails.push({ name: "Душевой уголок/Трап", price: PLUMBING_COSTS.shower_base });
+        }
+
+        // 4. Итоговая сумма
+        const totalDemolition = 5000; // Фиксированная оценка за демонтаж старой плитки/ванны
+        const totalElectrics = 8000;  // Замена проводки/розеток (влагозащищенные)
+        const totalPipes = 12000;     // Разводка труб (полипропилен/медь)
+
+        const grandTotal = totalDemolition + costWaterproofing + costPlastering + costTileMaterials + costTileWorks + costSanitary + totalElectrics + totalPipes;
+
+        // Вывод результатов
+        document.getElementById('resultsArea').style.display = 'block';
+        document.getElementById('finalPrice').innerText = fmt.format(grandTotal) + ' ₽';
+        document.getElementById('wallAreaDisplay').innerText = wallArea.toFixed(1) + ' м²';
+        document.getElementById('floorAreaDisplay').innerText = floorArea.toFixed(1) + ' м²';
+        document.getElementById('tileUsageDisplay').innerText = (totalTileNeededWall + totalTileNeededFloor).toFixed(1) + ' м²';
+
+        // Таблица разбивки
+        const tbody = document.getElementById('breakdownTableBody');
+        tbody.innerHTML = '';
+        
+        const rows = [
+            { stage: "Демонтаж", desc: "Старая плитка, ванна, трубы", price: totalDemolition },
+            { stage: "Черновая отделка", desc: "Штукатурка стен, гидроизоляция пола/стен", price: costPlastering + costWaterproofing },
+            { stage: "Инженерия", desc: "Разводка водоснабжения и канализации, электрика", price: totalPipes + totalElectrics },
+            { stage: "Чистовая отделка", desc: `Плитка (${rates.tileMat}₽/м² мат.) + Укладка (${rates.tileWork}₽/м² раб.)`, price: costTileMaterials + costTileWorks },
+            { stage: "Сантехника", desc: sanitaryDetails.map(d => d.name).join(', ') || "Не выбрана", price: costSanitary }
+        ];
+
+        rows.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><b>${row.stage}</b></td>
+                <td style="color:var(--color-text-muted)">${row.desc}</td>
+                <td style="text-align:right"><b>${fmt.format(Math.round(row.price))} ₽</b></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        drawBathChart(rows.map(r => r.price));
+        document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function drawBathChart(dataArray) {
+        const ctx = document.getElementById('bathCostChart').getContext('2d');
+        if (window.myBathChart) window.myBathChart.destroy();
+
+        window.myBathChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Демонтаж', 'Черновая отделка', 'Инженерия', 'Чистовая отделка', 'Сантехника'],
+                datasets: [{
+                    data: dataArray,
+                    backgroundColor: ['#ef4444', '#fbbf24', '#38bdf8', '#22c55e', '#818cf8'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '60%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#f8fafc', font: { size: 12 } } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + fmt.format(context.parsed) + ' ₽';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
