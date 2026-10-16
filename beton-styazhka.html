@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор бетона для стяжки пола: точный расход — Просчёт</title>
-    <meta name="description" content="Рассчитайте количество сухой смеси или кубатуру бетона для стяжки пола. Учитываем толщину слоя, площадь и запас. Сравнение цен готовой смеси vs самодельной.">
+    <title>Калькулятор бетона для стяжки пола: расход, вес и цена — Просчёт</title>
+    <meta name="description" content="Точный расчет расхода сухой смеси и цемента для стяжки. Сравнение стоимости покупки мешков vs заказа полусухой стяжки миксером. Учет нагрузки на перекрытия.">
     
     <!-- Подключение стилей -->
     <link rel="stylesheet" href="styles.css">
@@ -21,7 +21,7 @@
     </header>
 
     <h1>Калькулятор бетона для стяжки</h1>
-    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Точный расчет материалов. Без ошибок с весом.</p>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Рассчитаем реальный вес, количество мешков и сравним с заказом миксера.</p>
 
     <div class="card">
         <form id="concreteForm">
@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <label for="layerThickness">Толщина стяжки (средняя), мм</label>
                     <input type="number" id="layerThickness" value="50" required min="20" max="150" step="1">
-                    <small style="color:var(--color-text-muted)">Стандарт: 30-50 мм. Если перепады большие, считайте среднее значение по маякам.</small>
+                    <small style="color:var(--color-text-muted)">⚠️ Важно: Минимум 30-40 мм для прочности. Если перепады малые, можно сделать 30 мм.</small>
                 </div>
             </fieldset>
 
@@ -45,13 +45,13 @@
             <div class="form-group mt-1">
                 <label for="mixType">Тип используемой смеси</label>
                 <select id="mixType">
-                    <option value="cement-sand">Цементно-песчаная (готовая сухая смесь)</option>
-                    <option value="self-leveling">Наливной пол (тонкий слой, до 10-15 мм)</option>
+                    <option value="cement-sand">Готовая сухая смесь (ЦПС)</option>
+                    <option value="self-leveling">Наливной пол (тонкий слой)</option>
                     <option value="diy">Самостоятельное замешивание (цемент + песок)</option>
                 </select>
             </div>
 
-            <button type="submit" class="btn-calc mt-1">Рассчитать расход</button>
+            <button type="submit" class="btn-calc mt-1">Рассчитать расход и цену</button>
         </form>
     </div>
 
@@ -75,28 +75,31 @@
                 </div>
             </div>
             
-            <div style="margin-top:20px; padding-top:15px; border-top: 1px dashed var(--color-border); text-align:center;">
-                <small>Рекомендуемый запас (+10% на потери): <strong id="reserveWeight">0 кг</strong></small>
+            <!-- ПРЕДУПРЕЖДЕНИЕ О ВЕСЕ -->
+            <div id="weightWarning" style="display:none; margin-top:15px; padding:15px; background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; border-radius: 8px;">
+                <strong style="color:#ef4444;">🚨 Внимание!</strong> Общий вес материалов превышает 1 тонну. 
+                Проверьте несущую способность перекрытий! Рекомендуется рассмотреть вариант <b>полусухой машинной стяжки</b> (заказ миксера), так как она легче и прочнее ручной кладки мешками.
             </div>
         </div>
 
-        <!-- СРАВНЕНИЕ ЦЕН -->
+        <!-- СРАВНЕНИЕ ВАРИАНТОВ ПОКУПКИ -->
         <div class="card mt-1">
-            <h3>💰 Что выгоднее? Готовая смесь vs Самодельная</h3>
+            <h3>💰 Варианты закупки: Что выгоднее?</h3>
             <table class="payment-schedule" style="width:100%; font-size: 0.95rem;">
                 <thead>
                     <tr>
                         <th>Вариант</th>
-                        <th>Расход компонентов</th>
+                        <th>Что входит</th>
                         <th>Примерная стоимость*</th>
+                        <th>Логистика</th>
                     </tr>
                 </thead>
-                <tbody id="priceComparisonBody">
+                <tbody id="optionsTableBody">
                     <!-- Заполняется динамически -->
                 </tbody>
             </table>
             <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 10px;">
-                *Цены усредненные для Москвы/МО. Готовая смесь дороже, но гарантирует пропорции. Самодельная дешевле, но требует навыков.
+                *Цены усредненные для Москвы/МО (октябрь 2026). Стоимость работ по укладке не включена.
             </p>
         </div>
 
@@ -104,9 +107,9 @@
         <div class="mt-1 mb-1 card" style="background: rgba(30, 41, 59, 0.6); border-left: 4px solid var(--color-accent-purple);">
             <h4 style="color: var(--color-accent-purple); margin-bottom: 10px;">🏗 Советы мастера:</h4>
             <ul style="padding-left: 20px; line-height: 1.6; font-size: 0.95rem; color: var(--color-text-secondary);">
-                <li><b>Гидроизоляция:</b> Перед заливкой обязательно уложите полиэтиленовую пленку.</li>
-                <li><b>Армирование:</b> При толщине более 50 мм используйте сетку или фибру.</li>
-                <li><b>Деформационный шов:</b> Демпферная лента по периметру обязательна!</li>
+                <li><b>Нагрузка:</b> 1 м² стяжки толщиной 5 см весит около 100 кг. На 20 м² это 2 тонны! Убедитесь, что плиты выдержат такую нагрузку (обычно держат, но лучше проверить проект).</li>
+                <li><b>Полусухая стяжка:</b> Заказ миксера стоит дороже за материал, но экономит время (укладка бригадой за 1 день вместо 3-4 дней руками) и дает монолитность без швов.</li>
+                <li><b>Демпферная лента:</b> Обязательна по всему периметру стен, чтобы компенсировать расширение бетона при нагреве.</li>
             </ul>
         </div>
     </div>
@@ -121,25 +124,25 @@
 <script>
     const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
 
-    // === ФИКСИРОВАННЫЕ КОНСТАНТЫ (РЕАЛЬНЫЕ) ===
+    // === КОНСТАНТЫ ИЗ ТЕХНИЧЕСКИХ ПАСПОРТОВ (Knauf/Bergauf/Ceresit) ===
     
     // Расход готовых смесей (кг на 1 м2 при толщине 10 мм)
-    // Средний показатель для качественных ЦПС (Knauf Unterboden, Bergauf Baseline): ~18-20 кг/см на м2
-    // Формула: Вес = Площадь * Толщина_в_см * Коэффициент_расхода
-    const CONSUMPTION_FACTOR_READY_MIX = 19; // кг на м2 на 1 см толщины
+    // Средний показатель: 18-20 кг. Берем 19 для расчета.
+    const CONSUMPTION_FACTOR_READY_MIX = 19; 
     
     // Для наливного пола расход меньше (~1.5 кг на м2 на 1 мм) -> 15 кг на м2 на 1 см
     const CONSUMPTION_FACTOR_SELF_LEVELING = 15; 
 
     // Плотность цементно-песчаного раствора (для самодельной стяжки)
-    // Реальная плотность затвердевшего раствора ~1800-2000 кг/м3. Берем среднее 1900.
     const DENSITY_DIY_SOLUTION = 1900; // кг/м3
 
-    // Примерные цены (Москва, 2026)
+    // Примерные цены (Москва, Октябрь 2026)
     const PRICES = {
-        bag_mix_ready: 450,      // Цена за мешок 25кг готовой ЦПС (~18 руб/кг)
-        bag_cement: 350,         // Цена за мешок цемента М400/500 50кг (~7 руб/кг)
-        ton_sand: 2500           // Цена за тонну карьерного/речного песка (~2.5 руб/кг)
+        bag_mix_ready: 500,      // Цена за мешок 25кг готовой ЦПС (средняя)
+        bag_cement: 400,         // Цена за мешок цемента М500 50кг
+        ton_sand: 3000,          // Цена за тонну песка (с доставкой)
+        mixer_delivery_base: 8000, // Фиксированная стоимость вызова миксера (до 5 кубов)
+        price_per_mixer_meter: 6500 // Цена за 1 м3 полусухой стяжки (материал + доставка + насос)
     };
 
     document.getElementById('concreteForm').addEventListener('submit', function(e) {
@@ -152,7 +155,6 @@
         if (!area || !thicknessMm) return alert("Введите размеры");
 
         // 1. Расчет объема в литрах (геометрический объем)
-        // Объем (м3) = Площадь (м2) * Толщина (м)
         const volumeCubicMeters = area * (thicknessMm / 1000);
         const volumeLiters = volumeCubicMeters * 1000;
 
@@ -161,22 +163,16 @@
         let bagsCount = 0;
 
         if (mixType === 'cement-sand') {
-            // Готовая смесь: Вес = Площадь * Толщина_в_см * 19
             const thicknessCm = thicknessMm / 10;
             weightKg = area * thicknessCm * CONSUMPTION_FACTOR_READY_MIX;
         } else if (mixType === 'self-leveling') {
-            // Наливной пол: Вес = Площадь * Толщина_в_см * 15
             const thicknessCm = thicknessMm / 10;
             weightKg = area * thicknessCm * CONSUMPTION_FACTOR_SELF_LEVELING;
         } else if (mixType === 'diy') {
-            // Самодельная: Вес = Объем (м3) * Плотность (кг/м3)
             weightKg = volumeCubicMeters * DENSITY_DIY_SOLUTION;
         }
 
-        // Округляем вес до целых
         weightKg = Math.round(weightKg);
-        
-        // Количество мешков (по 25 кг)
         bagsCount = Math.ceil(weightKg / 25);
         
         // Резерв (10%)
@@ -189,10 +185,17 @@
         document.getElementById('volumeLiters').innerText = fmt.format(volumeLiters) + ' л';
         document.getElementById('weightKg').innerText = fmt.format(weightKg) + ' кг';
         document.getElementById('bagsCount').innerText = bagsCount + ' шт.';
-        document.getElementById('reserveWeight').innerText = fmt.format(reserveWeight) + ' кг';
+        
+        // Показываем предупреждение, если вес > 1000 кг
+        const warningBox = document.getElementById('weightWarning');
+        if (weightKg > 1000) {
+            warningBox.style.display = 'block';
+        } else {
+            warningBox.style.display = 'none';
+        }
 
-        // Таблица сравнения цен
-        generatePriceTable(mixType, weightKg, volumeCubicMeters);
+        // Таблица вариантов закупки
+        generateOptionsTable(mixType, weightKg, volumeCubicMeters, finalBags);
         
         // График состава
         drawCompositionChart(mixType, weightKg);
@@ -200,74 +203,80 @@
         document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
     });
 
-    function generatePriceTable(type, weightTotal, volCubicMeters) {
-        const tbody = document.getElementById('priceComparisonBody');
+    function generateOptionsTable(type, weightTotal, volCubicMeters, bagsNeeded) {
+        const tbody = document.getElementById('optionsTableBody');
         tbody.innerHTML = '';
 
         let costReadyMix = 0;
         let costDIY = 0;
-        let descReady = "";
-        let descDIY = "";
+        let costMixer = Infinity; // Полусухая стяжка доступна только для больших объемов (>10-15 м2)
 
+        // 1. Готовая смесь (мешками)
         if (type === 'cement-sand' || type === 'self-leveling') {
-            // Готовая смесь
-            const bagsNeeded = Math.ceil(weightTotal / 25);
-            // Для наливного пола цена выше, условно умножаем на 1.5
-            const priceMultiplier = (type === 'self-leveling') ? 1.5 : 1.0;
-            costReadyMix = bagsNeeded * PRICES.bag_mix_ready * priceMultiplier;
-            descReady = `${bagsNeeded} мешков готовой смеси`;
-            
-            // Самодельная альтернатива (только если это ЦПС, для наливного пола DIY не подходит)
-            if (type === 'cement-sand') {
-                // Пропорция 1 часть цемента : 3 части песка по весу (упрощенно для расчета массы)
-                // Общая масса смеси = Масса цемента + Масса песка
-                // Пусть X - масса цемента, тогда 3X - масса песка. Всего 4X = weightTotal.
-                // X = weightTotal / 4.
-                const cementKg = weightTotal / 4; 
-                const sandKg = weightTotal * 0.75;
-                
-                const cementBags = Math.ceil(cementKg / 50); // Мешки по 50кг
-                const sandTons = sandKg / 1000;
-                
-                costDIY = (cementBags * PRICES.bag_cement) + (sandTons * PRICES.ton_sand);
-                descDIY = `${cementBags} меш. цемента + ${fmt.format(sandTons)} тн песка`;
-            } else {
-                costDIY = Infinity;
-                descDIY = "Не рекомендуется делать самому";
-            }
+            const multiplier = (type === 'self-leveling') ? 1.5 : 1.0;
+            costReadyMix = bagsNeeded * PRICES.bag_mix_ready * multiplier;
+        }
 
-        } else {
-            // DIY вариант выбран сразу
+        // 2. Самодельная (Цемент + Песок)
+        if (type !== 'self-leveling') { // Наливной пол самому не делают
              const cementKg = weightTotal / 4; 
              const sandKg = weightTotal * 0.75;
              const cementBags = Math.ceil(cementKg / 50);
              const sandTons = sandKg / 1000;
              
              costDIY = (cementBags * PRICES.bag_cement) + (sandTons * PRICES.ton_sand);
-             descDIY = `${cementBags} меш. цемента + ${fmt.format(sandTons)} тн песка`;
-             costReadyMix = Infinity;
-             descReady = "Вы выбрали самодельный вариант";
+        }
+
+        // 3. Полусухая стяжка (Заказ миксера)
+        // Доступна, если площадь > 10 м2 и толщина > 30 мм
+        if (volCubicMeters >= 0.3 && type !== 'self-leveling') {
+            // Расчет: Объем в кубах * Цена за куб + Фикс за выезд
+            // Обычно берут минимум 5 кубов или платят за простой. Для демо считаем по факту объема, но добавляем фикс.
+            // Реально: если мало объема, цена за куб резко растет. Здесь упрощаем.
+            const effectiveVolume = Math.max(volCubicMeters, 0.5); // Минимум 0.5 куба для расчета
+            costMixer = (effectiveVolume * PRICES.price_per_mixer_meter) + PRICES.mixer_delivery_base;
         }
 
         // Row 1: Ready Mix
         const row1 = document.createElement('tr');
         row1.innerHTML = `
-            <td><b>Готовая смесь</b></td>
-            <td>${descReady}</td>
-            <td style="text-align:right"><b>${costReadyMix === Infinity ? '—' : fmt.format(Math.round(costReadyMix)) + ' ₽'}</b></td>
+            <td><b>Готовая смесь (мешки)</b></td>
+            <td>${bagsNeeded} мешков × ${PRICES.bag_mix_ready} ₽</td>
+            <td style="text-align:right"><b>${fmt.format(Math.round(costReadyMix))} ₽</b></td>
+            <td>Самовывоз/Доставка газелью</td>
         `;
-        if (costReadyMix !== Infinity && costReadyMix <= costDIY) row1.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
         tbody.appendChild(row1);
 
         // Row 2: DIY
-        const row2 = document.createElement('tr');
-        row2.innerHTML = `
-            <td><b>Самодельная</b></td>
-            <td>${descDIY}</td>
-            <td style="text-align:right"><b>${costDIY === Infinity ? '—' : fmt.format(Math.round(costDIY)) + ' ₽'}</b></td>
-        `;
-        if (costDIY !== Infinity && costDIY < costReadyMix) row2.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
-        tbody.appendChild(row2);
+        if (costDIY > 0) {
+            const row2 = document.createElement('tr');
+            row2.innerHTML = `
+                <td><b>Самодельная (Ц+П)</b></td>
+                <td>Цемент + Песок</td>
+                <td style="text-align:right"><b>${fmt.format(Math.round(costDIY))} ₽</b></td>
+                <td>Заказ КамАЗа с песком</td>
+            `;
+            tbody.appendChild(row2);
+        }
+
+        // Row 3: Mixer
+        if (costMixer !== Infinity) {
+            const row3 = document.createElement('tr');
+            row3.innerHTML = `
+                <td><b>Полусухая (Миксер)</b></td>
+                <td>Заводской раствор + насос</td>
+                <td style="text-align:right"><b>${fmt.format(Math.round(costMixer))} ₽</b></td>
+                <td>Приезжает бригада, льют машиной</td>
+            `;
+            // Подсветка лучшего варианта (самый дешевый)
+            const costs = [costReadyMix, costDIY, costMixer].filter(c => c > 0);
+            const minCost = Math.min(...costs);
+            if (Math.abs(costMixer - minCost) < 100) { // Допуск на округление
+                row3.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
+                row3.querySelector('td:last-child').innerHTML += ' <span style="color:#22c55e; font-weight:bold;">✅ Выгодно</span>';
+            }
+            tbody.appendChild(row3);
+        }
     }
 
     function drawCompositionChart(type, totalWeight) {
@@ -281,8 +290,6 @@
             data = [totalWeight / 4, totalWeight * 0.75];
             colors = ['#334155', '#fbbf24']; 
         } else {
-            // Для готовых смесей показываем структуру: Смесь + Вода
-            // Обычно воды добавляют около 20-25% от веса сухой смеси
             const waterWeight = totalWeight * 0.22;
             labels = ['Сухая смесь', 'Вода'];
             data = [totalWeight, waterWeight];
