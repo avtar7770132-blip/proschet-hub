@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор мощности котла отопления: расчет теплопотерь — Просчёт</title>
+    <meta name="description" content="Рассчитайте необходимую мощность газового или электрического котла для частного дома. Учитываем площадь, высоту потолков, тип утепления и климатический пояс.">
+    
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Яндекс Метрика -->
+    <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
+</head>
+<body>
+
+<div class="container">
+    <header style="margin-bottom: 30px;">
+        <a href="index.html" style="font-weight: bold; color: var(--color-accent-blue); text-decoration: none;">← Назад к списку калькуляторов</a>
+    </header>
+
+    <h1>Калькулятор мощности котла отопления</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Узнайте, какой котел нужен вашему дому, чтобы не замерзнуть зимой и не переплатить за лишние киловатты летом.</p>
+
+    <div class="card">
+        <form id="boilerForm">
+            <!-- Блок 1: Параметры дома -->
+            <fieldset style="border: 1px solid var(--color-border); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                <legend style="font-size: 0.9rem; color: var(--color-accent-blue); font-weight: bold;">ПАРАМЕТРЫ ПОМЕЩЕНИЯ</legend>
+                
+                <div class="form-group">
+                    <label for="houseArea">Площадь отапливаемого помещения, м²</label>
+                    <input type="number" id="houseArea" value="100" required min="10" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="ceilingHeight">Высота потолков, м</label>
+                    <input type="number" id="ceilingHeight" value="2.7" required min="2.0" max="4.0" step="0.1">
+                    <small style="color:var(--color-text-muted)">Стандарт считается 2.5–2.7 м. Если выше — потребуется корректировка.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="climateZone">Климатическая зона (регион)</label>
+                    <select id="climateZone">
+                        <option value="south">Юг России (до -10°C)</option>
+                        <option value="central" selected>Центральная Россия / Москва (до -25°C)</option>
+                        <option value="northwest">Северо-Запад (до -30°C)</option>
+                        <option value="urals">Урал / Сибирь (до -40°C)</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <!-- Блок 2: Утепление -->
+            <fieldset style="border: 1px solid var(--color-border); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                <legend style="font-size: 0.9rem; color: var(--color-accent-purple); font-weight: bold;">ТИП УТЕПЛЕНИЯ СТЕН</legend>
+                
+                <div class="form-group">
+                    <label for="insulationType">Материал стен и степень изоляции</label>
+                    <select id="insulationType">
+                        <option value="poor">Без утепления (старый кирпич/бетон, щели)</option>
+                        <option value="medium" selected>Среднее (кирпич + слой пенопласта/ваты 5 см)</option>
+                        <option value="good">Хорошее (газобетон/каркас с базальтовой ватой 10 см+, стеклопакеты)</option>
+                        <option value="excellent">Отличное (дом из SIP-панелей или тройной контур утепления)</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn-calc mt-1">Рассчитать требуемую мощность</button>
+        </form>
+    </div>
+
+    <!-- РЕЗУЛЬТАТЫ РАСЧЕТА -->
+    <div id="resultsArea" style="display:none;">
+        
+        <div class="result-box mt-1 fade-in-up">
+            <h3>Рекомендуемая мощность котла</h3>
+            <div style="text-align:center; margin-top:15px;">
+                <span style="color:var(--color-text-muted)">Минимально необходимая мощность:</span><br>
+                <span class="big-number" id="minPower" style="font-size: 3rem; letter-spacing: -1px; color:#ef4444;">0 кВт</span>
+            </div>
+            
+            <div style="margin-top:10px; text-align:center;">
+                <span style="color:var(--color-text-muted)">Рекомендуемая покупка (с запасом 20-30%):</span><br>
+                <span class="big-number" id="recPower" style="font-size: 2.5rem; color:#22c55e;">0 кВт</span>
+            </div>
+
+            <div style="margin-top:20px; padding-top:15px; border-top: 1px dashed var(--color-border); display:flex; justify-content:space-around; flex-wrap:wrap; gap:15px; font-size: 0.95rem;">
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Объем воздуха</small><br><strong id="volumeDisplay">0 м³</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Удельная мощность</small><br><strong id="specificPower">0 Вт/м³</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Расход газа (ориентир)</small><br><strong id="gasConsumption">0 м³/сутки</strong></div>
+            </div>
+        </div>
+
+        <!-- ГРАФИК ТЕПЛОПОТЕРЬ -->
+        <div class="card mt-1 text-center">
+            <h3>Где уходит тепло?</h3>
+            <div style="height: 250px; width: 100%; max-width: 400px; margin: 0 auto;">
+                <canvas id="heatLossChart"></canvas>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 10px;">
+                *Показывает условную структуру потерь через стены, окна, крышу и вентиляцию для выбранного типа дома.
+            </p>
+        </div>
+
+        <!-- ИНФО-БЛОК -->
+        <div class="mt-1 mb-1 card" style="background: rgba(30, 41, 59, 0.6); border-left: 4px solid var(--color-accent-blue);">
+            <h4 style="color: var(--color-accent-blue); margin-bottom: 10px;">🔥 Советы по выбору котла:</h4>
+            <ul style="padding-left: 20px; line-height: 1.6; font-size: 0.95rem; color: var(--color-text-secondary);">
+                <li><b>Запас мощности:</b> Всегда берите котел на 20–30% мощнее расчетного значения. Это нужно для работы при экстремальных морозах и для нагрева воды (если котел двухконтурный).</li>
+                <li><b>Двухконтурные vs Одноконтурные:</b> Если у вас большая семья (>3 человек) и часто нужна горячая вода, лучше взять одноконтурный котел + бойлер косвенного нагрева. Двухконтурные плохо тянут поток, если открыть два крана сразу.</li>
+                <li><b>Инверторные модели:</b> Для стабильной сети подойдут любые. Для нестабильной (частые скачки напряжения) выбирайте инверторные газовые котлы — они мягче реагируют на перепады.</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        © 2026 Просчёт · Расчет справочный. Не является проектной документацией.<br>
+        <small>Точный теплотехнический расчет выполняет инженер с учетом конкретных материалов и геометрии здания.</small>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
+
+    // Коэффициенты удельной мощности (Вт/м³) в зависимости от региона и утепления
+    // База: Центральный регион, среднее утепление ~ 40-50 Вт/м3
+    const CLIMATE_FACTORS = {
+        south: 0.7,   // Юг требует меньше энергии
+        central: 1.0,  // Эталон
+        northwest: 1.2, // Северо-Запад холоднее
+        urals: 1.5     // Сибирь/Урал значительно холоднее
+    };
+
+    const INSULATION_FACTORS = {
+        poor: 1.8,      // Без утепления теряет много
+        medium: 1.0,    // Средний уровень (эталон расчета)
+        good: 0.6,      // Хорошее утепление экономит энергию
+        excellent: 0.4  // Отличное (энергоэффективный дом)
+    };
+
+    document.getElementById('boilerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const area = parseFloat(document.getElementById('houseArea').value);
+        const height = parseFloat(document.getElementById('ceilingHeight').value);
+        const climateKey = document.getElementById('climateZone').value;
+        const insulationKey = document.getElementById('insulationType').value;
+
+        if (!area || !height) return alert("Введите параметры помещения");
+
+        // 1. Расчет объема помещения
+        const volume = area * height;
+
+        // 2. Определение базовой удельной мощности (для центрального региона и среднего утепления)
+        // Стандартная формула СНиП для бытового расчета: 40 Вт на 1 куб.метр
+        let baseSpecificPower = 40; 
+
+        // 3. Корректировка коэффициентами
+        const cFactor = CLIMATE_FACTORS[climateKey];
+        const iFactor = INSULATION_FACTORS[insulationKey];
+        
+        // Итоговая удельная мощность (Вт/м³)
+        const finalSpecificPower = baseSpecificPower * cFactor * iFactor;
+
+        // 4. Расчет минимальной необходимой мощности (кВт)
+        const totalWatts = volume * finalSpecificPower;
+        const minKw = totalWatts / 1000;
+
+        // 5. Рекомендуемая мощность с запасом (обычно +20-30%)
+        // Для южных регионов можно меньше запаса, для северных больше
+        let reservePercent = 0.25; 
+        if (climateKey === 'south') reservePercent = 0.15;
+        if (climateKey === 'urals') reservePercent = 0.35;
+        
+        const recKw = minKw * (1 + reservePercent);
+
+        // 6. Ориентировочный расход газа
+        // Теплота сгорания природного газа ~ 8-9 кВт/ч на 1 м3 (условно принимаем 8.5)
+        // КПД современного котла ~ 90-92%
+        // Расход м3/час = Мощность (кВт) / (Теплота сгорания * КПД)
+        // За сутки (при работе 24 часа в сильные морозы, усредненно берем нагрузку 50% времени)
+        const gasPerHourMax = minKw / (8.5 * 0.9); 
+        const gasPerDayAvg = gasPerHourMax * 12; // Примерно половина суток активной работы в отопительный сезон
+
+        // Вывод результатов
+        document.getElementById('resultsArea').style.display = 'block';
+        document.getElementById('minPower').innerText = fmt.format(minKw) + ' кВт';
+        document.getElementById('recPower').innerText = fmt.format(recKw) + ' кВт';
+        document.getElementById('volumeDisplay').innerText = fmt.format(volume) + ' м³';
+        document.getElementById('specificPower').innerText = Math.round(finalSpecificPower) + ' Вт/м³';
+        document.getElementById('gasConsumption').innerText = fmt.format(gasPerDayAvg) + ' м³/сутки';
+
+        drawHeatLossChart(insulationKey);
+        document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function drawHeatLossChart(insulationType) {
+        const ctx = document.getElementById('heatLossChart').getContext('2d');
+        if (window.myBoilerChart) window.myBoilerChart.destroy();
+
+        // Данные для диаграммы зависят от типа утепления
+        // Структура потерь: Стены, Окна/Двери, Крыша, Пол, Вентиляция
+        let walls, windows, roof, floor, vent;
+
+        switch(insulationType) {
+            case 'poor':
+                walls = 40; windows = 30; roof = 15; floor = 10; vent = 5;
+                break;
+            case 'medium':
+                walls = 35; windows = 25; roof = 20; floor = 15; vent = 5;
+                break;
+            case 'good':
+                walls = 25; windows = 20; roof = 30; floor = 20; vent = 5;
+                break;
+            case 'excellent':
+                walls = 20; windows = 15; roof = 40; floor = 20; vent = 5;
+                break;
+            default:
+                walls = 35; windows = 25; roof = 20; floor = 15; vent = 5;
+        }
+
+        window.myBoilerChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Через стены', 'Через окна/двери', 'Через крышу', 'Через пол', 'Вентиляция'],
+                datasets: [{
+                    data: [walls, windows, roof, floor, vent],
+                    backgroundColor: ['#ef4444', '#fbbf24', '#38bdf8', '#22c55e', '#818cf8'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '60%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#f8fafc', font: { size: 11 } } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
