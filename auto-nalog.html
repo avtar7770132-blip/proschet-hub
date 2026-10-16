@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор НДФЛ при продаже авто в 2026 году — Просчёт</title>
+    <meta name="description" content="Рассчитайте налог с продажи автомобиля онлайн. Учтите срок владения, вычет 250 000 ₽ или метод 'Доходы минус расходы'. Узнайте точную сумму к уплате.">
+    
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Яндекс Метрика -->
+    <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
+</head>
+<body>
+
+<div class="container">
+    <header style="margin-bottom: 30px;">
+        <a href="index.html" style="font-weight: bold; color: var(--color-accent-blue); text-decoration: none;">← Назад к списку калькуляторов</a>
+    </header>
+
+    <h1>Калькулятор налога с продажи авто</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Узнайте, сколько реально придется заплатить государству после сделки купли-продажи.</p>
+
+    <div class="card">
+        <form id="taxForm">
+            <!-- Блок 1: Данные о машине -->
+            <fieldset style="border: 1px solid var(--color-border); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                <legend style="font-size: 0.9rem; color: var(--color-accent-blue); font-weight: bold;">ПАРАМЕТРЫ СДЕЛКИ</legend>
+                
+                <div class="form-group">
+                    <label for="salePrice">Цена продажи, ₽</label>
+                    <input type="number" id="salePrice" value="850000" required min="1" step="1000">
+                </div>
+
+                <div class="form-group">
+                    <label for="purchasePrice">Цена покупки (если есть документы), ₽</label>
+                    <input type="number" id="purchasePrice" value="700000" min="0" step="1000">
+                    <small style="color:var(--color-text-muted)">Оставьте пустым или 0, если машина получена в наследство/дар или покупалась давно без чеков.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="ownershipYears">Срок владения, лет</label>
+                    <select id="ownershipYears">
+                        <option value="less3">Менее 3 лет</option>
+                        <option value="more3">Более 3 лет (для единственного жилья/авто)</option>
+                        <option value="more5">Более 5 лет (общий случай)</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn-calc mt-1">Рассчитать налог</button>
+        </form>
+    </div>
+
+    <!-- РЕЗУЛЬТАТЫ РАСЧЕТА -->
+    <div id="resultsArea" style="display:none;">
+        
+        <div class="result-box mt-1 fade-in-up">
+            <h3>Итоговый результат</h3>
+            <div style="text-align:center; margin-top:15px;">
+                <span style="color:var(--color-text-muted)">Налог к уплате (НДФЛ 13%):</span><br>
+                <span class="big-number" id="finalTax" style="font-size: 3rem; letter-spacing: -1px;">0 ₽</span>
+            </div>
+            
+            <div id="zeroTaxMessage" style="display:none; margin-top:15px; padding:15px; background: rgba(34, 197, 94, 0.1); border-left: 4px solid #22c55e; border-radius: 8px; text-align:center;">
+                <strong style="color:#22c55e;">🎉 Поздравляем! Налог равен нулю.</strong><br>
+                Декларацию подавать НЕ нужно.
+            </div>
+
+            <div id="needDeclarationMessage" style="display:none; margin-top:15px; padding:15px; background: rgba(251, 191, 36, 0.1); border-left: 4px solid #fbbf24; border-radius: 8px; text-align:center;">
+                <strong style="color:#fbbf24;">⚠️ Внимание!</strong><br>
+                Даже если налог 0 ₽, но цена продажи выше 250 000 ₽, декларацию 3-НДФЛ подать ОБЯЗАТЕЛЬНО до 30 апреля следующего года.
+            </div>
+        </div>
+
+        <!-- СРАВНЕНИЕ МЕТОДОВ -->
+        <div class="card mt-1">
+            <h3>Какой способ выгоднее?</h3>
+            <table class="payment-schedule" style="width:100%; font-size: 0.95rem;">
+                <thead>
+                    <tr>
+                        <th>Метод расчета базы</th>
+                        <th>Формула</th>
+                        <th>Налоговая база</th>
+                        <th>Сумма налога</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonTableBody">
+                    <!-- Заполняется динамически -->
+                </tbody>
+            </table>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 10px;">
+                *Выбирайте тот метод, который дает меньшую налоговую базу. Если документов о покупке нет, остается только вычет 250 000 ₽.
+            </p>
+        </div>
+
+        <!-- ГРАФИК ЭКОНОМИИ -->
+        <div class="card mt-1 text-center">
+            <h3>Экономия благодаря правильному выбору метода</h3>
+            <div style="height: 250px; width: 100%; max-width: 400px; margin: 0 auto;">
+                <canvas id="savingsChart"></canvas>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 10px;">
+                Показывает разницу между худшим вариантом (просто вычет) и лучшим (доходы минус расходы).
+            </p>
+        </div>
+
+        <!-- ИНФО-БЛОК -->
+        <div class="mt-1 mb-1 card" style="background: rgba(30, 41, 59, 0.6); border-left: 4px solid var(--color-accent-purple);">
+            <h4 style="color: var(--color-accent-purple); margin-bottom: 10px;">📌 Важные нюансы 2026 года:</h4>
+            <ul style="padding-left: 20px; line-height: 1.6; font-size: 0.95rem; color: var(--color-text-secondary);">
+                <li><b>Минимальный срок владения:</b> 3 года для подарков от близких родственников, наследства и приватизации. 5 лет для остальных случаев.</li>
+                <li><b>Кадастровая стоимость:</b> Если вы продадите машину дешевле её кадастровой стоимости (умноженной на понижающий коэффициент 0.7), ФНС начислит налог исходя из кадастра, а не договора.</li>
+                <li><b>Штраф за просрочку:</b> 5% от неуплаченной суммы за каждый месяц просрочки подачи декларации (минимум 1000 ₽).</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        © 2026 Просчёт · Расчет справочный. Не является налоговой консультацией.<br>
+        <small>Ставка НДФЛ для резидентов РФ — 13%. Проверьте актуальные ставки перед подачей.</small>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+    const TAX_RATE = 0.13; // 13%
+    const DEDUCTION_LIMIT = 250000; // Стандартный вычет
+
+    document.getElementById('taxForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const salePrice = parseFloat(document.getElementById('salePrice').value);
+        const purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0;
+        const ownershipPeriod = document.getElementById('ownershipYears').value;
+
+        if (!salePrice) return alert("Введите цену продажи");
+
+        let taxDue = 0;
+        let baseMethod1 = 0; // Доходы - Расходы
+        let baseMethod2 = 0; // Вычет 250к
+        let showZeroMsg = false;
+        let showDeclMsg = false;
+
+        // Логика освобождения от налога по сроку владения
+        if (ownershipPeriod === 'more3' || ownershipPeriod === 'more5') {
+            taxDue = 0;
+            showZeroMsg = true;
+            // Но декларацию надо подать, если продажа > 250к? 
+            // Нет, если владеешь больше минимального срока, декларация вообще не нужна независимо от суммы.
+        } else {
+            // Владеешь менее 3 лет -> Считаем налог
+            
+            // Метод 1: Доходы минус расходы (только если есть подтверждение расходов)
+            if (purchasePrice > 0 && purchasePrice <= salePrice) {
+                baseMethod1 = Math.max(0, salePrice - purchasePrice);
+            } else {
+                baseMethod1 = Infinity; // Недоступен или невыгоден
+            }
+
+            // Метод 2: Имущественный вычет 250 000
+            baseMethod2 = Math.max(0, salePrice - DEDUCTION_LIMIT);
+
+            // Выбираем лучший вариант (минимальную базу)
+            const bestBase = Math.min(baseMethod1, baseMethod2);
+            taxDue = bestBase * TAX_RATE;
+
+            // Сообщения пользователю
+            if (taxDue === 0) {
+                showZeroMsg = true;
+                if (salePrice > DEDUCTION_LIMIT) {
+                    showDeclMsg = true; // Налог 0, но декларацию сдать надо!
+                }
+            }
+        }
+
+        // Вывод основного результата
+        document.getElementById('resultsArea').style.display = 'block';
+        document.getElementById('finalTax').innerText = fmt.format(Math.round(taxDue)) + ' ₽';
+        
+        const zeroBox = document.getElementById('zeroTaxMessage');
+        const declBox = document.getElementById('needDeclarationMessage');
+        
+        if (showZeroMsg) {
+            zeroBox.style.display = 'block';
+        } else {
+            zeroBox.style.display = 'none';
+        }
+
+        if (showDeclMsg) {
+            declBox.style.display = 'block';
+        } else {
+            declBox.style.display = 'none';
+        }
+
+        // Таблица сравнения методов
+        generateComparisonTable(salePrice, purchasePrice, baseMethod1, baseMethod2, taxDue);
+        
+        // График экономии
+        drawSavingsChart(baseMethod1, baseMethod2, taxDue);
+
+        document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function generateComparisonTable(sale, purch, b1, b2, finalTax) {
+        const tbody = document.getElementById('comparisonTableBody');
+        tbody.innerHTML = '';
+
+        // Row 1: Deduction Method
+        const row1 = document.createElement('tr');
+        row1.innerHTML = `
+            <td><b>Вычет 250 000 ₽</b></td>
+            <td>(Продажа - 250к) × 13%</td>
+            <td>${fmt.format(b2)} ₽</td>
+            <td>${fmt.format(b2 * TAX_RATE)} ₽</td>
+        `;
+        if (b2 * TAX_RATE === finalTax && b2 !== Infinity) row1.style.backgroundColor = 'rgba(34, 197, 94, 0.1)'; // Highlight winner
+        tbody.appendChild(row1);
+
+        // Row 2: Expenses Method
+        const row2 = document.createElement('tr');
+        let expDesc = purch > 0 ? `(Продажа - Покупка) × 13%` : 'Нет документов о покупке';
+        let expBase = purch > 0 ? b1 : '—';
+        let expTax = purch > 0 ? b1 * TAX_RATE : '—';
+        
+        row2.innerHTML = `
+            <td><b>Доходы минус расходы</b></td>
+            <td>${expDesc}</td>
+            <td>${typeof expBase === 'number' ? fmt.format(expBase) : expBase} ₽</td>
+            <td>${typeof expTax === 'number' ? fmt.format(expTax) : expTax} ₽</td>
+        `;
+        if (purch > 0 && b1 * TAX_RATE === finalTax) row2.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
+        tbody.appendChild(row2);
+    }
+
+    function drawSavingsChart(b1, b2, actualTax) {
+        const ctx = document.getElementById('savingsChart').getContext('2d');
+        if (window.myAutoChart) window.myAutoChart.destroy();
+
+        // Calculate worst case scenario (just deduction) vs actual paid
+        const worstCaseTax = b2 * TAX_RATE;
+        const savings = Math.max(0, worstCaseTax - actualTax);
+
+        window.myAutoChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Налог без учета расходов', 'Реальный налог (экономия)', 'Сумма экономии'],
+                datasets: [{
+                    label: 'Сумма, ₽',
+                    data: [worstCaseTax, actualTax, savings],
+                    backgroundColor: ['#ef4444', '#22c55e', '#38bdf8'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, ticks: { callback: function(v) { return fmt.format(v); }, color: '#94a3b8' }, grid: { color: '#334155' } },
+                    x: { ticks: { color: '#f8fafc' }, grid: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + fmt.format(context.parsed.y) + ' ₽';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
