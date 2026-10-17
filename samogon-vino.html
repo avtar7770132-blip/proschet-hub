@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор самогонщика и винодела: выход спирта и шуартирование — Просчёт</title>
+    <meta name="description" content="Рассчитайте теоретический выход самогона из сахара и зерна. Узнайте сколько сахара добавить в виноградное сусло для нужной крепости вина. Профессиональные формулы Гей-Люссака.">
+    
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Яндекс Метрика -->
+    <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
+</head>
+<body>
+
+<div class="container">
+    <header style="margin-bottom: 30px;">
+        <a href="index.html" style="font-weight: bold; color: var(--color-accent-blue); text-decoration: none;">← Назад к списку калькуляторов</a>
+    </header>
+
+    <h1>🍷 Калькулятор Самогонщика и Винодела</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Точные расчеты брожения и дистилляции для домашних мастеров.</p>
+
+    <!-- Переключатель вкладок -->
+    <div class="card mb-1" style="padding: 10px; display: flex; gap: 10px;">
+        <button id="tabMoonshine" onclick="switchTab('moonshine')" class="btn-calc" style="flex:1; background: #f97316;">🥃 Самогон (Выход)</button>
+        <button id="tabWine" onclick="switchTab('wine')" class="btn-calc" style="flex:1; background: transparent; border: 1px solid var(--color-border); color: var(--color-text-muted);">🍇 Вино (Шуартирование)</button>
+    </div>
+
+    <!-- БЛОК 1: САМОГОН -->
+    <div id="section-moonshine">
+        <div class="card">
+            <form id="moonshineForm">
+                <div class="form-group">
+                    <label for="msRawType">Тип сырья</label>
+                    <select id="msRawType">
+                        <option value="sugar">Сахар (Брага)</option>
+                        <option value="grain">Зерно (Пшеница/Ячмень)</option>
+                        <option value="fruit">Фрукты/Ягоды (Свекловичный сахар в составе)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="msWeight">Вес сырья, кг</label>
+                    <input type="number" id="msWeight" value="10" required min="1" step="0.1">
+                </div>
+
+                <div class="form-group">
+                    <label for="msEfficiency">КПД аппарата (%)</label>
+                    <input type="number" id="msEfficiency" value="90" required min="50" max="98" step="1">
+                    <small style="color:var(--color-text-muted)">Царга/Ректификация ~95%. Классический аппарат ~85-90%.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="msTargetStrength">Желаемая крепость продукта, %</label>
+                    <input type="number" id="msTargetStrength" value="40" required min="30" max="96" step="1">
+                </div>
+
+                <button type="submit" class="btn-calc mt-1" style="background:#f97316;">Рассчитать выход</button>
+            </form>
+        </div>
+
+        <div id="resultsMoonshine" style="display:none;">
+            <div class="result-box mt-1 fade-in-up">
+                <h3>Прогноз результата</h3>
+                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; margin-top:15px;">
+                    <div>
+                        <span style="color:var(--color-text-muted)">Чистый спирт (абс.):</span><br>
+                        <span class="big-number" id="msPureAlcohol" style="font-size: 2rem;">0 л</span>
+                    </div>
+                    <div>
+                        <span style="color:var(--color-text-muted)">Готовый продукт:</span><br>
+                        <span class="big-number" id="msFinalProduct" style="color:#f97316; font-size: 2rem;">0 л</span>
+                    </div>
+                     <div>
+                        <span style="color:var(--color-text-muted)">Себестоимость литра:</span><br>
+                        <span class="big-number" id="msCost" style="color:#fbbf24; font-size: 1.5rem;">0 ₽</span>
+                    </div>
+                </div>
+                 <div style="margin-top:20px; padding-top:15px; border-top: 1px dashed var(--color-border); font-size: 0.9rem; color: var(--color-text-secondary);">
+                    *Для получения питьевого самогона добавьте воду согласно таблице разбавления. Не забудьте отделить головы и хвосты!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК 2: ВИНО (ШУАРТИРОВАНИЕ) -->
+    <div id="section-wine" style="display:none;">
+        <div class="card">
+            <form id="wineForm">
+                <div class="form-group">
+                    <label for="wVolume">Объем сусла/вина, литров</label>
+                    <input type="number" id="wVolume" value="10" required min="1" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="wCurrentSugar">Текущий сахар в сусле, г/л (или плотность °Brix)</label>
+                    <input type="number" id="wCurrentSugar" value="200" required min="0" step="1">
+                    <small style="color:var(--color-text-muted)">Если используете ареометр, переведите показания в г/л сахара примерно так: Brix * 10 = г/л.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="wTargetABV">Целевая крепость вина, % об.</label>
+                    <input type="number" id="wTargetABV" value="12" required min="8" max="18" step="0.5">
+                </div>
+
+                <button type="submit" class="btn-calc mt-1" style="background:#8b5cf6;">Рассчитать сахар</button>
+            </form>
+        </div>
+
+        <div id="resultsWine" style="display:none;">
+            <div class="result-box mt-1 fade-in-up">
+                <h3>Рецепт корректировки</h3>
+                <div style="text-align:center; margin-top:15px;">
+                    <span style="color:var(--color-text-muted)">Необходимо добавить сахара:</span><br>
+                    <span class="big-number" id="wSugarToAdd" style="font-size: 3rem; color:#8b5cf6;">0 гр</span>
+                </div>
+                
+                <div style="margin-top:20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-left: 4px solid #8b5cf6; border-radius: 8px; font-size: 0.95rem; line-height: 1.6;">
+                    <strong>💡 Инструкция:</strong><br>
+                    1. Растворите calculated количество сахара в небольшом объеме вина или воды.<br>
+                    2. Тщательно перемешайте с основной массой.<br>
+                    3. Следите за процессом брожения. При высокой концентрации сахара (>250 г/л) обычные дрожжи могут погибнуть. Используйте винные турбо-дрожжи.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        © 2026 Просчёт · Употребление алкоголя вредит вашему здоровью. Производите легально.<br>
+        <small>Расчеты носят ознакомительный характер.</small>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 1 });
+
+    // Логика переключения вкладок
+    function switchTab(tabName) {
+        const btnMs = document.getElementById('tabMoonshine');
+        const btnW = document.getElementById('tabWine');
+        const secMs = document.getElementById('section-moonshine');
+        const secW = document.getElementById('section-wine');
+
+        if (tabName === 'moonshine') {
+            btnMs.style.background = '#f97316';
+            btnMs.style.color = 'white';
+            btnW.style.background = 'transparent';
+            btnW.style.border = '1px solid var(--color-border)';
+            btnW.style.color = 'var(--color-text-muted)';
+            
+            secMs.style.display = 'block';
+            secW.style.display = 'none';
+        } else {
+            btnW.style.background = '#8b5cf6';
+            btnW.style.color = 'white';
+            btnMs.style.background = 'transparent';
+            btnMs.style.border = '1px solid var(--color-border)';
+            btnMs.style.color = 'var(--color-text-muted)';
+            
+            secW.style.display = 'block';
+            secMs.style.display = 'none';
+        }
+    }
+
+    // --- ЛОГИКА САМОГОНА ---
+    document.getElementById('moonshineForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const rawType = document.getElementById('msRawType').value;
+        const weight = parseFloat(document.getElementById('msWeight').value);
+        const efficiency = parseFloat(document.getElementById('msEfficiency').value) / 100;
+        const targetStrength = parseFloat(document.getElementById('msTargetStrength').value) / 100;
+
+        if (!weight || !targetStrength) return alert("Введите данные");
+
+        // Коэффициенты выхода абсолютного спирта (литров) из 1 кг сырья
+        // Сахар: теоретически 0.6 л. Практически 0.55-0.6. Берем 0.6.
+        // Зерно: зависит от крахмала. Пшеница ~0.35-0.4. Берем 0.38.
+        // Фрукты: очень низко, считаем как сахарную брагу с низким КПД, но здесь упрощаем до 0.1 (для ягод/фруктов без добавления сахара). 
+        // Но обычно "самогоны из фруктов" делают с добавлением сахара. Для чистого фруктового сока коэффициент мал.
+        // Давайте использовать стандартные значения для браги:
+        let yieldFactor = 0;
+        if (rawType === 'sugar') yieldFactor = 0.6;
+        else if (rawType === 'grain') yieldFactor = 0.38;
+        else if (rawType === 'fruit') yieldFactor = 0.15; // Условный коэффициент для сладких фруктов/ягод
+
+        const pureAlcoholTheoretical = weight * yieldFactor;
+        const pureAlcoholReal = pureAlcoholTheoretical * efficiency;
+
+        // Объем готового продукта при заданной крепости
+        // V_product = V_pure_alcohol / Strength_decimal
+        const finalVolume = pureAlcoholReal / targetStrength;
+
+        // Себестоимость (грубая оценка: сырье + вода/дрожжи/энергия)
+        // Сахар ~60р/кг. Зерно ~30р/кг. Фрукты ~100р/кг. Накладные расходы ~20р/кг сырья.
+        let costPerKgRaw = 0;
+        if (rawType === 'sugar') costPerKgRaw = 80; // 60 сахар + 20 накладные
+        else if (rawType === 'grain') costPerKgRaw = 50; 
+        else if (rawType === 'fruit') costPerKgRaw = 120;
+
+        const totalCost = weight * costPerKgRaw;
+        const costPerLiter = finalVolume > 0 ? totalCost / finalVolume : 0;
+
+        document.getElementById('resultsMoonshine').style.display = 'block';
+        document.getElementById('msPureAlcohol').innerText = fmt.format(pureAlcoholReal) + ' л';
+        document.getElementById('msFinalProduct').innerText = fmt.format(finalVolume) + ' л';
+        document.getElementById('msCost').innerText = fmt.format(Math.round(costPerLiter)) + ' ₽';
+
+        document.getElementById('resultsMoonshine').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // --- ЛОГИКИ ВИНА ---
+    document.getElementById('wineForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const volumeL = parseFloat(document.getElementById('wVolume').value);
+        const currentSugarGL = parseFloat(document.getElementById('wCurrentSugar').value); // г/л
+        const targetABV = parseFloat(document.getElementById('wTargetABV').value); // % об.
+
+        if (!volumeL || isNaN(currentSugarGL) || !targetABV) return alert("Введите данные");
+
+        // Формула Шуартирования (упрощенная классическая):
+        // 17 грамм сахара на 1 литр дают примерно 1% объема спирта.
+        // Текущая потенциальная крепость от имеющегося сахара:
+        const potentialABVFromCurrent = currentSugarGL / 17;
+        
+        // Какая дополнительная крепость нужна?
+        const abvDeficit = targetABV - potentialABVFromCurrent;
+
+        let sugarToAddTotal = 0;
+
+        if (abvDeficit > 0) {
+            // Нужно добавить сахара
+            // Грамм сахара на литр для 1% ABV = 17г
+            const gramsPerLiterNeeded = abvDeficit * 17;
+            sugarToAddTotal = gramsPerLiterNeeded * volumeL;
+        } else {
+            // Крепость уже выше целевой или равна ей. Ничего добавлять не нужно.
+            // Можно предложить разбавить водой, но это не входит в задачу "добавить сахар".
+            alert("Текущий уровень сахара обеспечивает крепость выше или равную целевой. Добавление сахара не требуется.");
+            document.getElementById('resultsWine').style.display = 'none';
+            return;
+        }
+
+        document.getElementById('resultsWine').style.display = 'block';
+        document.getElementById('wSugarToAdd').innerText = Math.round(sugarToAddTotal) + ' гр';
+        
+        document.getElementById('resultsWine').scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+</body>
+</html>
