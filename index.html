@@ -29,6 +29,7 @@
         <button onclick="filterCards('auto')" class="filter-btn" id="btn-auto" style="padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-border); background: transparent; color: var(--color-text-muted); cursor: pointer;">🚗 Авто</button>
         <button onclick="filterCards('health')" class="filter-btn" id="btn-health" style="padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-border); background: transparent; color: var(--color-text-muted); cursor: pointer;">❤️ Здоровье</button>
         <button onclick="filterCards('home')" class="filter-btn" id="btn-home" style="padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-border); background: transparent; color: var(--color-text-muted); cursor: pointer;">🏠 Быт</button>
+        <button onclick="filterCards('blog')" class="filter-btn" id="btn-blog" style="padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-accent-purple); background: transparent; color: var(--color-accent-purple); cursor: pointer;">📚 Статьи</button>
     </div>
 
     <!-- СЕТКА КАЛЬКУЛЯТОРОВ -->
@@ -153,10 +154,11 @@
             <span style="color: #f97316; font-weight: bold;">Рассчитать →</span>
         </a>
 
-        <!-- === БЛОГ === -->
-        <a href="blog/index.html" class="card" data-category="all" style="text-decoration: none; display: block; grid-column: span 2; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--color-accent-purple);">
+        <!-- === БЛОГ (СТАТЬИ) === -->
+        <!-- Эта карточка видна только во вкладках 'all' и 'blog' -->
+        <a href="blog/index.html" class="card blog-card" data-category="blog" style="text-decoration: none; display: block; grid-column: span 2; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--color-accent-purple);">
             <h3 class="card-title" style="color: white;">📚 Статьи и Гайды</h3>
-            <p class="card-desc" style="color: var(--color-text-secondary);">Читаем про налоги, ремонт и экономию. Учимся считать деньги грамотно.</p>
+            <p class="card-desc" style="color: var(--color-text-secondary);">Читаем про налоги, ремонт, авто и экономию. Учимся считать грамотно.</p>
             <span style="color: var(--color-accent-purple); font-weight: bold;">Перейти в блог →</span>
         </a>
 
@@ -183,7 +185,14 @@
         // Активируем текущую кнопку
         const activeBtn = document.getElementById('btn-' + category);
         if(activeBtn) {
-            activeBtn.style.background = 'var(--color-accent-blue)';
+            // Для кнопки блога используем фиолетовый цвет
+            if(category === 'blog') {
+                activeBtn.style.background = 'var(--color-accent-purple)';
+                activeBtn.style.borderColor = 'var(--color-accent-purple)';
+            } else {
+                activeBtn.style.background = 'var(--color-accent-blue)';
+                activeBtn.style.borderColor = 'var(--color-accent-blue)';
+            }
             activeBtn.style.color = 'white';
             activeBtn.classList.add('active');
         }
@@ -192,7 +201,29 @@
         cards.forEach(card => {
             const cardCategories = card.getAttribute('data-category').split(' ');
             
-            if (category === 'all' || cardCategories.includes(category)) {
+            // Логика показа:
+            // 1. Если выбрана категория 'all', показываем всё.
+            // 2. Если выбрана конкретная категория, проверяем совпадение.
+            // 3. Особое условие для блога: он всегда скрыт, кроме случаев 'all' и 'blog'.
+            
+            let shouldShow = false;
+
+            if (category === 'all') {
+                shouldShow = true;
+            } else if (category === 'blog') {
+                // Показываем только если у карточки есть класс 'blog'
+                shouldShow = cardCategories.includes('blog');
+            } else {
+                // Обычная фильтрация по категориям
+                shouldShow = cardCategories.includes(category);
+                
+                // Дополнительно: скрываем блог-карточку при выборе других категорий
+                if (shouldShow && cardCategories.includes('blog')) {
+                    shouldShow = false;
+                }
+            }
+
+            if (shouldShow) {
                 card.style.display = 'block';
             } else {
                 card.style.display = 'none';
