@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор авто-кредита: полная стоимость владения — Просчёт</title>
+    <meta name="description" content="Рассчитайте ежемесячный платеж и полную стоимость автомобиля в кредите. Учитываем первоначальный взнос, ставку банка, КАСКО и страхование жизни. Сравнение с покупкой за наличные.">
+    
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Яндекс Метрика -->
+    <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
+</head>
+<body>
+
+<div class="container">
+    <header style="margin-bottom: 30px;">
+        <a href="index.html" style="font-weight: bold; color: var(--color-accent-blue); text-decoration: none;">← Назад к списку калькуляторов</a>
+    </header>
+
+    <h1>Калькулятор авто-кредита</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Узнайте реальную цену машины в рассрочку. Не дайте банку спрятать переплату в мелком шрифте.</p>
+
+    <div class="card">
+        <form id="carLoanForm">
+            <!-- Блок 1: Параметры кредита -->
+            <fieldset style="border: 1px solid var(--color-border); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                <legend style="font-size: 0.9rem; color: var(--color-accent-blue); font-weight: bold;">ПАРАМЕТРЫ СДЕЛКИ</legend>
+                
+                <div class="form-group">
+                    <label for="carPrice">Стоимость автомобиля, ₽</label>
+                    <input type="number" id="carPrice" value="2500000" required min="100000" step="10000">
+                </div>
+
+                <div class="form-group">
+                    <label for="downPayment">Первоначальный взнос, ₽</label>
+                    <input type="number" id="downPayment" value="500000" required min="0" step="10000">
+                    <small style="color:var(--color-text-muted)">Обычно от 10% до 50%. Чем больше взнос, тем ниже ставка.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="interestRate">Годовая ставка, %</label>
+                    <input type="number" id="interestRate" value="14.5" required min="0" max="30" step="0.1">
+                </div>
+
+                <div class="form-group">
+                    <label for="loanTerm">Срок кредита, месяцев</label>
+                    <select id="loanTerm">
+                        <option value="12">1 год (12 мес.)</option>
+                        <option value="24">2 года (24 мес.)</option>
+                        <option value="36" selected>3 года (36 мес.)</option>
+                        <option value="48">4 года (48 мес.)</option>
+                        <option value="60">5 лет (60 мес.)</option>
+                        <option value="72">6 лет (72 мес.)</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <!-- Блок 2: Страховки и Доп. услуги -->
+            <fieldset style="border: 1px solid var(--color-border); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                <legend style="font-size: 0.9rem; color: #ef4444; font-weight: bold;">СТРАХОВКИ И ДОП. УСЛУГИ (Часто скрыты)</legend>
+                
+                <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <input type="checkbox" id="optKasko" checked style="width:auto;">
+                    <label for="optKasko" style="margin:0; cursor:pointer;">КАСКО (Ежегодное, ~5-7% от цены авто)</label>
+                </div>
+                <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                    <input type="checkbox" id="optLifeInsurance" checked style="width:auto;">
+                    <label for="optLifeInsurance" style="margin:0; cursor:pointer;">Страхование жизни/здоровья (~0.5-1% от тела кредита в год)</label>
+                </div>
+                <div class="form-group">
+                    <label for="extraFees">Разовые комиссии банка / Оформление, ₽</label>
+                    <input type="number" id="extraFees" value="15000" min="0" step="1000">
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn-calc mt-1">Рассчитать полную стоимость</button>
+        </form>
+    </div>
+
+    <!-- РЕЗУЛЬТАТЫ РАСЧЕТА -->
+    <div id="resultsArea" style="display:none;">
+        
+        <div class="result-box mt-1 fade-in-up">
+            <h3>Итоговые показатели</h3>
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; margin-top:15px;">
+                <div>
+                    <span style="color:var(--color-text-muted)">Ежемесячный платеж:</span><br>
+                    <span class="big-number" id="monthlyPayment" style="font-size: 2.5rem;">0 ₽</span>
+                </div>
+                <div>
+                    <span style="color:var(--color-text-muted)">Переплата по процентам:</span><br>
+                    <span class="big-number" id="overpaymentInterest" style="color:#fbbf24; font-size: 2rem;">0 ₽</span>
+                </div>
+            </div>
+            
+            <div style="margin-top:20px; padding-top:15px; border-top: 1px dashed var(--color-border); display:flex; justify-content:space-around; flex-wrap:wrap; gap:15px; font-size: 0.95rem;">
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Сумма кредита (тело):</small><br><strong id="loanPrincipal">0 ₽</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Страховки за весь срок:</small><br><strong id="totalInsuranceCost">0 ₽</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">ПОЛНАЯ ЦЕНА АВТО:</small><br><strong id="finalCarPrice" style="color:#ef4444;">0 ₽</strong></div>
+            </div>
+             <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 10px; text-align: center;">
+                *Полная цена = Стоимость авто + Все проценты + Все страховки + Комиссии.
+            </p>
+        </div>
+
+        <!-- ГРАФИК СТРУКТУРЫ ЗАТРАТ -->
+        <div class="card mt-1 text-center">
+            <h3>Из чего складывается итоговая сумма?</h3>
+            <div style="height: 250px; width: 100%; max-width: 400px; margin: 0 auto;">
+                <canvas id="carLoanChart"></canvas>
+            </div>
+        </div>
+
+        <!-- СОВЕТ ЭКСПЕРТА -->
+        <div class="mt-1 mb-1 card" style="background: rgba(30, 41, 59, 0.6); border-left: 4px solid #22c55e;">
+            <h4 style="color: #22c55e; margin-bottom: 10px;">💡 Как снизить переплату?</h4>
+            <ul style="padding-left: 20px; line-height: 1.6; font-size: 0.95rem; color: var(--color-text-secondary);">
+                <li><b>Больший первый взнос:</b> Увеличение ПВ на 10% часто снижает ставку на 0.5–1 п.п., что экономит десятки тысяч рублей за срок.</li>
+                <li><b>Отказ от «навязанных» услуг:</b> Требуйте детализацию полисов. Часто банк включает GAP-страхование или юридические услуги без спроса.</li>
+                <li><b>Досрочное погашение:</b> Если планируете закрыть кредит раньше, выбирайте схему с уменьшением срока, а не платежа (экономия процентов максимальна).</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        © 2026 Просчёт · Расчет справочный.<br>
+        <small>Реальные условия зависят от конкретного банка и тарифов страховых компаний.</small>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+
+    document.getElementById('carLoanForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const carPrice = parseFloat(document.getElementById('carPrice').value);
+        const downPayment = parseFloat(document.getElementById('downPayment').value);
+        const rateAnnual = parseFloat(document.getElementById('interestRate').value) / 100 / 12; // Monthly rate
+        const termMonths = parseInt(document.getElementById('loanTerm').value);
+        
+        const hasKasko = document.getElementById('optKasko').checked;
+        const hasLife = document.getElementById('optLifeInsurance').checked;
+        const extraFees = parseFloat(document.getElementById('extraFees').value);
+
+        if (!carPrice || !termMonths) return alert("Введите данные");
+
+        // 1. Тело кредита
+        const loanPrincipal = Math.max(0, carPrice - downPayment);
+        
+        // 2. Ежемесячный платеж (Аннуитетная формула)
+        // PMT = P * r * (1+r)^n / ((1+r)^n - 1)
+        let monthlyPayment = 0;
+        let totalInterest = 0;
+
+        if (rateAnnual > 0) {
+            const powFactor = Math.pow(1 + rateAnnual, termMonths);
+            monthlyPayment = loanPrincipal * (rateAnnual * powFactor) / (powFactor - 1);
+            totalInterest = (monthlyPayment * termMonths) - loanPrincipal;
+        } else {
+            monthlyPayment = loanPrincipal / termMonths;
+            totalInterest = 0;
+        }
+
+        // 3. Расчет страховок
+        // КАСКО: обычно платится ежегодно. Для упрощения считаем общий объем за срок (усредненно 6% от цены авто в год).
+        // Но так как машина дешевеет, точный расчет сложен. Возьмем консервативную оценку: 5% от цены авто * кол-во лет.
+        const years = termMonths / 12;
+        let kaskoTotal = 0;
+        if (hasKasko) {
+            // Примерная формула: Цена * 0.05 * Кол-во лет (без учета снижения коэффициента, это верхняя граница)
+            kaskoTotal = carPrice * 0.05 * years; 
+        }
+
+        // Страхование жизни: ~0.8% от остатка долга в месяц. Упрощенно: 1% от тела кредита в год.
+        let lifeTotal = 0;
+        if (hasLife) {
+            lifeTotal = loanPrincipal * 0.01 * years;
+        }
+
+        const totalInsurance = kaskoTotal + lifeTotal;
+
+        // 4. Полная стоимость авто
+        const finalCarPrice = carPrice + totalInterest + totalInsurance + extraFees;
+
+        // Вывод результатов
+        document.getElementById('resultsArea').style.display = 'block';
+        document.getElementById('monthlyPayment').innerText = fmt.format(Math.round(monthlyPayment)) + ' ₽';
+        document.getElementById('overpaymentInterest').innerText = fmt.format(Math.round(totalInterest)) + ' ₽';
+        document.getElementById('loanPrincipal').innerText = fmt.format(loanPrincipal) + ' ₽';
+        document.getElementById('totalInsuranceCost').innerText = fmt.format(Math.round(totalInsurance)) + ' ₽';
+        document.getElementById('finalCarPrice').innerText = fmt.format(Math.round(finalCarPrice)) + ' ₽';
+
+        drawCarLoanChart(carPrice, totalInterest, totalInsurance, extraFees);
+        document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function drawCarLoanChart(basePrice, interest, insurance, fees) {
+        const ctx = document.getElementById('carLoanChart').getContext('2d');
+        if (window.myCarLoanChart) window.myCarLoanChart.destroy();
+
+        window.myCarLoanChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Цена авто', 'Проценты банку', 'Страховки', 'Комиссии'],
+                datasets: [{
+                    data: [basePrice, interest, insurance, fees],
+                    backgroundColor: ['#38bdf8', '#ef4444', '#fbbf24', '#818cf8'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '60%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#f8fafc' } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + fmt.format(context.parsed) + ' ₽';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
