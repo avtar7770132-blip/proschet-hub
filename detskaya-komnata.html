@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор ремонта детской комнаты: бюджет под ключ — Просчёт</title>
+    <meta name="description" content="Рассчитайте стоимость ремонта и обстановки детской комнаты для малыша, школьника или подростка. Учитываем экологичные материалы, зонирование и безопасность.">
+    
+    <!-- Подключение стилей -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <!-- Яндекс Метрика -->
+    <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
+</head>
+<body>
+
+<div class="container">
+    <header style="margin-bottom: 30px;">
+        <a href="index.html" style="font-weight: bold; color: var(--color-accent-blue); text-decoration: none;">← Назад к списку калькуляторов</a>
+    </header>
+
+    <h1>Калькулятор ремонта детской комнаты</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Узнайте бюджет на ремонт и мебель для ребенка любого возраста.</p>
+
+    <div class="card">
+        <form id="kidsRoomForm">
+            <!-- Блок 1: Возраст и Стиль -->
+            <fieldset style="border: 1px solid var(--color-border); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                <legend style="font-size: 0.9rem; color: #ec4899; font-weight: bold;">ВОЗРАСТ РЕБЕНКА (ВЛИЯЕТ НА МЕБЕЛЬ)</legend>
+                
+                <div class="form-group">
+                    <label for="childAge">Для кого делаем комнату?</label>
+                    <select id="childAge">
+                        <option value="baby">Малыш (0–3 года): Кроватка, пеленальный стол, мягкий пол</option>
+                        <option value="school" selected>Школьник (7–12 лет): Письменный стол, кровать-чердак, стеллажи</option>
+                        <option value="teen">Подросток (13+ лет): Диван-кровать, гардероб, геймерская зона</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <!-- Блок 2: Геометрия -->
+            <fieldset style="border: 1px solid var(--color-border); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                <legend style="font-size: 0.9rem; color: var(--color-accent-blue); font-weight: bold;">ПАРАМЕТРЫ ПОМЕЩЕНИЯ</legend>
+                
+                <div class="form-group">
+                    <label for="roomArea">Площадь комнаты, м²</label>
+                    <input type="number" id="roomArea" value="12" required min="6" step="0.5">
+                </div>
+
+                <div class="form-group">
+                    <label for="ceilingHeight">Высота потолков, м</label>
+                    <input type="number" id="ceilingHeight" value="2.7" required min="2.4" max="3.5" step="0.1">
+                </div>
+            </fieldset>
+
+            <!-- Блок 3: Уровень отделки -->
+            <div class="form-group mt-1">
+                <label for="finishLevel">Уровень чистовой отделки (Экология + Дизайн)</label>
+                <select id="finishLevel">
+                    <option value="eco-budget">Бюджетный Эко (Обои винил, Линолеум, Краска водоэмульсионная)</option>
+                    <option value="standard" selected>Стандарт Комфорт (Флизелиновые обои, Пробковый пол/Ламинат, Латексная краска)</option>
+                    <option value="premium">Премиум Безопасность (Жидкие обои/Ткань, Паркетная доска, Интерьерная штукатурка)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-calc mt-1">Рассчитать смету детской</button>
+        </form>
+    </div>
+
+    <!-- РЕЗУЛЬТАТЫ РАСЧЕТА -->
+    <div id="resultsArea" style="display:none;">
+        
+        <div class="result-box mt-1 fade-in-up">
+            <h3>Предварительный бюджет проекта</h3>
+            <div style="text-align:center; margin-top:15px;">
+                <span style="color:var(--color-text-muted)">Стоимость «под ключ» (ремонт + базовая мебель):</span><br>
+                <span class="big-number" id="finalPrice" style="font-size: 3rem; letter-spacing: -1px;">0 ₽</span>
+            </div>
+            
+            <div style="margin-top:20px; padding-top:15px; border-top: 1px dashed var(--color-border); display:flex; justify-content:space-around; flex-wrap:wrap; gap:15px; font-size: 0.95rem;">
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Отделка стен/потолка</small><br><strong id="costWalls">0 ₽</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Напольное покрытие</small><br><strong id="costFloor">0 ₽</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Мебельный пакет</small><br><strong id="costFurniture">0 ₽</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Освещение и Декор</small><br><strong id="costDecor">0 ₽</strong></div>
+            </div>
+        </div>
+
+        <!-- ДЕТАЛЬНАЯ РАЗБИВКА ПО ЭТАПАМ -->
+        <div class="card mt-1">
+            <h3>Что входит в смету?</h3>
+            <table class="payment-schedule" style="width:100%; font-size: 0.9rem;">
+                <thead>
+                    <tr>
+                        <th>Категория</th>
+                        <th>Состав работ/товаров</th>
+                        <th>Стоимость, ₽</th>
+                    </tr>
+                </thead>
+                <tbody id="breakdownTableBody">
+                    <!-- Заполняется динамически -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ГРАФИК СТРУКТУРЫ ЗАТРАТ -->
+        <div class="card mt-1 text-center">
+            <h3>Распределение бюджета</h3>
+            <div style="height: 250px; width: 100%; max-width: 400px; margin: 0 auto;">
+                <canvas id="kidsCostChart"></canvas>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 10px;">
+                *В детской комнате доля мебели обычно выше, чем во взрослых помещениях, из-за необходимости хранения игрушек и вещей.
+            </p>
+        </div>
+
+        <!-- СОВЕТ ЭКСПЕРТА / НАТИВНАЯ РЕКЛАМА -->
+        <div class="mt-1 mb-1 card" style="background: rgba(30, 41, 59, 0.6); border-left: 4px solid #ec4899;">
+            <h4 style="color: #ec4899; margin-bottom: 10px;">🧸 Советы по безопасности:</h4>
+            <ul style="padding-left: 20px; line-height: 1.6; font-size: 0.95rem; color: var(--color-text-secondary);">
+                <li><b>Розетки:</b> Обязательно установите заглушки или выберите модели со шторками. Для малышей лучше скрыть нижние розетки за мебелью.</li>
+                <li><b>Окна:</b> Установите детские замки на ручки окон. Москитные сетки должны быть усиленными (PetScreen), чтобы ребенок не мог их выдавить.</li>
+                <li><b>Материалы:</b> Выбирайте лакокрасочные покрытия с маркировкой «для детских учреждений» или сертификатами GREENGUARD Gold (низкая эмиссия VOC).</li>
+            </ul>
+        </div>
+
+        <!-- CTA БЛОК СО ССЫЛКОЙ НА КАЛЬКУЛЯТОР МЕБЕЛИ -->
+        <div class="card mt-1" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid var(--color-accent-blue); text-align:center; padding: 30px;">
+            <h3 style="color: white; margin-bottom: 15px;">Хотите рассчитать точную стоимость шкафов и столов?</h3>
+            <p style="color: var(--color-text-secondary); margin-bottom: 20px;">Используйте наш калькулятор мебели. Выберите материал (ЛДСП/МДФ) и размеры, чтобы получить цену изготовления под ваши параметры.</p>
+            <a href="mebel.html" class="btn-calc" style="display:inline-block; width:auto; padding:15px 30px; font-size: 1.1rem;">👉 Рассчитать мебель для детской</a>
+        </div>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        © 2026 Просчёт · Расчет справочный. Не является офертой.<br>
+        <small>Цены актуальны для Москвы и МО на октябрь 2026 года.</small>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
+
+    // Коэффициенты стоимости отделки (руб/м2 стены + потолок)
+    const WALL_FINISH_RATES = {
+        'eco-budget': 1200,   // Обои + покраска потолка
+        'standard': 2500,     // Флизелин + подготовка стен + латекс
+        'premium': 4500       // Штукатурка/Жидкие обои + сложный декор
+    };
+
+    // Коэффициенты стоимости пола (руб/м2)
+    const FLOOR_RATES = {
+        'eco-budget': 1500,   // Линолеум коммерческий
+        'standard': 3000,     // Ламинат 32 кл. + подложка
+        'premium': 6000       // Паркетная доска/Пробка + циклевка
+    };
+
+    // Базовые пакеты мебели в зависимости от возраста (руб)
+    const FURNITURE_PACKAGES = {
+        baby: {
+            items: ["Кроватка-трансформер", "Пеленальный столик", "Комод для белья", "Мягкий коврик"],
+            cost: 45000
+        },
+        school: {
+            items: ["Письменный стол 120см", "Кресло ортопедическое", "Кровать односпальная", "Шкаф купе 1.5м", "Стеллаж для книг"],
+            cost: 85000
+        },
+        teen: {
+            items: ["Диван-кровать евро", "Гардеробная секция", "Компьютерный стол", "Гамак/Кресло-мешок", "Полки навесные"],
+            cost: 110000
+        }
+    };
+
+    // Освещение и декор (фиксированные суммы + % от площади)
+    const DECOR_BASE = 15000; // Люстра, бра, шторы, картины
+    const LIGHTING_PER_M2 = 500; // Дополнительные светильники, гирлянды
+
+    document.getElementById('kidsRoomForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const ageGroup = document.getElementById('childAge').value;
+        const area = parseFloat(document.getElementById('roomArea').value);
+        const height = parseFloat(document.getElementById('ceilingHeight').value);
+        const finishLevel = document.getElementById('finishLevel').value;
+
+        if (!area || !height) return alert("Введите размеры помещения");
+
+        // 1. Расчет площадей
+        // Периметр условно принимаем как sqrt(area)*4 (квадрат) или даем пользователю ввести? 
+        // Для простоты демо: Площадь стен = 2 * (sqrt(area) * 2) * height. 
+        // Более точно: Пусть P = Perimeter. Area = W*L. Assume Square-ish room.
+        // Используем приближение: Стены ≈ 4 * sqrt(Area) * Height.
+        const wallAreaApprox = 4 * Math.sqrt(area) * height;
+        const ceilingArea = area;
+        const totalSurfaceForWallsCeilings = wallAreaApprox + ceilingArea;
+
+        // 2. Стоимость отделки
+        const rateWall = WALL_FINISH_RATES[finishLevel];
+        const costWalls = totalSurfaceForWallsCeilings * rateWall;
+
+        // 3. Стоимость пола
+        const rateFloor = FLOOR_RATES[finishLevel];
+        const costFloor = area * rateFloor;
+
+        // 4. Мебель
+        const furnitureData = FURNITURE_PACKAGES[ageGroup];
+        const costFurniture = furnitureData.cost;
+
+        // 5. Свет и Декор
+        const costDecor = DECOR_BASE + (area * LIGHTING_PER_M2);
+
+        // 6. Итого
+        const grandTotal = costWalls + costFloor + costFurniture + costDecor;
+
+        // Вывод результатов
+        document.getElementById('resultsArea').style.display = 'block';
+        document.getElementById('finalPrice').innerText = fmt.format(grandTotal) + ' ₽';
+        document.getElementById('costWalls').innerText = fmt.format(costWalls) + ' ₽';
+        document.getElementById('costFloor').innerText = fmt.format(costFloor) + ' ₽';
+        document.getElementById('costFurniture').innerText = fmt.format(costFurniture) + ' ₽';
+        document.getElementById('costDecor').innerText = fmt.format(costDecor) + ' ₽';
+
+        // Таблица разбивки
+        const tbody = document.getElementById('breakdownTableBody');
+        tbody.innerHTML = '';
+        
+        const rows = [
+            { cat: "Отделка поверхностей", desc: `Стены и потолок (${rateWall}₽/м²)`, price: costWalls },
+            { cat: "Напольное покрытие", desc: `Материал + укладка (${rateFloor}₽/м²)`, price: costFurniture }, // Wait, bug in logic below, fixing in render
+            { cat: "Мебельный гарнитур", desc: furnitureData.items.join(', '), price: costFurniture },
+            { cat: "Освещение и Текстиль", desc: "Люстры, шторы, элементы декора", price: costDecor }
+        ];
+
+        // Correcting the table generation loop manually to avoid variable confusion
+        const tableRows = [
+            { title: "Отделка стен и потолка", detail: `Площадь ~${Math.round(totalSurfaceForWallsCeilings)} м² × ${rateWall} ₽`, val: costWalls },
+            { title: "Пол", detail: `${area} м² × ${rateFloor} ₽`, val: costFloor },
+            { title: "Мебель (" + ageGroup.toUpperCase() + ")", detail: furnitureData.items.slice(0,2).join(', ') + "...", val: costFurniture },
+            { title: "Декор и Свет", detail: "Шторы, лампы, аксессуары", val: costDecor }
+        ];
+
+        tableRows.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><b>${row.title}</b></td>
+                <td style="color:var(--color-text-muted)">${row.detail}</td>
+                <td style="text-align:right"><b>${fmt.format(Math.round(row.val))} ₽</b></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        drawKidsChart([costWalls, costFloor, costFurniture, costDecor]);
+        document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    function drawKidsChart(dataArray) {
+        const ctx = document.getElementById('kidsCostChart').getContext('2d');
+        if (window.myKidsChart) window.myKidsChart.destroy();
+
+        window.myKidsChart = new Chart(ctx, {
+            type: 'pie', // Pie chart looks better for distinct categories like this
+            data: {
+                labels: ['Отделка', 'Пол', 'Мебель', 'Декор'],
+                datasets: [{
+                    data: dataArray,
+                    backgroundColor: ['#38bdf8', '#fbbf24', '#ec4899', '#818cf8'],
+                    borderWidth: 2,
+                    borderColor: '#0f172a'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#f8fafc' } },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + fmt.format(context.parsed) + ' ₽';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
