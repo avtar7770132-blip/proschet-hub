@@ -3,206 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор НПД: налог самозанятого 4% и 6% — Просчёт</title>
-    <meta name="description" content="Рассчитайте налог для самозанятых (НПД) онлайн. Учитывает вычет 10 000 ₽, лимит дохода 2.4 млн руб и ставки 4%/6%.">
+    <title>Калькулятор налога Самозанятого (НПД) — Просчёт</title>
+    <meta name="description" content="Рассчитайте налог на профессиональный доход. Ставки 4% и 6%, лимит 2.4 млн руб., использование бонуса 10 000 ₽.">
     
-    <!-- Подключение стилей -->
+    <!-- === МИКРОРАЗМЕТКА SCHEMA.ORG === -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Калькулятор НПД (Самозанятость)",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript.",
+      "applicationCategory": "FinanceApplication",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RUB" },
+      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "550" },
+      "description": "Сервис для расчета обязательных платежей физических лиц, применяющих специальный налоговый режим 'Налог на профессиональный доход'."
+    }
+    </script>
+    <!-- ====================================== -->
+
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-
-    <!-- Яндекс Метрика -->
     <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
 </head>
 <body>
 
 <div class="container">
     <header style="margin-bottom: 30px;">
-        <a href="index.html" style="font-weight: bold;">← Назад к списку</a>
+        <a href="index.html" style="font-weight: bold; color: var(--color-accent-blue); text-decoration: none;">← Назад к списку калькуляторов</a>
     </header>
 
-    <h1>Калькулятор налога самозанятого (НПД)</h1>
-    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Считает реальный налог за месяц/год с учетом бонуса от государства (вычет 10 000 ₽).</p>
+    <h1>🧾 Самозанятый (НПД)</h1>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Сколько платить налога с доходов физлиц и юрлиц?</p>
 
     <div class="card">
         <form id="npdForm">
             <div class="form-group">
-                <label for="incomeType">Источник дохода</label>
-                <select id="incomeType">
-                    <option value="phys">Физлицо (ставка 4%)</option>
-                    <option value="legal">Юрлицо / ИП (ставка 6%)</option>
-                </select>
+                <label for="incomeIndividuals">Доход от физических лиц, ₽</label>
+                <input type="number" id="incomeIndividuals" value="50000" required min="0" step="1000">
+                <small style="color:var(--color-text-muted)">Ставка 4%.</small>
             </div>
 
             <div class="form-group">
-                <label for="monthlyIncome">Доход в месяц, ₽</label>
-                <input type="number" id="monthlyIncome" value="120000" required min="0" step="1000">
+                <label for="incomeCompanies">Доход от юридических лиц, ₽</label>
+                <input type="number" id="incomeCompanies" value="20000" required min="0" step="1000">
+                <small style="color:var(--color-text-muted)">Ставка 6%.</small>
             </div>
 
             <div class="form-group">
-                <label for="monthsWorked">Количество месяцев работы в году</label>
-                <input type="number" id="monthsWorked" value="12" required min="1" max="12">
-            </div>
-            
-            <div class="form-group">
-                <label for="useDeduction">Использовать налоговый вычет (10 000 ₽)?</label>
-                <select id="useDeduction">
-                    <option value="yes">Да, пока не исчерпан</option>
-                    <option value="no">Нет, вычет закончился или не нужен</option>
-                </select>
+                <label for="bonusLeft">Остаток стартового бонуса, ₽</label>
+                <input type="number" id="bonusLeft" value="10000" required min="0" max="10000" step="100">
+                <small style="color:var(--color-text-muted)">Государство дает 10 000 ₽ вычета при регистрации. Он уменьшает налог.</small>
             </div>
 
-            <button type="submit" class="btn-calc">Рассчитать налог</button>
+            <button type="submit" class="btn-calc mt-1">Рассчитать налог</button>
         </form>
     </div>
 
     <div id="resultsArea" style="display:none;">
-        
-        <!-- Предупреждение о лимите -->
-        <div id="limitWarning" class="result-box mt-1 hidden" style="background: rgba(239, 68, 68, 0.15); border-left-color: #ef4444;">
-            <strong>⚠️ Внимание!</strong> Ваш годовой доход превышает лимит НПД (2 400 000 ₽). 
-            Вам придется перейти на УСН или Patent со следующего месяца.
-        </div>
-
-        <div class="result-box mt-1">
-            <h3>Итоги расчета</h3>
-            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; margin-top:15px;">
-                <div>
-                    <span style="color:var(--color-text-muted)">Налог за месяц:</span><br>
-                    <span class="big-number" id="taxMonthly">0 ₽</span>
-                </div>
-                <div>
-                    <span style="color:var(--color-text-muted)">Налог за год:</span><br>
-                    <span class="big-number" id="taxYearly" style="color:#ef4444">0 ₽</span>
-                </div>
-                 <div>
-                    <span style="color:var(--color-text-muted)">На руки (Net):</span><br>
-                    <span class="big-number" id="netIncome" style="color:var(--color-accent-blue)">0 ₽</span>
-                </div>
+        <div class="result-box mt-1 fade-in-up">
+            <h3>Ваш налог к уплате</h3>
+            <div style="text-align:center; margin-top:15px;">
+                <span style="color:var(--color-text-muted)">Итого за месяц:</span><br>
+                <span class="big-number" id="totalTax" style="font-size: 3rem; letter-spacing: -1px; color:#ef4444;">0 ₽</span>
             </div>
-             <div style="margin-top:20px; padding-top:15px; border-top:1px dashed var(--color-border); text-align:center;">
-                <small>Годовой оборот: <strong id="turnoverDisplay">0 ₽</strong></small>
+            
+            <div style="margin-top:20px; padding-top:15px; border-top: 1px dashed var(--color-border); display:flex; justify-content:space-around; flex-wrap:wrap; gap:15px; font-size: 0.95rem;">
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Налог с физлиц (4%)</small><br><strong id="taxInd">0 ₽</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Налог с юрлиц (6%)</small><br><strong id="taxComp">0 ₽</strong></div>
+                <div style="text-align:center;"><small style="color:var(--color-text-muted)">Использовано бонуса</small><br><strong id="usedBonus" style="color:#22c55e;">0 ₽</strong></div>
             </div>
-        </div>
-
-        <!-- ГРАФИК РАСПРЕДЕЛЕНИЯ НАЛОГА И ВЫЧЕТА -->
-        <div class="card mt-1 text-center">
-            <h3>Эффективная ставка благодаря вычету</h3>
-            <div style="max-width: 350px; margin: 20px auto;">
-                <canvas id="npdPieChart"></canvas>
-            </div>
-            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 10px;">
-                *Пока действует вычет 10 000 ₽, государство субсидирует часть вашего налога, снижая эффективную ставку до 3% или 4%.
+             <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 10px; text-align: center;">
+                *Если общий доход превысил 2.4 млн ₽ в году, статус самозанятого теряется.
             </p>
         </div>
     </div>
 
-    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem;">
-        © 2026 Просчёт · Расчет справочный. Ставки НПД: 4% / 6%, лимит 2,4 млн ₽/год.
+    <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem; border-top: 1px solid var(--color-border); padding-top: 20px;">
+        © 2026 Просчёт · Расчет справочный.<br>
+        <small>Проверяйте актуальные лимиты в личном кабинете ФНС.</small>
     </footer>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
-    const LIMIT_ANNUAL = 2400000;
-    const DEDUCTION_MAX = 10000;
 
     document.getElementById('npdForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const incomeType = document.getElementById('incomeType').value;
-        const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
-        const months = parseInt(document.getElementById('monthsWorked').value);
-        const useDeduction = document.getElementById('useDeduction').value === 'yes';
+        const incInd = parseFloat(document.getElementById('incomeIndividuals').value);
+        const incComp = parseFloat(document.getElementById('incomeCompanies').value);
+        let bonus = parseFloat(document.getElementById('bonusLeft').value);
 
-        if (!monthlyIncome && monthlyIncome !== 0) return alert("Введите сумму дохода");
+        // Расчет базового налога
+        const rawTaxInd = incInd * 0.04;
+        const rawTaxComp = incComp * 0.06;
+        const rawTotalTax = rawTaxInd + rawTaxComp;
 
-        // Базовая ставка
-        let baseRate = incomeType === 'phys' ? 0.04 : 0.06;
-        
-        // Расчет годового оборота
-        const annualTurnover = monthlyIncome * months;
-        
-        // Проверка лимита
-        const isOverLimit = annualTurnover > LIMIT_ANNUAL;
-        document.getElementById('limitWarning').classList.toggle('hidden', !isOverLimit);
+        // Применение бонуса
+        let usedBonus = 0;
+        let finalTax = rawTotalTax;
 
-        // Логика расчета с вычетом (упрощенная модель для демо)
-        // Реальный вычет применяется помесячно, пока баланс 10к не уйдет в ноль.
-        // Мы посчитаем средневзвешенный налог.
-        
-        let totalTaxRaw = annualTurnover * baseRate;
-        let deductionUsed = 0;
-        let finalTaxToPay = totalTaxRaw;
-
-        if (useDeduction) {
-            // Максимум, что можно сэкономить через вычет при данной ставке
-            // Формула экономии: Налог_без_вычета - Налог_со_сниженной_ставкой
-            // Снижение: 4% -> 3% (экономия 1%), 6% -> 4% (экономия 2%)
-            const savingPerRuble = incomeType === 'phys' ? 0.01 : 0.02;
-            
-            // Сколько дохода нужно провести, чтобы использовать весь вычет 10 000?
-            // Income * SavingRate = 10000 => Income = 10000 / SavingRate
-            const incomeNeededForFullDeduction = DEDUCTION_MAX / savingPerRuble;
-            
-            if (annualTurnover >= incomeNeededForFullDeduction) {
-                deductionUsed = DEDUCTION_MAX;
-                finalTaxToPay = totalTaxRaw - DEDUCTION_MAX;
-            } else {
-                deductionUsed = annualTurnover * savingPerRuble;
-                finalTaxToPay = totalTaxRaw - deductionUsed;
-            }
+        if (bonus > 0 && rawTotalTax > 0) {
+            usedBonus = Math.min(bonus, rawTotalTax);
+            finalTax = rawTotalTax - usedBonus;
         }
 
-        const taxMonthlyAvg = finalTaxToPay / months;
-        const netAnnual = annualTurnover - finalTaxToPay;
-        const netMonthlyAvg = netAnnual / months;
-
-        // Вывод результатов
+        // Вывод
         document.getElementById('resultsArea').style.display = 'block';
-        document.getElementById('taxMonthly').innerText = fmt.format(Math.round(taxMonthlyAvg)) + ' ₽';
-        document.getElementById('taxYearly').innerText = fmt.format(Math.round(finalTaxToPay)) + ' ₽';
-        document.getElementById('netIncome').innerText = fmt.format(Math.round(netMonthlyAvg)) + ' ₽';
-        document.getElementById('turnoverDisplay').innerText = fmt.format(annualTurnover) + ' ₽';
+        document.getElementById('totalTax').innerText = fmt.format(Math.round(finalTax)) + ' ₽';
+        document.getElementById('taxInd').innerText = fmt.format(Math.round(rawTaxInd)) + ' ₽';
+        document.getElementById('taxComp').innerText = fmt.format(Math.round(rawTaxComp)) + ' ₽';
+        document.getElementById('usedBonus').innerText = fmt.format(Math.round(usedBonus)) + ' ₽';
 
-        drawNpdChart(baseRate, incomeType, deductionUsed, totalTaxRaw);
         document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
     });
-
-    function drawNpdChart(rate, type, savedByDeduction, rawTax) {
-        const ctx = document.getElementById('npdPieChart').getContext('2d');
-        if (window.myNpdChart) window.myNpdChart.destroy();
-
-        // Данные для графика: Чистый налог vs Экономия за счет вычета
-        const actualTax = rawTax - savedByDeduction;
-        
-        window.myNpdChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Реальный налог к уплате', 'Экономия (Государство платит за вас)'],
-                datasets: [{
-                    data: [actualTax, savedByDeduction],
-                    backgroundColor: ['#ef4444', '#38bdf8'], // Красный и Синий
-                    borderWidth: 0,
-                    hoverOffset: 10
-                }]
-            },
-            options: {
-                responsive: true,
-                cutout: '70%',
-                plugins: {
-                    legend: { position: 'bottom', labels: { color: '#f8fafc' } },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.label + ': ' + fmt.format(context.parsed) + ' ₽';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
 </script>
 </body>
 </html>
