@@ -150,18 +150,23 @@
     const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
 
     // Коэффициенты стоимости (руб/м2 или фиксированные суммы)
-    // Основаны на средних ценах по Москве/МО на 2026 год
-    
     const RATES = {
         economy: { tileMat: 1200, workTile: 3000, chebnovaya: 2200 },
         standard: { tileMat: 2500, workTile: 4000, chebnovaya: 2800 },
         premium: { tileMat: 5000, workTile: 5500, chebnovaya: 3500 }
     };
 
+    // Исправленные ключи для сантехники (соответствуют значениям select: economy, standard, premium)
     const PLUMBING_SETS = {
-        bathtub_econ: 35000, bathtub_std: 55000, bathtub_prem: 95000,
-        toilet_econ: 18000, toilet_std: 30000, toilet_prem: 55000,
-        shower_base: 45000 // Душевой уголок + трап + смеситель
+        bathtub_economy: 35000, 
+        bathtub_standard: 55000, 
+        bathtub_premium: 95000,
+        
+        toilet_economy: 18000, 
+        toilet_standard: 30000, 
+        toilet_premium: 55000,
+        
+        shower_base: 45000 // Универсальная цена за душевой уголок
     };
 
     const COST_DEMOLITION_FIX = 18000; // Демонтаж + вывоз мусора
@@ -183,16 +188,15 @@
 
         // 1. Расчет площадей
         const floorArea = w * l;
-        // Периметр минус ширина двери (условно 0.8м)
         const perimeter = 2 * (w + l) - 0.8; 
         const wallArea = perimeter * h;
         const totalSurfaceForChebnovaya = wallArea + floorArea;
         
-        // Площадь плитки (стены + пол) с запасом 10% на подрезку
+        // Площадь плитки с запасом 10%
         const totalTileNeededWall = wallArea * 1.1;
         const totalTileNeededFloor = floorArea * 1.1;
 
-        // 2. Черновая отделка (Гидроизоляция + Штукатурка/выравнивание)
+        // 2. Черновая отделка
         const costChebnovaya = totalSurfaceForChebnovaya * RATES[level].chebnovaya;
 
         // 3. Плитка (Материал + Работа)
@@ -200,21 +204,23 @@
         const tileWorkCost = (totalTileNeededWall + totalTileNeededFloor) * RATES[level].workTile;
         const costTiles = tileMatCost + tileWorkCost;
 
-        // 4. Сантехника
+        // 4. Сантехника (Исправленная логика доступа к объекту)
         let costSanitary = 0;
-        const prefix = level.substring(0, 3); // econ, std, prem
         
         if (hasBathtub) {
-            costSanitary += PLUMBING_SETS['bathtub_' + prefix];
+            const key = 'bathtub_' + level; // Создает ключ типа 'bathtub_economy'
+            costSanitary += PLUMBING_SETS[key] || 0; // Защита от undefined
         }
+        
         if (hasToilet) {
-            costSanitary += PLUMBING_SETS['toilet_' + prefix];
+            const key = 'toilet_' + level;
+            costSanitary += PLUMBING_SETS[key] || 0;
         }
-        if (hasShower && !hasBathtub) { // Если есть душ без ванны
-             costSanitary += PLUMBING_SETS.shower_base;
-        } else if (hasShower && hasBathtub) {
-             // Комбинированный вариант: добавляем только душевую стойку/трап условно
-             costSanitary += 15000; 
+        
+        if (hasShower) {
+            // Если есть душ, добавляем базовую стоимость уголка
+            // Примечание: если есть и ванна, и душ, считаем оба элемента отдельно
+            costSanitary += PLUMBING_SETS.shower_base;
         }
 
         // 5. Итоговая сумма
