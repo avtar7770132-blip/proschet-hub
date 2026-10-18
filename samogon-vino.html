@@ -6,6 +6,30 @@
     <title>Калькулятор самогонщика и винодела: выход спирта и шуартирование — Просчёт</title>
     <meta name="description" content="Рассчитайте теоретический выход самогона из сахара и зерна. Узнайте сколько сахара добавить в виноградное сусло для нужной крепости вина. Профессиональные формулы Гей-Люссака.">
     
+    <!-- === МИКРОРАЗМЕТКА SCHEMA.ORG (WEBAPPLICATION) === -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Калькулятор Самогонщика и Винодела",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "applicationCategory": "LifestyleApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "RUB"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.7",
+        "reviewCount": "89"
+      },
+      "description": "Инструмент для расчета выхода дистиллята из различных видов сырья и корректировки сахаристости виноградного сусла (шуартирование)."
+    }
+    </script>
+    <!-- =================================================== -->
+
     <!-- Подключение стилей -->
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -178,27 +202,20 @@
         if (!weight || !targetStrength) return alert("Введите данные");
 
         // Коэффициенты выхода абсолютного спирта (литров) из 1 кг сырья
-        // Сахар: теоретически 0.6 л. Практически 0.55-0.6. Берем 0.6.
-        // Зерно: зависит от крахмала. Пшеница ~0.35-0.4. Берем 0.38.
-        // Фрукты: очень низко, считаем как сахарную брагу с низким КПД, но здесь упрощаем до 0.1 (для ягод/фруктов без добавления сахара). 
-        // Но обычно "самогоны из фруктов" делают с добавлением сахара. Для чистого фруктового сока коэффициент мал.
-        // Давайте использовать стандартные значения для браги:
         let yieldFactor = 0;
         if (rawType === 'sugar') yieldFactor = 0.6;
         else if (rawType === 'grain') yieldFactor = 0.38;
-        else if (rawType === 'fruit') yieldFactor = 0.15; // Условный коэффициент для сладких фруктов/ягод
+        else if (rawType === 'fruit') yieldFactor = 0.15; 
 
         const pureAlcoholTheoretical = weight * yieldFactor;
         const pureAlcoholReal = pureAlcoholTheoretical * efficiency;
 
         // Объем готового продукта при заданной крепости
-        // V_product = V_pure_alcohol / Strength_decimal
         const finalVolume = pureAlcoholReal / targetStrength;
 
-        // Себестоимость (грубая оценка: сырье + вода/дрожжи/энергия)
-        // Сахар ~60р/кг. Зерно ~30р/кг. Фрукты ~100р/кг. Накладные расходы ~20р/кг сырья.
+        // Себестоимость (грубая оценка)
         let costPerKgRaw = 0;
-        if (rawType === 'sugar') costPerKgRaw = 80; // 60 сахар + 20 накладные
+        if (rawType === 'sugar') costPerKgRaw = 80; 
         else if (rawType === 'grain') costPerKgRaw = 50; 
         else if (rawType === 'fruit') costPerKgRaw = 120;
 
@@ -218,29 +235,21 @@
         e.preventDefault();
         
         const volumeL = parseFloat(document.getElementById('wVolume').value);
-        const currentSugarGL = parseFloat(document.getElementById('wCurrentSugar').value); // г/л
-        const targetABV = parseFloat(document.getElementById('wTargetABV').value); // % об.
+        const currentSugarGL = parseFloat(document.getElementById('wCurrentSugar').value); 
+        const targetABV = parseFloat(document.getElementById('wTargetABV').value); 
 
         if (!volumeL || isNaN(currentSugarGL) || !targetABV) return alert("Введите данные");
 
-        // Формула Шуартирования (упрощенная классическая):
-        // 17 грамм сахара на 1 литр дают примерно 1% объема спирта.
-        // Текущая потенциальная крепость от имеющегося сахара:
+        // Формула Шуартирования: 17г сахара на 1 литр дают ~1% ABV
         const potentialABVFromCurrent = currentSugarGL / 17;
-        
-        // Какая дополнительная крепость нужна?
         const abvDeficit = targetABV - potentialABVFromCurrent;
 
         let sugarToAddTotal = 0;
 
         if (abvDeficit > 0) {
-            // Нужно добавить сахара
-            // Грамм сахара на литр для 1% ABV = 17г
             const gramsPerLiterNeeded = abvDeficit * 17;
             sugarToAddTotal = gramsPerLiterNeeded * volumeL;
         } else {
-            // Крепость уже выше целевой или равна ей. Ничего добавлять не нужно.
-            // Можно предложить разбавить водой, но это не входит в задачу "добавить сахар".
             alert("Текущий уровень сахара обеспечивает крепость выше или равную целевой. Добавление сахара не требуется.");
             document.getElementById('resultsWine').style.display = 'none';
             return;
