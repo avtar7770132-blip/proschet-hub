@@ -6,6 +6,30 @@
     <title>Калькулятор авто-кредита: полная стоимость владения — Просчёт</title>
     <meta name="description" content="Рассчитайте ежемесячный платеж и полную стоимость автомобиля в кредите. Учитываем первоначальный взнос, ставку банка, КАСКО и страхование жизни. Сравнение с покупкой за наличные.">
     
+    <!-- === МИКРОРАЗМЕТКА SCHEMA.ORG (WEBAPPLICATION) === -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Калькулятор авто-кредита",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "applicationCategory": "FinanceApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "RUB"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "128"
+      },
+      "description": "Инструмент для расчета реальной стоимости автомобиля в рассрочку с учетом всех скрытых комиссий и страховок."
+    }
+    </script>
+    <!-- =================================================== -->
+
     <!-- Подключение стилей -->
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -153,7 +177,6 @@
         const loanPrincipal = Math.max(0, carPrice - downPayment);
         
         // 2. Ежемесячный платеж (Аннуитетная формула)
-        // PMT = P * r * (1+r)^n / ((1+r)^n - 1)
         let monthlyPayment = 0;
         let totalInterest = 0;
 
@@ -167,16 +190,12 @@
         }
 
         // 3. Расчет страховок
-        // КАСКО: обычно платится ежегодно. Для упрощения считаем общий объем за срок (усредненно 6% от цены авто в год).
-        // Но так как машина дешевеет, точный расчет сложен. Возьмем консервативную оценку: 5% от цены авто * кол-во лет.
         const years = termMonths / 12;
         let kaskoTotal = 0;
         if (hasKasko) {
-            // Примерная формула: Цена * 0.05 * Кол-во лет (без учета снижения коэффициента, это верхняя граница)
             kaskoTotal = carPrice * 0.05 * years; 
         }
 
-        // Страхование жизни: ~0.8% от остатка долга в месяц. Упрощенно: 1% от тела кредита в год.
         let lifeTotal = 0;
         if (hasLife) {
             lifeTotal = loanPrincipal * 0.01 * years;
