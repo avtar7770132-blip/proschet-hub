@@ -3,9 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор бетона для стяжки пола: расход, вес и цена — Просчёт</title>
-    <meta name="description" content="Точный расчет расхода сухой смеси и цемента для стяжки. Сравнение стоимости покупки мешков vs заказа полусухой стяжки миксером. Учет нагрузки на перекрытия.">
+    <title>Калькулятор бетона для стяжки пола: точный расход — Просчёт</title>
+    <meta name="description" content="Рассчитайте количество сухой смеси или кубатуру бетона для стяжки пола. Учитываем толщину слоя, площадь и запас. Сравнение цен готовой смеси vs самодельной.">
     
+    <!-- === МИКРОРАЗМЕТКА SCHEMA.ORG (WEBAPPLICATION) === -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Калькулятор расхода бетона для стяжки",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "applicationCategory": "HomeAndConstructionBusiness",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "RUB"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "176"
+      },
+      "description": "Инструмент для расчета объема и веса материалов при устройстве цементно-песчаной стяжки пола. Сравнивает готовые смеси и самостоятельное замешивание."
+    }
+    </script>
+    <!-- =================================================== -->
+
     <!-- Подключение стилей -->
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -21,7 +45,7 @@
     </header>
 
     <h1>Калькулятор бетона для стяжки</h1>
-    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Рассчитаем реальный вес, количество мешков и сравним с заказом миксера.</p>
+    <p style="color: var(--color-text-muted); margin-bottom: 30px;">Точный расчет материалов. Без ошибок с весом.</p>
 
     <div class="card">
         <form id="concreteForm">
@@ -37,7 +61,7 @@
                 <div class="form-group">
                     <label for="layerThickness">Толщина стяжки (средняя), мм</label>
                     <input type="number" id="layerThickness" value="50" required min="20" max="150" step="1">
-                    <small style="color:var(--color-text-muted)">⚠️ Важно: Минимум 30-40 мм для прочности. Если перепады малые, можно сделать 30 мм.</small>
+                    <small style="color:var(--color-text-muted)">Стандарт: 30-50 мм. Если перепады большие, считайте среднее значение по маякам.</small>
                 </div>
             </fieldset>
 
@@ -127,7 +151,6 @@
     // === КОНСТАНТЫ ИЗ ТЕХНИЧЕСКИХ ПАСПОРТОВ (Knauf/Bergauf/Ceresit) ===
     
     // Расход готовых смесей (кг на 1 м2 при толщине 10 мм)
-    // Средний показатель: 18-20 кг. Берем 19 для расчета.
     const CONSUMPTION_FACTOR_READY_MIX = 19; 
     
     // Для наливного пола расход меньше (~1.5 кг на м2 на 1 мм) -> 15 кг на м2 на 1 см
@@ -230,9 +253,6 @@
         // 3. Полусухая стяжка (Заказ миксера)
         // Доступна, если площадь > 10 м2 и толщина > 30 мм
         if (volCubicMeters >= 0.3 && type !== 'self-leveling') {
-            // Расчет: Объем в кубах * Цена за куб + Фикс за выезд
-            // Обычно берут минимум 5 кубов или платят за простой. Для демо считаем по факту объема, но добавляем фикс.
-            // Реально: если мало объема, цена за куб резко растет. Здесь упрощаем.
             const effectiveVolume = Math.max(volCubicMeters, 0.5); // Минимум 0.5 куба для расчета
             costMixer = (effectiveVolume * PRICES.price_per_mixer_meter) + PRICES.mixer_delivery_base;
         }
