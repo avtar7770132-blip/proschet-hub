@@ -6,35 +6,23 @@
     <title>Калькулятор стоимости мебели на заказ: кухня, шкаф — Просчёт</title>
     <meta name="description" content="Рассчитайте примерную стоимость кухни или шкафа-купе онлайн. Выберите материал фасада, размеры и получите смету со скидкой. Быстрый расчет без звонков.">
     
-    <!-- === МИКРОРАЗМЕТКА SCHEMA.ORG (WEBAPPLICATION) === -->
+    <!-- Микроразметка Schema.org -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Калькулятор стоимости мебели на заказ",
       "operatingSystem": "Any",
-      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "browserRequirements": "Requires JavaScript.",
       "applicationCategory": "UtilitiesApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "RUB"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "95"
-      },
-      "description": "Инструмент для быстрого расчета стоимости кухонных гарнитуров, шкафов-купе и офисной мебели с учетом материалов и размеров."
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "RUB" },
+      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "reviewCount": "95" },
+      "description": "Инструмент для быстрого расчета кухонных гарнитуров и шкафов."
     }
     </script>
-    <!-- =================================================== -->
 
-    <!-- Подключение стилей -->
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-
-    <!-- Яндекс Метрика -->
     <script type="text/javascript">(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");ym(113103717, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});</script>
 </head>
 <body>
@@ -116,6 +104,19 @@
                 ✅ Отправить смету в WhatsApp
             </button>
         </div>
+
+        <!-- === БЛОК РЕКОМЕНДАЦИЙ: МЕБЕЛЬ + РЕМОНТ === -->
+        <div class="card mt-1" style="background: #1e293b; border: 1px dashed var(--color-border); padding: 20px;">
+            <h3 style="margin-top: 0; color: white;">🔨 Планируете установку кухни?</h3>
+            <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 15px;">Не забудьте рассчитать расход материалов для черновых работ и стяжки пола.</p>
+            
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="beton-styazhka.html" class="btn-calc" style="flex: 1; min-width: 150px; background: #fbbf24; color: black; text-decoration: none; display: inline-block; text-align: center;">🧱 Расход бетона</a>
+                <a href="vannaya.html" class="btn-calc" style="flex: 1; min-width: 150px; background: #38bdf8; text-decoration: none; display: inline-block; text-align: center;">🚿 Ремонт ванной</a>
+            </div>
+        </div>
+        <!-- =============================================== -->
+
     </div>
 
     <footer style="margin-top: 50px; text-align: center; color: var(--color-text-muted); font-size: 0.9rem;">
@@ -127,7 +128,6 @@
     const fmt = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 });
     const MY_WHATSAPP_NUMBER = "79064143916"; 
 
-    // Базовые коэффициенты цены (руб за м2 площади фасада условно)
     const RATES = {
         kitchen: { economy: 15000, standard: 22000, premium: 35000 },
         wardrobe: { economy: 12000, standard: 18000, premium: 28000 },
@@ -144,7 +144,6 @@
 
         if (!length || !height) return alert("Введите размеры");
 
-        // Расчет площади "фасадов" (упрощенно: длина * высота * коэффициент сложности)
         let complexity = 1.0;
         if(itemType === 'kitchen') complexity = 1.2;
         if(itemType === 'wardrobe') complexity = 1.0;
@@ -153,8 +152,6 @@
         const baseRate = RATES[itemType][materialClass];
         
         let rawCost = area * baseRate;
-        
-        // Скидка 15%
         let discountedCost = rawCost * 0.85;
         discountedCost = Math.round(discountedCost / 100) * 100;
 
@@ -207,5 +204,6 @@
     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 })(window, document, "clarity", "script", "yzppvg2qta");
 </script>
-<!-- END CLARITY --></body>
+<!-- END CLARITY -->
+</body>
 </html>
