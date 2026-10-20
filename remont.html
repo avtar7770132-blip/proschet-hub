@@ -5,17 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Просчёт · Точные расчёты без обмана</title>
 <meta name="description" content="Бесплатные онлайн-калькуляторы: ипотека, вклады, налоги, ремонт, авто, здоровье. Прозрачно, бесплатно, онлайн.">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="styles.css">
 <style>
 /* --- СТИЛИ БАННЕРА --- */
-.hero{position:relative;width:100%;border-radius:16px;overflow:hidden;margin-bottom:30px;box-shadow:0 10px 30px rgba(22,163,74,.18);border:1px solid var(--color-border);background:#e0f2fe}
+.hero{position:relative;width:100%;border-radius:16px;overflow:hidden;margin-bottom:30px;box-shadow:0 10px 30px rgba(59,130,246,.18);border:1px solid #334155;background:#0f172a}
 .hero svg{display:block;width:100%;height:auto}
-.hero-badge{position:absolute;left:20px;top:20px;background:rgba(255,255,255,.9);backdrop-filter:blur(4px);color:var(--color-accent);font-weight:bold;font-size:.85rem;padding:8px 14px;border-radius:20px;border:1px solid var(--color-border);box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.hero-tag{position:absolute;right:20px;bottom:20px;background:var(--color-accent);color:#fff;font-weight:bold;font-size:.85rem;padding:8px 14px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.hero-badge{position:absolute;left:20px;top:20px;background:rgba(15,23,42,.9);backdrop-filter:blur(4px);color:#10b981;font-weight:bold;font-size:.85rem;padding:8px 14px;border-radius:20px;border:1px solid #1e293b;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.hero-tag{position:absolute;right:20px;bottom:20px;background:#10b981;color:#fff;font-weight:bold;font-size:.85rem;padding:8px 14px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 @media(max-width:600px){.hero-badge{left:12px;top:12px;font-size:.75rem;padding:6px 10px}.hero-tag{right:12px;bottom:12px;font-size:.75rem;padding:6px 10px}}
 
-/* --- СТАРЫЕ СТИЛИ (для безопасности) --- */
+/* --- ОСНОВНЫЕ СТИЛИ (на случай если styles.css не подхватится) --- */
 body { background-color: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
 .container { max-width: 1200px; margin: 0 auto; }
 h1 { text-align: center; font-size: 2.5rem; margin-bottom: 10px; color: #fff; }
@@ -40,7 +39,7 @@ footer { text-align: center; margin-top: 50px; color: #64748b; font-size: 0.8rem
 <div class="container">
 
 <!-- === НОВЫЙ SVG-БАННЕР (Тёмная тема + Графики) === -->
-<div class="hero" style="background:#0f172a; border:none;">
+<div class="hero">
   <svg viewBox="0 0 1200 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Финансовые графики и инструменты">
     <defs>
       <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
@@ -104,8 +103,8 @@ footer { text-align: center; margin-top: 50px; color: #64748b; font-size: 0.8rem
     </g>
   </svg>
   
-  <div class="hero-badge" style="background:rgba(15,23,42,.9); color:#10b981; border-color:#1e293b;">💰 Точные расчёты</div>
-  <div class="hero-tag" style="background:#10b981;">без обмана</div>
+  <div class="hero-badge">💰 Точные расчёты</div>
+  <div class="hero-tag">без обмана</div>
 </div>
 
 <header>
@@ -119,7 +118,7 @@ footer { text-align: center; margin-top: 50px; color: #64748b; font-size: 0.8rem
 <button onclick="filterCards('repair')" class="filter-btn" id="btn-repair">🔨 Ремонт</button>
 <button onclick="filterCards('auto')" class="filter-btn" id="btn-auto">🚗 Авто</button>
 <button onclick="filterCards('health')" class="filter-btn" id="btn-health">❤️ Здоровье</button>
-<button onclick="filterCards('life')" class="filter-btn" id="btn-life">🏠 Быт</button>
+<button onclick="filterCards('life')" class="filter-btn" id="btn-life"> Быт</button>
 <button onclick="filterCards('articles')" class="filter-btn" id="btn-articles">📚 Статьи</button>
 </div>
 
@@ -129,8 +128,8 @@ footer { text-align: center; margin-top: 50px; color: #64748b; font-size: 0.8rem
 <!-- ФИНАНСЫ -->
 <a href="kredit.html" class="card fade-in" data-category="finance"><div class="card-title">💳 Кредит и Переплата</div><div class="card-desc">Узнай реальную стоимость займа. График платежей + диаграмма тела долга vs процентов.</div><span class="btn-link">Открыть →</span></a>
 <a href="zarplata.html" class="card fade-in" data-category="finance"><div class="card-title">💵 Зарплата «на руки»</div><div class="card-desc">Расчет чистого дохода после вычета НДФЛ 13%. Учитывает стандартные вычеты и прогрессивную шкалу.</div><span class="btn-link">Открыть →</span></a>
-<a href="vklad.html" class="card fade-in" data-category="finance"><div class="card-title">📈 Вклад и Сложный %</div><div class="card-desc">Посмотри, как растут деньги во времени. Линейный график накоплений по месяцам/годам.</div><span class="btn-link">Открыть →</span></a>
-<a href="npd.html" class="card fade-in" data-category="finance"><div class="card-title">🧾 Самозанятый (НПД)</div><div class="card-desc">Сколько платить налога? Ставки 4% и 6%, лимиты и использование вычета 10 000 ₽.</div><span class="btn-link">Открыть →</span></a>
+<a href="vklad.html" class="card fade-in" data-category="finance"><div class="card-title"> Вклад и Сложный %</div><div class="card-desc">Посмотри, как растут деньги во времени. Линейный график накоплений по месяцам/годам.</div><span class="btn-link">Открыть →</span></a>
+<a href="npd.html" class="card fade-in" data-category="finance"><div class="card-title"> Самозанятый (НПД)</div><div class="card-desc">Сколько платить налога? Ставки 4% и 6%, лимиты и использование вычета 10 000 ₽.</div><span class="btn-link">Открыть →</span></a>
 <a href="ipoteka-dosrochno.html" class="card fade-in" data-category="finance"><div class="card-title">🏦 Ипотека досрочно</div><div class="card-desc">Как гасить быстрее? Сравнение стратегий «сокращение срока» и «уменьшение платежа».</div><span class="btn-link">Открыть →</span></a>
 <a href="ipoteka-matkapital.html" class="card fade-in" data-category="finance"><div class="card-title">👶 Ипотека + Маткапитал</div><div class="card-desc">Расчет платежа с учетом господдержки. Сравнение семейной, IT и рыночной программ.</div><span class="btn-link">Открыть →</span></a>
 <a href="usn.html" class="card fade-in" data-category="finance"><div class="card-title">📋 Налог УСН</div><div class="card-desc">Расчет налога при упрощенке. Доходы минус расходы или только доходы.</div><span class="btn-link">Рассчитать →</span></a>
@@ -155,7 +154,7 @@ footer { text-align: center; margin-top: 50px; color: #64748b; font-size: 0.8rem
 <a href="samogon-vino.html" class="card fade-in" data-category="health"><div class="card-title">🍷 Самогон и Вино</div><div class="card-desc">Расчет выхода спирта из сахара/зерна и шпатирование виноградного сусла.</div><span class="btn-link">Рассчитать →</span></a>
 
 <!-- БЫТ / СТАТЬИ -->
-<a href="blog/index.html" class="card fade-in" data-category="articles"><div class="card-title">📚 Статьи и Гайды</div><div class="card-desc">Читаем про налоги, ремонт, авто и экономику. Учимся считать грамотно.</div><span class="btn-link">Перейти в блог →</span></a>
+<a href="blog.html" class="card fade-in" data-category="articles"><div class="card-title">📚 Статьи и Гайды</div><div class="card-desc">Читаем про налоги, ремонт, авто и экономику. Учимся считать грамотно.</div><span class="btn-link">Перейти в блог →</span></a>
 </div>
 
 <footer>
