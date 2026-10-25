@@ -103,5 +103,45 @@
         document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
     });
 </script>
-</body>
+<!-- ПАРТНЁРКА ZDRAVCITY ДЛЯ ЗДОРОВЬЯ -->
+<script>
+(function() {
+    const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
+    
+    // Все медицинские страницы используют эту картинку
+    const imgName = 'kalorii-imt.jpg';
+
+    // 1. Вставляем картинку
+    const container = document.querySelector('.container') || document.body;
+    if (!container.querySelector(`img[src="${imgName}"]`)) {
+        const img = document.createElement('img');
+        img.src = imgName;
+        img.alt = 'Здоровье и питание';
+        img.style.cssText = 'width:100%; height:auto; max-height:300px; object-fit:cover; border-radius:16px; margin-bottom:25px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); display:block;';
+        
+        const firstChild = container.firstElementChild;
+        if (firstChild && (firstChild.tagName === 'HEADER' || firstChild.tagName === 'H1')) {
+            container.insertBefore(img, firstChild.nextSibling);
+        } else {
+            container.prepend(img);
+        }
+    }
+
+    // 2. Создаём блок партнёрки ЗдравСити
+    const partnerHTML = `
+    <div style="text-align:center; margin:40px auto; padding:25px; background:#eff6ff; border:1px dashed #3b82f6; border-radius:12px; max-width:650px; font-family:sans-serif;">
+        <div style="font-weight:bold; color:#1d4ed8; margin-bottom:10px; font-size:1.3rem;">💊 Нужны витамины или лекарства?</div>
+        <p style="margin-bottom:15px; color:#555; font-size:0.95rem;">Закажи товары для здоровья в онлайн-аптеке ЗдравСити с доставкой до двери.</p>
+        <a href="https://ru.i07o.xyz/6adcb736dfc0c?erid=2SDnjc4kgDE" target="_blank" rel="nofollow noopener" style="display:inline-block; background:#3b82f6; color:white; text-decoration:none; padding:14px 32px; border-radius:8px; font-weight:bold; font-size:1.05rem; transition:0.3s; box-shadow:0 4px 12px rgba(59,130,246,0.3);">Перейти в ЗдравСити →</a>
+        <div style="font-size:0.7rem; color:#888; margin-top:12px; line-height:1.4;">Реклама. Рекламодатель АО "ЦЕНТР ВНЕДРЕНИЯ ПРОТЕК", ИНН 7724053916. Сайт https://zdravcity.ru<br>erid: 2SDnjc4kgDE</div>
+    </div>`;
+    
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.insertAdjacentHTML('beforebegin', partnerHTML);
+    } else {
+        document.body.insertAdjacentHTML('beforeend', partnerHTML);
+    }
+})();
+</script></body>
 </html>
