@@ -162,5 +162,61 @@
         });
     }
 </script>
-</body>
+<!-- ПАРТНЁРКА Т-БАНК ДЛЯ ФИНАНСОВ -->
+<script>
+(function() {
+    const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
+    
+    // Карта картинок для финансовых разделов
+    const imgMap = {
+        'kredit': 'ipoteka-calc.jpg', // Используем общую тему денег/документов
+        'zarplata': 'zarplata-npd-usn.jpg',
+        'vklad': 'zarplata-npd-usn.jpg',
+        'npd': 'zarplata-npd-usn.jpg',
+        'usn': 'zarplata-npd-usn.jpg',
+        'ipoteka': 'ipoteka-calc.jpg',
+        'ipoteka-dosrochno': 'ipoteka-calc.jpg',
+        'ipoteka-matkapital': 'ipoteka-calc.jpg'
+    };
+    
+    const imgName = imgMap[currentPage] || 'hero-universal.jpg';
+
+    // 1. Вставляем картинку
+    const container = document.querySelector('.container') || document.body;
+    if (!container.querySelector(`img[src="${imgName}"]`)) {
+        const img = document.createElement('img');
+        img.src = imgName;
+        img.alt = 'Финансовые расчёты';
+        img.style.cssText = 'width:100%; height:auto; max-height:300px; object-fit:cover; border-radius:16px; margin-bottom:25px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); display:block;';
+        
+        const firstChild = container.firstElementChild;
+        if (firstChild && (firstChild.tagName === 'HEADER' || firstChild.tagName === 'H1')) {
+            container.insertBefore(img, firstChild.nextSibling);
+        } else {
+            container.prepend(img);
+        }
+    }
+
+    // 2. Создаём блок партнёрки Т-Банк
+    // Примечание: Если точной ссылки на Т-Банк нет в истории чата, используй плейсхолдер или проверь кабинет. 
+    // Здесь я использовал структуру, аналогичную предыдущим, но тебе нужно убедиться, что ссылка активна.
+    // Так как ты упомянул "она у тебя есть", я предполагаю стандартную партнерку трекера.
+    // Если ссылка неизвестна, замени href="#" на реальную.
+    const partnerHTML = `
+    <div style="text-align:center; margin:40px auto; padding:25px; background:#fffbeb; border:1px dashed #fbbf24; border-radius:12px; max-width:650px; font-family:sans-serif;">
+        <div style="font-weight:bold; color:#b45309; margin-bottom:10px; font-size:1.3rem;">💳 Управляй деньгами эффективно с Т-Банком</div>
+        <p style="margin-bottom:15px; color:#555; font-size:0.95rem;">Кэшбэк рублями, процент на остаток и бесплатная карта. Начни экономить уже сегодня.</p>
+        <!-- ЗАМЕНИ ССЫЛКУ НИЖЕ НА АКТИВНУЮ ПАРТНЁРСКУЮ ССЫЛКУ Т-БАНКА ИЗ КАБИНЕТА -->
+        <a href="#" target="_blank" rel="nofollow noopener" style="display:inline-block; background:#ffdd2d; color:#000; text-decoration:none; padding:14px 32px; border-radius:8px; font-weight:bold; font-size:1.05rem; transition:0.3s; box-shadow:0 4px 12px rgba(255,221,45,0.3);">Оформить карту →</a>
+        <div style="font-size:0.7rem; color:#888; margin-top:12px; line-height:1.4;">Реклама. АО «ТБанк». ИНН 7710140679. Сайт https://www.tbank.ru<br>erid: [УКАЖИ ERID ИЗ КАБИНЕТА]</div>
+    </div>`;
+    
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.insertAdjacentHTML('beforebegin', partnerHTML);
+    } else {
+        document.body.insertAdjacentHTML('beforeend', partnerHTML);
+    }
+})();
+</script></body>
 </html>
