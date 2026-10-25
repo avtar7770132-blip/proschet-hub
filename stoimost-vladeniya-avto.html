@@ -211,5 +211,45 @@
         });
     }
 </script>
-</body>
+<!-- ПАРТНЁРКА KOLESO.RU ДЛЯ АВТО -->
+<script>
+(function() {
+    const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
+    
+    // Все авто-страницы используют одну тематическую картинку
+    const imgName = 'auto-kredit-calc.jpg';
+
+    // 1. Вставляем картинку
+    const container = document.querySelector('.container') || document.body;
+    if (!container.querySelector(`img[src="${imgName}"]`)) {
+        const img = document.createElement('img');
+        img.src = imgName;
+        img.alt = 'Автомобильные расчёты';
+        img.style.cssText = 'width:100%; height:auto; max-height:300px; object-fit:cover; border-radius:16px; margin-bottom:25px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); display:block;';
+        
+        const firstChild = container.firstElementChild;
+        if (firstChild && (firstChild.tagName === 'HEADER' || firstChild.tagName === 'H1')) {
+            container.insertBefore(img, firstChild.nextSibling);
+        } else {
+            container.prepend(img);
+        }
+    }
+
+    // 2. Создаём блок партнёрки Koleso.ru
+    const partnerHTML = `
+    <div style="text-align:center; margin:40px auto; padding:25px; background:#fefce8; border:1px dashed #eab308; border-radius:12px; max-width:650px; font-family:sans-serif;">
+        <div style="font-weight:bold; color:#ca8a04; margin-bottom:10px; font-size:1.3rem;">🚗 Готовишься к дальней дороге?</div>
+        <p style="margin-bottom:15px; color:#555; font-size:0.95rem;">Подбери надежные шины и диски со скидкой в интернет-магазине Koleso.ru.</p>
+        <a href="https://ru.i05o.xyz/6adcd7cedc29e?erid=2SDnjdYS6Xi" target="_blank" rel="nofollow noopener" style="display:inline-block; background:#eab308; color:#fff; text-decoration:none; padding:14px 32px; border-radius:8px; font-weight:bold; font-size:1.05rem; transition:0.3s; box-shadow:0 4px 12px rgba(234,179,8,0.3);">Перейти в Koleso.ru →</a>
+        <div style="font-size:0.7rem; color:#888; margin-top:12px; line-height:1.4;">Реклама. Рекламодатель ООО "САМ - МБ", ИНН 75001048893. Сайт https://koleso.ru<br>erid: 2SDnjdYS6Xi</div>
+    </div>`;
+    
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.insertAdjacentHTML('beforebegin', partnerHTML);
+    } else {
+        document.body.insertAdjacentHTML('beforeend', partnerHTML);
+    }
+})();
+</script></body>
 </html>
