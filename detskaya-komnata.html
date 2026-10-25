@@ -286,5 +286,76 @@
         });
     }
 </script>
-</body>
+<!-- АВТОМАТИЧЕСКАЯ КАРТИНКА + ПАРТНЁРКА ДЛЯ ПРОСЧЁТА -->
+<script>
+(function() {
+    // Карта соответствия файлов и картинок
+    const fileToImageMap = {
+        'remont': 'remont-calc.jpg',
+        'mebel': 'mebel-calc.jpg',
+        'beton-styazhka': 'beton-styazhka.jpg',
+        'vannaya': 'vannaya-calc.jpg',
+        'detskaya-komnata': 'detskaya-calc.jpg',
+        'auto-kredit': 'auto-kredit-calc.jpg',
+        'auto-nalog': 'auto-kredit-calc.jpg',
+        'stoimost-vladeniya-avto': 'auto-kredit-calc.jpg',
+        'ipoteka': 'ipoteka-calc.jpg',
+        'ipoteka-matkapital': 'ipoteka-calc.jpg',
+        'ipoteka-dosrochno': 'ipoteka-calc.jpg',
+        'mortgage-dosrochno': 'ipoteka-calc.jpg',
+        'zarplata': 'zarplata-npd-usn.jpg',
+        'usn': 'zarplata-npd-usn.jpg',
+        'npd': 'zarplata-npd-usn.jpg',
+        'kalorii': 'kalorii-imt.jpg',
+        'imt': 'kalorii-imt.jpg',
+        'imt-deti': 'kalorii-imt.jpg',
+        'kotelmashinost': 'kotelmashinost.jpg'
+    };
+
+    // Список файлов, которым нужна партнёрка "Твой Дом" (ремонт/мебель/бетон)
+    const homeImprovementFiles = ['remont', 'mebel', 'beton-styazhka', 'vannaya', 'detskaya-komnata'];
+
+    const currentPage = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
+    const imgName = fileToImageMap[currentPage] || 'hero-universal.jpg';
+
+    // 1. Вставляем картинку в начало контейнера
+    const container = document.querySelector('.container') || document.body;
+    
+    if (!container.querySelector(`img[src="${imgName}"]`)) {
+        const img = document.createElement('img');
+        img.src = imgName;
+        img.alt = 'Просчёт Инструмент';
+        img.style.cssText = 'width:100%; height:auto; max-height:300px; object-fit:cover; border-radius:16px; margin-bottom:25px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); display:block;';
+        
+        const firstChild = container.firstElementChild;
+        if (firstChild && (firstChild.tagName === 'HEADER' || firstChild.tagName === 'H1')) {
+            container.insertBefore(img, firstChild.nextSibling);
+        } else {
+            container.prepend(img);
+        }
+    }
+
+    // 2. Создаём блок партнёрки только для ремонтных ниш
+    let partnerHTML = '';
+    if (homeImprovementFiles.includes(currentPage)) {
+        partnerHTML = `
+        <div style="text-align:center; margin:40px auto; padding:25px; background:#f0fdf4; border:1px dashed #4CAF50; border-radius:12px; max-width:650px; font-family:sans-serif;">
+            <div style="font-weight:bold; color:#2E7D32; margin-bottom:10px; font-size:1.3rem;">🏡 Всё для дома и сада в одном месте</div>
+            <p style="margin-bottom:15px; color:#555; font-size:0.95rem;">Инструменты, отделочные материалы, мебель и декор со скидкой до 40% в магазине «Твой Дом».</p>
+            <a href="https://ru.trackerpro.org/6adcc9d6a4934?erid=2SDnjek8Bjn" target="_blank" rel="nofollow noopener" style="display:inline-block; background:#4CAF50; color:white; text-decoration:none; padding:14px 32px; border-radius:8px; font-weight:bold; font-size:1.05rem; transition:0.3s; box-shadow:0 4px 12px rgba(76,175,80,0.3);">Перейти в магазин Твой Дом →</a>
+            <div style="font-size:0.7rem; color:#888; margin-top:12px; line-height:1.4;">Реклама. АО "КРОКУС", ИНН 7728115183. Сайт https://tvoydom.ru<br>erid: 2SDnjek8Bjn</div>
+        </div>`;
+    }
+
+    // 3. Вставляем перед футером, если есть контент
+    if (partnerHTML) {
+        const footer = document.querySelector('footer');
+        if (footer) {
+            footer.insertAdjacentHTML('beforebegin', partnerHTML);
+        } else {
+            document.body.insertAdjacentHTML('beforeend', partnerHTML);
+        }
+    }
+})();
+</script></body>
 </html>
