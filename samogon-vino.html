@@ -14,28 +14,55 @@
     })(window, document, "clarity", "script", "z26px2msaf");
 </script>
 <style>
-.result-box { background: rgba(255,255,255,0.9); border-left: 5px solid #7B1FA2; padding: 25px; border-radius: 12px; margin-top: 30px; display: none; }
-.calc-value { font-size: 2.5rem; font-weight: 800; color: #4A148C; text-align: center; margin: 10px 0; }
+/* Общие стили */
+.container { max-width: 800px; margin: 0 auto; padding: 20px; }
+h1 { color: #7B1FA2; text-align: center; font-size: 2rem; margin-bottom: 10px; }
+.subtitle { text-align: center; color: #555; margin-bottom: 30px; }
+
+/* Табы Переключения */
+.tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #E1BEE7; padding-bottom: 10px; }
+.tab-btn { background: none; border: none; padding: 10px 20px; font-size: 1.1rem; cursor: pointer; color: #888; transition: 0.3s; font-weight: bold; }
+.tab-btn.active { color: #7B1FA2; border-bottom: 3px solid #7B1FA2; }
+
+/* Формы */
+.form-section { display: none; animation: fadeIn 0.3s ease-in-out; }
+.form-section.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; font-weight: 600; color: #4A148C; }
+select, input[type="number"] { width: 100%; padding: 12px; border: 1px solid #CE93D8; border-radius: 8px; font-size: 1rem; background: #FDFBF7; }
+button.calc-btn { width: 100%; padding: 15px; background: #7B1FA2; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; }
+button.calc-btn:hover { background: #4A148C; transform: translateY(-2px); }
+
+/* Результаты */
+.result-box { background: linear-gradient(135deg, #F3E5F5, #FFFFFF); border: 2px solid #7B1FA2; border-radius: 12px; padding: 25px; margin-top: 20px; display: none; text-align: center; }
+.res-value { font-size: 2.5rem; font-weight: 800; color: #4A148C; margin: 10px 0; }
+.res-desc { color: #555; font-size: 1.1rem; line-height: 1.5; }
+.res-details { text-align: left; margin-top: 15px; font-size: 0.95rem; color: #666; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 8px; }
+
+/* Партнёрка ВинЛаб */
 .ad-banner-vinlab { 
-    background: linear-gradient(135deg, #F3E5F5, #FFFFFF); 
-    border: 2px solid #7B1FA2; 
+    background: linear-gradient(135deg, #FFF8E1, #FFFFFF); 
+    border: 2px solid #FFB300; /* Золотистый акцент для алкоголя */
     border-radius: 16px; 
     padding: 30px; 
     margin: 40px auto; 
     max-width: 700px; 
-    box-shadow: 0 8px 25px rgba(123, 31, 162, 0.15);
+    box-shadow: 0 8px 25px rgba(255, 179, 0, 0.15);
 }
-.vinlab-header { color: #4A148C; font-size: 1.5rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+.vinlab-header { color: #E65100; font-size: 1.5rem; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
 .vinlab-info { font-size: 0.95rem; color: #555; line-height: 1.6; margin-bottom: 20px; }
-.promo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-.promo-card { background: white; border: 1px dashed #7B1FA2; border-radius: 8px; padding: 15px; text-align: center; transition: transform 0.2s; }
+.promo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
+.promo-card { background: white; border: 1px dashed #FFB300; border-radius: 8px; padding: 15px; text-align: center; transition: transform 0.2s; }
 .promo-card:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 .promo-code { font-family: monospace; font-size: 1.1rem; font-weight: bold; color: #D32F2F; letter-spacing: 1px; }
 .promo-desc { font-size: 0.85rem; color: #666; margin-top: 5px; }
 .btn-vinlab {
     display: inline-block;
-    background: #7B1FA2;
-    color: white;
+    background: #FFB300;
+    color: #3E2723;
     text-decoration: none;
     padding: 14px 32px;
     border-radius: 8px;
@@ -46,42 +73,91 @@
     text-align: center;
     box-sizing: border-box;
 }
-.btn-vinlab:hover { background: #4A148C; transform: scale(1.02); }
+.btn-vinlab:hover { background: #FF8F00; transform: scale(1.02); }
 .ad-mark-vinlab { font-size: 0.7rem; color: #888; margin-top: 15px; text-align: center; line-height: 1.4; }
-.input-styled { width: 100%; padding: 12px; border: 1px solid #CE93D8; border-radius: 8px; background: white; font-size: 1rem; margin-bottom: 20px; }
 </style>
 </head>
 <body>
 <div class="container">
 <header style="margin-bottom:20px"><a href="index.html" style="color:#7B1FA2;font-weight:bold;text-decoration:none">← На главную</a></header>
 
-<!-- КАРТИНКА СВЕРХУ -->
-<img src="moonshine.jpg" alt="Калькулятор самогона" style="width:100%; height:250px; object-fit:cover; border-radius:16px; margin-bottom:30px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
-
-<h1 style="color:#4A148C;">🍷 Калькулятор самогона и вина</h1>
+<h1>🍷 Калькулятор самогона и вина</h1>
 <p class="subtitle">Рассчитайте выход продукта, крепость и стоимость ингредиентов.</p>
 
-<div class="card" style="max-width:600px; margin:0 auto;">
-    <div class="form-group">
-        <label style="display:block; margin-bottom:8px; font-weight:600; color:#4A148C;">Тип сырья</label>
-        <select id="type" class="input-styled">
-            <option value="grain">Зерно (пшеница, рожь)</option>
-            <option value="fruit">Фрукты (яблоки, виноград)</option>
-            <option value="sugar">Сахарная брага</option>
-        </select>
-    </div>
-    
-    <div class="form-group">
-        <label style="display:block; margin-bottom:8px; font-weight:600; color:#4A148C;">Объём браги (литры)</label>
-        <input type="number" id="volume" placeholder="Например: 20" class="input-styled">
-    </div>
+<!-- ТАБЫ -->
+<div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('moonshine')">Самогон</button>
+    <button class="tab-btn" onclick="switchTab('wine')">Вино</button>
+</div>
 
-    <button onclick="calc()" style="width:100%; padding:14px; background:#7B1FA2; color:white; border:none; border-radius:8px; font-weight:bold; font-size:1.1rem; cursor:pointer;">Рассчитать выход</button>
+<!-- СЕКЦИЯ САМОГОНА -->
+<div id="section-moonshine" class="form-section active">
+    <div class="card">
+        <div class="form-group">
+            <label>Тип сырья для браги</label>
+            <select id="ms-type" onchange="updateMsHint()">
+                <option value="grain">Зерно (пшеница, рожь, кукуруза)</option>
+                <option value="sugar">Сахар (классика)</option>
+                <option value="fruit">Фрукты/Ягоды (яблоки, слива, вишня)</option>
+                <option value="mash">Картофель</option>
+            </select>
+            <small id="ms-hint" style="display:block; margin-top:5px; color:#888;">Норма сахара: ~2.5 кг на 10 л воды (для зерна)</small>
+        </div>
+        
+        <div class="form-group">
+            <label>Объём браги (литры)</label>
+            <input type="number" id="ms-volume" placeholder="Например: 20" value="20">
+        </div>
 
-    <!-- РЕЗУЛЬТАТ -->
-    <div id="res" class="result-box">
-        <div class="calc-value" id="val">0 л</div>
-        <div style="text-align:center; color:#555;" id="desc">Чистого спирта-сырца (~40%)</div>
+        <div class="form-group">
+            <label>Желаемая крепость готового продукта (%)</label>
+            <select id="ms-strength">
+                <option value="40">40% (Водка)</option>
+                <option value="50">50% (Коньячный стиль)</option>
+                <option value="60">60% (Чистый спирт-сырец)</option>
+            </select>
+        </div>
+
+        <button class="calc-btn" onclick="calcMoonshine()">Рассчитать самогон</button>
+
+        <div id="res-ms" class="result-box">
+            <div class="res-value" id="ms-val">0 л</div>
+            <div class="res-desc" id="ms-desc">Чистого продукта (~40%)</div>
+            <div class="res-details" id="ms-details"></div>
+        </div>
+    </div>
+</div>
+
+<!-- СЕКЦИЯ ВИНА -->
+<div id="section-wine" class="form-section">
+    <div class="card">
+        <div class="form-group">
+            <label>Тип винограда / фруктов</label>
+            <select id="w-type">
+                <option value="red-grape">Красный виноград (Каберне, Мерло)</option>
+                <option value="white-grape">Белый виноград (Шардоне, Рислинг)</option>
+                <option value="apple">Яблочное сидр-вино</option>
+                <option value="currant">Смородина</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Вес ягод / плодов (кг)</label>
+            <input type="number" id="w-weight" placeholder="Например: 10" value="10">
+        </div>
+
+        <div class="form-group">
+            <label>Добавленный сахар (кг) - опционально для повышения градуса</label>
+            <input type="number" id="w-sugar" placeholder="0" value="0" step="0.1">
+        </div>
+
+        <button class="calc-btn" onclick="calcWine()">Рассчитать вино</button>
+
+        <div id="res-w" class="result-box">
+            <div class="res-value" id="w-val">0 л</div>
+            <div class="res-desc" id="w-desc">Готового вина</div>
+            <div class="res-details" id="w-details"></div>
+        </div>
     </div>
 </div>
 
@@ -92,6 +168,7 @@
         Сеть «ВинЛаб» входит в структуру <strong>NOVABEV GROUP</strong> — крупнейшей алкогольной компании России (с 1999 года). 
         Мы выпускаем продукты на 7 собственных заводах и являемся эксклюзивным дистрибьютором мировых брендов: 
         ром Barceló, коньяк «Ной», виски The San-In, вина Familia Torres, Masi, Concha y Toro, Champagne Pommery и бокалы RIEDEL.
+        Широкий ассортимент от бюджетных вариантов до элитного алкоголя в подарочных упаковках.
     </div>
     
     <div class="promo-grid">
@@ -120,22 +197,137 @@
 </div>
 
 <script>
-function calc() {
-    const type = document.getElementById('type').value;
-    const vol = parseFloat(document.getElementById('volume').value);
+// Логика переключения табов
+function switchTab(tabName) {
+    // Убираем активный класс со всех кнопок и секций
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
     
-    if (!vol || vol <= 0) return alert("Введите объём браги");
+    // Добавляем активный класс нужной кнопке и секции
+    if (tabName === 'moonshine') {
+        document.querySelector('[onclick="switchTab(\'moonshine\')"]').classList.add('active');
+        document.getElementById('section-moonshine').classList.add('active');
+    } else {
+        document.querySelector('[onclick="switchTab(\'wine\')"]').classList.add('active');
+        document.getElementById('section-wine').classList.add('active');
+    }
+}
+
+// Подсказки для самогона
+function updateMsHint() {
+    const type = document.getElementById('ms-type').value;
+    const hint = document.getElementById('ms-hint');
+    if(type === 'grain') hint.innerText = "Норма сахара: ~2.5 кг на 10 л воды (для зерна)";
+    else if(type === 'sugar') hint.innerText = "Норма сахара: 1.5–2 кг на 10 л воды";
+    else if(type === 'fruit') hint.innerText = "Фруктовая брага требует меньше сахара, если плоды сладкие.";
+    else if(type === 'mash') hint.innerText = "Картофельная брага дает специфический привкус, часто очищается углем.";
+}
+
+// Расчет Самогона
+function calcMoonshine() {
+    const type = document.getElementById('ms-type').value;
+    const vol = parseFloat(document.getElementById('ms-volume').value);
+    const strength = parseInt(document.getElementById('ms-strength').value);
     
-    // Коэффициенты выхода (усредненные для домашнего производства)
-    let yieldRate = 0.1; // 10% от объема браги при перегонке до 40%
-    if (type === 'fruit') yieldRate = 0.08;
-    if (type === 'sugar') yieldRate = 0.12;
+    if (!vol || vol <= 0) return alert("Введите корректный объём браги");
+
+    // Коэффициенты выхода чистого спирта (абсолютного) из 1 литра браги в зависимости от типа
+    // Эти значения усредненные для домашнего производства
+    let yieldCoef = 0.08; // По умолчанию
     
-    const result = Math.round(vol * yieldRate * 10) / 10;
+    if (type === 'grain') yieldCoef = 0.09; // Зерно дает хороший выход
+    if (type === 'sugar') yieldCoef = 0.10; // Сахар максимально эффективен
+    if (type === 'fruit') yieldCoef = 0.06; // Фрукты менее насыщенные
+    if (type === 'mash') yieldCoef = 0.07; // Картофель средний
+
+    // Потери при дистилляции (головы/хвосты) ~10-15%
+    const efficiency = 0.85; 
     
-    document.getElementById('res').style.display = 'block';
-    document.getElementById('val').innerText = result + " л";
-    document.getElementById('desc').innerText = "Выход сырца ~40% из " + vol + " л браги";
+    // Абсолютный спирт в литрах
+    const absoluteAlcohol = vol * yieldCoef * efficiency;
+    
+    // Объем готового продукта заданной крепости
+    // Формула: V_готового = V_спирта / (крепость / 100)
+    const finalVolume = absoluteAlcohol / (strength / 100);
+    
+    // Округление
+    const resVol = Math.round(finalVolume * 10) / 10;
+    
+    document.getElementById('res-ms').style.display = 'block';
+    document.getElementById('ms-val').innerText = resVol + " л";
+    document.getElementById('ms-desc').innerText = `Готового продукта ${strength}%`;
+    
+    // Детали расчета
+    let detailsHtml = `<strong>Ингредиенты:</strong><br>`;
+    if(type === 'sugar') detailsHtml += `Сахар: ~${Math.round(vol * 0.15)} кг<br>`;
+    if(type === 'grain') detailsHtml += `Зерно: ~${Math.round(vol * 0.2)} кг + Солод<br>`;
+    if(type === 'fruit') detailsHtml += `Фрукты: ~${Math.round(vol * 0.3)} кг<br>`;
+    
+    detailsHtml += `<br><strong>Выход спирта-сырца:</strong> ~${Math.round(absoluteAlcohol * 10)/10} л (100%)<br>`;
+    detailsHtml += `<em>Учтены потери на головы и хвосты (~15%).</em>`;
+    
+    document.getElementById('ms-details').innerHTML = detailsHtml;
+}
+
+// Расчет Вина
+function calcWine() {
+    const type = document.getElementById('w-type').value;
+    const weight = parseFloat(document.getElementById('w-weight').value);
+    const addedSugar = parseFloat(document.getElementById('w-sugar').value) || 0;
+    
+    if (!weight || weight <= 0) return alert("Введите вес ягод");
+
+    // Выход сока из ягод (л на кг)
+    let juiceYield = 0.7; // Виноград
+    if (type === 'apple') juiceYield = 0.6;
+    if (type === 'currant') juiceYield = 0.5;
+
+    const totalJuice = weight * juiceYield;
+    
+    // Примерный градус натурального вина без сахара
+    // Зависит от сорта, но в среднем 9-12%. Возьмем 10% как базу.
+    let baseStrength = 10; 
+    if (type === 'white-grape') baseStrength = 11;
+    if (type === 'red-grape') baseStrength = 10;
+    if (type === 'apple') baseStrength = 6; // Сидр слабее
+    if (type === 'currant') baseStrength = 8;
+
+    // Расчет дополнительного градуса от сахара
+    // Правило: 17 г сахара на 1 л сусла дают ~1% алкоголя
+    // Но мы считаем по общему объему. 
+    // Допустим, весь объем сусла = сок + вода (если разбавляли, но тут не спрашиваем) + сахар растворяется.
+    // Упрощенно: добавленный сахар увеличивает плотность и итоговый алкоголь.
+    
+    // Конвертация кг сахара в граммы
+    const sugarGrams = addedSugar * 1000;
+    
+    // Прибавка к крепости: (Сахар в гр / Общий объем сусла в мл) * 1000 / 17
+    // Объем сусла примерно равен объему сока (сахар занимает мало места)
+    const volumeMl = totalJuice * 1000;
+    const extraStrength = (sugarGrams / volumeMl) * 1000 / 17;
+    
+    const finalStrength = baseStrength + extraStrength;
+    
+    // Потери при брожении и снятии с осадка (~5-10%)
+    const lossFactor = 0.92;
+    const finalVolume = totalJuice * lossFactor;
+    
+    const resVol = Math.round(finalVolume * 10) / 10;
+    const resStr = Math.round(finalStrength * 10) / 10;
+
+    document.getElementById('res-w').style.display = 'block';
+    document.getElementById('w-val').innerText = resVol + " л";
+    document.getElementById('w-desc').innerText = `Готового вина (~${resStr}%)`;
+    
+    let detailsHtml = `<strong>Исходники:</strong><br>`;
+    detailsHtml += `Ягоды/Фрукты: ${weight} кг<br>`;
+    detailsHtml += `Сахар: ${addedSugar > 0 ? addedSugar + ' кг' : 'Не добавлен'}<br>`;
+    detailsHtml += `<br><strong>Процесс:</strong><br>`;
+    detailsHtml += `Выход сока: ~${Math.round(totalJuice*10)/10} л<br>`;
+    detailsHtml += `Потери на осадок/брожение: ~8%<br>`;
+    detailsHtml += `<em>Реальный вкус зависит от кислоты ягод и времени выдержки.</em>`;
+    
+    document.getElementById('w-details').innerHTML = detailsHtml;
 }
 </script>
 </body>
