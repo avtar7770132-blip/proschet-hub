@@ -115,5 +115,65 @@
     </footer>
 </div>
 
-</body>
+<!-- ПАРТНЁРКА ВИНЛАБ ДЛЯ СТАТЬИ ПРО САМОГОН/ВИНО -->
+<script>
+(function() {
+    // 1. Вставляем картинку blog-alcohol.jpg сверху, если её нет
+    const container = document.querySelector('.container') || document.body;
+    const imgSrc = '../blog-alcohol.jpg'; // Путь из папки blog в корень
+    
+    if (!container.querySelector(`img[src="${imgSrc}"]`) && !container.querySelector('img')) {
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.alt = 'Домашнее вино и самогон';
+        img.style.cssText = 'width:100%; height:auto; max-height:350px; object-fit:cover; border-radius:16px; margin-bottom:25px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); display:block;';
+        
+        const firstChild = container.firstElementChild;
+        if (firstChild && (firstChild.tagName === 'HEADER' || firstChild.tagName === 'H1')) {
+            container.insertBefore(img, firstChild.nextSibling);
+        } else {
+            container.prepend(img);
+        }
+    }
+
+    // 2. Создаём блок партнёрки ВинЛаб с полной информацией и промокодами
+    const partnerHTML = `
+    <div style="text-align:center; margin:40px auto; padding:30px; background:linear-gradient(135deg, #F3E5F5, #FFFFFF); border:2px solid #7B1FA2; border-radius:16px; max-width:700px; font-family:sans-serif; box-shadow: 0 8px 25px rgba(123, 31, 162, 0.15);">
+        <div style="font-weight:bold; color:#4A148C; margin-bottom:15px; font-size:1.4rem;">🥃 Мир алкоголя в одном месте — ВинЛаб</div>
+        <p style="margin-bottom:20px; color:#555; font-size:0.95rem; line-height:1.6;">
+            Сеть «ВинЛаб» входит в структуру <strong>NOVABEV GROUP</strong> — крупнейшей алкогольной компании России. 
+            Эксклюзивный дистрибьютор мировых брендов: ром Barceló, коньяк «Ной», виски The San-In, вина Familia Torres, Masi, Concha y Toro, Champagne Pommery и бокалы RIEDEL.
+        </p>
+        
+        <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; margin-bottom:25px;">
+            <div style="background:white; border:1px dashed #7B1FA2; border-radius:8px; padding:10px 15px; min-width:150px;">
+                <div style="font-family:monospace; font-size:1rem; font-weight:bold; color:#D32F2F;">10NADV4536</div>
+                <div style="font-size:0.8rem; color:#666;">-10% первый заказ</div>
+            </div>
+            <div style="background:white; border:1px dashed #7B1FA2; border-radius:8px; padding:10px 15px; min-width:150px;">
+                <div style="font-family:monospace; font-size:1rem; font-weight:bold; color:#D32F2F;">10NADV8732</div>
+                <div style="font-size:0.8rem; color:#666;">-10% первый заказ</div>
+            </div>
+             <div style="background:white; border:1px dashed #7B1FA2; border-radius:8px; padding:10px 15px; min-width:150px;">
+                <div style="font-family:monospace; font-size:1rem; font-weight:bold; color:#D32F2F;">5NADV4536</div>
+                <div style="font-size:0.8rem; color:#666;">-5% повторный</div>
+            </div>
+        </div>
+
+        <a href="https://ru.trackerpro.org/6addda18a50c8" target="_blank" rel="nofollow noopener" style="display:inline-block; background:#7B1FA2; color:white; text-decoration:none; padding:14px 32px; border-radius:8px; font-weight:bold; font-size:1.1rem; transition:0.3s; box-shadow:0 4px 12px rgba(123, 31, 162, 0.3);">Перейти в каталог ВинЛаб →</a>
+        
+        <div style="font-size:0.7rem; color:#888; margin-top:15px; line-height:1.4;">
+            Реклама. Рекламодатель: ООО "Винлаб-Запад", ИНН 7719191835.<br>Сайт https://winlab.ru
+        </div>
+    </div>`;
+    
+    // 3. Вставляем перед футером
+    const footer = document.querySelector('footer');
+    if (footer) {
+        footer.insertAdjacentHTML('beforebegin', partnerHTML);
+    } else {
+        document.body.insertAdjacentHTML('beforeend', partnerHTML);
+    }
+})();
+</script></body>
 </html>
