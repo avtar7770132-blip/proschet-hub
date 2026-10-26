@@ -82,5 +82,107 @@
     </footer>
 </div>
 
-</body>
+<!-- УНИВЕРСАЛЬНЫЙ СКРИПТ ДЛЯ СТАТЕЙ ПРОСЧЁТА (КАРТИНКИ + ПАРТНЁРКИ) -->
+<script>
+(function() {
+    const pageName = window.location.pathname.split('/').pop().replace('.html', '');
+    
+    // 1. Карта соответствия: Статья -> Картинка -> Категория
+    const configMap = {
+        'avtokredit-polnaya-stoimost': { img: '../blog-auto.jpg', cat: 'auto' },
+        'bezopasnaya-detsky-byudjet': { img: '../blog-repair.jpg', cat: 'repair' },
+        'byudzhet-kukni-raschet': { img: '../blog-repair.jpg', cat: 'repair' },
+        'domashnee-vino-i-samogon-raschet': { img: '../blog-alcohol.jpg', cat: 'alcohol' },
+        'kak-vybrat-laminat-ne-pereplatit': { img: '../blog-repair.jpg', cat: 'repair' },
+        'ldsp-vs-mdf-emal': { img: '../blog-repair.jpg', cat: 'repair' },
+        'prodazha-avto-nalog': { img: '../blog-auto.jpg', cat: 'auto' },
+        'raschet-kaloriy-pohudenie': { img: '../blog-health.jpg', cat: 'health' },
+        'samozanyatye-2026': { img: '../blog-finance.jpg', cat: 'finance' },
+        'stoimost-vladeniya-avto-gaid': { img: '../blog-auto.jpg', cat: 'auto' }
+    };
+
+    const cfg = configMap[pageName];
+    if (!cfg) return; // Если файл неизвестен, ничего не делаем
+
+    // 2. Вставляем картинку в начало контента (если её там нет вручную)
+    const container = document.querySelector('.container') || document.body;
+    // Проверяем, нет ли уже картинки с таким src внутри первого блока
+    const existingImg = container.querySelector(`img[src="${cfg.img}"]`);
+    if (!existingImg) {
+        const img = document.createElement('img');
+        img.src = cfg.img;
+        img.alt = 'Изображение статьи';
+        img.style.cssText = 'width:100%; height:auto; max-height:350px; object-fit:cover; border-radius:16px; margin-bottom:25px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); display:block;';
+        
+        // Ищем первый H1 или Header и вставляем после него
+        const targetNode = container.querySelector('h1') || container.querySelector('header');
+        if (targetNode && targetNode.nextElementSibling !== null) {
+             // Если есть контент после заголовка, вставляем перед ним
+             container.insertBefore(img, targetNode.nextElementSibling);
+        } else {
+             container.prepend(img);
+        }
+    }
+
+    // 3. Генерируем партнёрскую ссылку в зависимости от категории
+    let adHTML = '';
+    
+    if (cfg.cat === 'auto') {
+        adHTML = `
+        <div style="text-align:center; margin:40px auto; padding:25px; background:#fefce8; border:1px dashed #eab308; border-radius:12px; max-width:650px; font-family:sans-serif;">
+            <div style="font-weight:bold; color:#ca8a04; margin-bottom:10px; font-size:1.3rem;">🚗 Готовишься к дальней дороге?</div>
+            <p style="margin-bottom:15px; color:#555; font-size:0.95rem;">Подбери надежные шины и диски со скидкой в Koleso.ru.</p>
+            <a href="https://ru.i05o.xyz/6adcd7cedc29e?erid=2SDnjdYS6Xi" target="_blank" rel="nofollow noopener" style="display:inline-block; background:#eab308; color:#fff; text-decoration:none; padding:14px 32px; border-radius:8px; font-weight:bold;">Перейти в Koleso.ru →</a>
+            <div style="font-size:0.7rem; color:#888; margin-top:12px;">Реклама. ООО "САМ - МБ", ИНН 75001048893. Сайт https://koleso.ru<br>erid: 2SDnjdYS6Xi</div>
+        </div>`;
+    } 
+    else if (cfg.cat === 'repair') {
+        adHTML = `
+        <div style="text-align:center; margin:40px auto; padding:25px; background:#f0fdf4; border:1px dashed #4CAF50; border-radius:12px; max-width:650px; font-family:sans-serif;">
+            <div style="font-weight:bold; color:#2E7D32; margin-bottom:10px; font-size:1.3rem;">🏡 Всё для дома и сада в одном месте</div>
+            <p style="margin-bottom:15px; color:#555; font-size:0.95rem;">Инструменты, материалы и мебель со скидкой до 40% в магазине «Твой Дом».</p>
+            <a href="https://ru.trackerpro.org/6adcc9d6a4934?erid=2SDnjek8Bjn" target="_blank" rel="nofollow noopener" style="display:inline-block; background:#4CAF50; color:white; text-decoration:none; padding:14px 32px; border-radius:8px; font-weight:bold;">Перейти в магазин Твой Дом →</a>
+            <div style="font-size:0.7rem; color:#888; margin-top:12px;">Реклама. АО "КРОКУС", ИНН 7728115183. Сайт https://tvoydom.ru<br>erid: 2SDnjek8Bjn</div>
+        </div>`;
+    }
+    else if (cfg.cat === 'health') {
+        adHTML = `
+        <div style="text-align:center; margin:40px auto; padding:25px; background:#eff6ff; border:1px dashed #3b82f6; border-radius:12px; max-width:650px; font-family:sans-serif;">
+            <div style="font-weight:bold; color:#1d4ed8; margin-bottom:10px; font-size:1.3rem;">💊 Нужны витамины или лекарства?</div>
+            <p style="margin-bottom:15px; color:#555; font-size:0.95rem;">Закажи товары для здоровья в онлайн-аптеке ЗдравСити.</p>
+            <a href="https://ru.i07o.xyz/6adcb736dfc0c?erid=2SDnjc4kgDE" target="_blank" rel="nofollow noopener" style="display:inline-block; background:#3b82f6; color:white; text-decoration:none; padding:14px 32px; border-radius:8px; font-weight:bold;">Перейти в ЗдравСити →</a>
+            <div style="font-size:0.7rem; color:#888; margin-top:12px;">Реклама. АО "ЦЕНТР ВНЕДРЕНИЯ ПРОТЕК", ИНН 7724053916. Сайт https://zdravcity.ru<br>erid: 2SDnjc4kgDE</div>
+        </div>`;
+    }
+    else if (cfg.cat === 'alcohol') {
+        adHTML = `
+        <div style="text-align:center; margin:40px auto; padding:25px; background:#F3E5F5; border:1px dashed #7B1FA2; border-radius:12px; max-width:650px; font-family:sans-serif;">
+            <div style="font-weight:bold; color:#4A148C; margin-bottom:10px; font-size:1.3rem;">🥃 Мир алкоголя в одном месте — ВинЛаб</div>
+            <p style="margin-bottom:15px; color:#555; font-size:0.95rem;">Широкий ассортимент от NOVABEV GROUP. Скидка 10% на первый заказ.</p>
+            <a href="https://ru.trackerpro.org/6addda18a50c8" target="_blank" rel="nofollow noopener" style="display:inline-block; background:#7B1FA2; color:white; text-decoration:none; padding:14px 32px; border-radius:8px; font-weight:bold;">Перейти в каталог ВинЛаб →</a>
+            <div style="font-size:0.7rem; color:#888; margin-top:12px;">Реклама. ООО "Винлаб-Запад", ИНН 7719191835. Сайт https://winlab.ru</div>
+        </div>`;
+    }
+    else if (cfg.cat === 'finance') {
+         // Для финансов оставляем заглушку или Skillbox, так как Т-Банк ссылка не подтверждена ERID в текущем контексте
+         adHTML = `
+        <div style="text-align:center; margin:40px auto; padding:25px; background:#E8F5E9; border:1px dashed #4CAF50; border-radius:12px; max-width:650px; font-family:sans-serif;">
+            <div style="font-weight:bold; color:#2E7D32; margin-bottom:10px; font-size:1.3rem;">🎓 Освой профессию будущего с Skillbox</div>
+            <p style="margin-bottom:15px; color:#555; font-size:0.95rem;">Программирование, Дизайн, Маркетинг. Помощь в трудоустройстве.</p>
+            <a href="https://ru.i05o.xyz/6addf7f118ccd?erid=2SDnjc5gTmq" target="_blank" rel="nofollow noopener" style="display:inline-block; background:#4CAF50; color:white; text-decoration:none; padding:14px 32px; border-radius:8px; font-weight:bold;">Выбрать курс →</a>
+            <div style="font-size:0.7rem; color:#888; margin-top:12px;">Реклама. ЧОУ СКИЛБОКС, ИНН 9704088880. Сайт https://skillbox.ru<br>erid: 2SDnjc5gTmq</div>
+        </div>`;
+    }
+
+    // 4. Вставляем рекламу перед футером
+    if (adHTML) {
+        const footer = document.querySelector('footer');
+        if (footer) {
+            footer.insertAdjacentHTML('beforebegin', adHTML);
+        } else {
+            document.body.insertAdjacentHTML('beforeend', adHTML);
+        }
+    }
+})();
+</script></body>
 </html>
