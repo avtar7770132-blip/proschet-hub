@@ -14,102 +14,20 @@
     })(window, document, "clarity", "script", "yzppvg2qta");
 </script>
 <style>
-/* Стили для красивого блога */
-.blog-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-    gap: 30px; 
-    margin-top: 40px; 
-}
-.blog-card { 
-    background: #ffffff; 
-    border-radius: 16px; 
-    overflow: hidden; 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
-    text-decoration: none; 
-    color: inherit; 
-    display: flex; 
-    flex-direction: column;
-    height: 100%;
-}
-.blog-card:hover { 
-    transform: translateY(-8px); 
-    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.15); 
-    border-color: #3b82f6;
-}
-.blog-card img { 
-    width: 100%; 
-    height: 200px; 
-    object-fit: cover; 
-    transition: transform 0.5s ease;
-}
-.blog-card:hover img {
-    transform: scale(1.05);
-}
-.blog-content { 
-    padding: 25px; 
-    display: flex; 
-    flex-direction: column; 
-    flex-grow: 1;
-}
-.blog-title { 
-    font-size: 1.3rem; 
-    font-weight: 700; 
-    color: #1e293b; 
-    margin-bottom: 12px; 
-    line-height: 1.4; 
-    letter-spacing: -0.02em;
-}
-.blog-desc { 
-    font-size: 0.95rem; 
-    color: #64748b; 
-    line-height: 1.6; 
-    margin-bottom: 20px; 
-    flex-grow: 1; /* Прижимает кнопку вниз */
-}
-.read-more { 
-    color: #3b82f6; 
-    font-weight: 600; 
-    font-size: 0.95rem; 
-    display: inline-flex; 
-    align-items: center; 
-    gap: 5px;
-    transition: color 0.2s;
-}
-.blog-card:hover .read-more {
-    color: #2563eb;
-}
-header h1 { 
-    color: #1e293b; 
-    font-size: 2.5rem; 
-    margin-bottom: 15px; 
-    font-weight: 800;
-}
-.subtitle { 
-    color: #64748b; 
-    max-width: 600px; 
-    font-size: 1.1rem; 
-    line-height: 1.6;
-}
-.back-link { 
-    display: inline-block; 
-    margin-bottom: 30px; 
-    color: #3b82f6; 
-    text-decoration: none; 
-    font-weight: 600; 
-    opacity: 0.8;
-    transition: opacity 0.2s;
-}
-.back-link:hover { 
-    opacity: 1; 
-    text-decoration: underline; 
-}
-/* Адаптив для мобильных */
-@media (max-width: 768px) {
-    .blog-grid { grid-template-columns: 1fr; }
-    header h1 { font-size: 2rem; }
-}
+.blog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; margin-top: 40px; }
+.blog-card { background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%; }
+.blog-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(59, 130, 246, 0.15); }
+.blog-card img { width: 100%; height: 200px; object-fit: cover; transition: transform 0.5s ease; }
+.blog-card:hover img { transform: scale(1.05); }
+.blog-content { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+.blog-title { font-size: 1.3rem; font-weight: 700; color: #1e293b; margin-bottom: 12px; line-height: 1.4; }
+.blog-desc { font-size: 0.95rem; color: #64748b; line-height: 1.6; margin-bottom: 20px; flex-grow: 1; }
+.read-more { color: #3b82f6; font-weight: 600; font-size: 0.95rem; }
+header h1 { color: #1e293b; font-size: 2.5rem; margin-bottom: 15px; font-weight: 800; }
+.subtitle { color: #64748b; max-width: 600px; font-size: 1.1rem; }
+.back-link { display: inline-block; margin-bottom: 30px; color: #3b82f6; text-decoration: none; font-weight: 600; }
+.back-link:hover { text-decoration: underline; }
+@media (max-width: 768px) { .blog-grid { grid-template-columns: 1fr; } header h1 { font-size: 2rem; } }
 </style>
 </head>
 <body>
@@ -119,107 +37,107 @@ header h1 {
 
 <header style="text-align:center; margin-bottom: 40px;">
 <h1>📚 Блог Просчёта</h1>
-<p class="subtitle">Практические гайды по деньгам, ремонту, авто и здоровью. Читай, считай, экономь.</p>
+<p class="subtitle">Практические гайды по деньгам, ремонту, авто и здоровью.</p>
 </header>
 
 <div class="blog-grid">
 
 <!-- 1. Автокредит -->
 <a href="avtokredit-polnaya-stoimost.html" class="blog-card">
-<img src="../blog-auto.jpg" alt="Автокредит"> <!-- ИСПРАВЛЕН ПУТЬ ../ -->
+<img src="../blog-auto.jpg" alt="Автокредит">
 <div class="blog-content">
 <div class="blog-title">Полная стоимость автокредита: как не переплатить миллионы</div>
-<div class="blog-desc">Разбираем скрытые комиссии, страхование жизни и реальную ставку. Почему «выгодный» кредит может оказаться ловушкой.</div>
+<div class="blog-desc">Разбираем скрытые комиссии и реальную ставку.</div>
 <span class="read-more">Читать статью →</span>
 </div>
 </a>
 
-<!-- 2. Детский бюджет -->
+<!-- 2. Детский бюджет (ИСПРАВЛЕНО ИМЯ ФАЙЛА ПОД ТВОЙ СПИСОК) -->
 <a href="bezopasnaya-detsky-byudjet.html" class="blog-card">
-<img src="../blog-repair.jpg" alt="Детская комната"> <!-- ИСПРАВЛЕН ПУТЬ ../ -->
+<img src="../blog-repair.jpg" alt="Детская комната">
 <div class="blog-content">
 <div class="blog-title">Безопасный ремонт детской комнаты: материалы и бюджет</div>
-<div class="blog-desc">Что нельзя использовать в комнате ребенка? Гипоаллергенные краски, экологичные обои и расчет сметы на 3 варианта дизайна.</div>
+<div class="blog-desc">Гипоаллергенные краски и расчет сметы.</div>
 <span class="read-more">Читать статью →</span>
 </div>
 </a>
 
 <!-- 3. Бюджет кухни -->
 <a href="byudzhet-kukni-raschet.html" class="blog-card">
-<img src="../blog-repair.jpg" alt="Кухня"> <!-- ИСПРАВЛЕН ПУТЬ ../ -->
+<img src="../blog-repair.jpg" alt="Кухня">
 <div class="blog-content">
 <div class="blog-title">Расчет бюджета кухни: от черновой отделки до техники</div>
-<div class="blog-desc">Пошаговый план закупки материалов и мебели. Как сэкономить 30% без потери качества фасадов и столешниц.</div>
+<div class="blog-desc">Как сэкономить 30% без потери качества.</div>
 <span class="read-more">Читать статью →</span>
 </div>
 </a>
 
 <!-- 4. Самогон и вино -->
 <a href="domashnee-vino-i-samogon-raschet.html" class="blog-card">
-<img src="../blog-alcohol.jpg" alt="Винокурение"> <!-- ИСПРАВЛЕН ПУТЬ ../ -->
+<img src="../blog-alcohol.jpg" alt="Винокурение">
 <div class="blog-content">
 <div class="blog-title">Домашнее вино и самогон: математика выхода продукта</div>
-<div class="blog-desc">Формулы расчета спиртуозности, сахара и дрожжей. Как получить идеальный напиток без ошибок новичка.</div>
+<div class="blog-desc">Формулы расчета спиртуозности и сахара.</div>
 <span class="read-more">Читать статью →</span>
 </div>
 </a>
 
 <!-- 5. Ламинат -->
 <a href="kak-vybrat-laminat-ne-pereplatit.html" class="blog-card">
-<img src="../blog-repair.jpg" alt="Ламинат"> <!-- ИСПРАВЛЕН ПУТЬ ../ -->
+<img src="../blog-repair.jpg" alt="Ламинат">
 <div class="blog-content">
 <div class="blog-title">Как выбрать ламинат и не переплатить за бренд</div>
-<div class="blog-desc">Сравнение классов износостойкости (32/33/34). Реальная разница между дешевым и дорогим покрытием под микроскопом.</div>
+<div class="blog-desc">Сравнение классов 32/33/34.</div>
 <span class="read-more">Читать статью →</span>
 </div>
 </a>
 
 <!-- 6. ЛДСП vs МДФ -->
 <a href="ldsp-vs-mdf-emal.html" class="blog-card">
-<img src="../blog-repair.jpg" alt="Мебель"> <!-- ИСПРАВЛЕН ПУТЬ ../ -->
+<img src="../blog-repair.jpg" alt="Мебель">
 <div class="blog-content">
-<div class="blog-title">ЛДСП против МДФ и эмали: что долговечнее для кухни?</div>
-<div class="blog-desc">Тест на влагостойкость, ударопрочность и уход. Плюсы и минусы каждого материала в реальных условиях эксплуатации.</div>
+<div class="blog-title">ЛДСП против МДФ и эмали: что долговечнее?</div>
+<div class="blog-desc">Тест на влагостойкость и ударопрочность.</div>
 <span class="read-more">Читать статью →</span>
 </div>
 </a>
 
 <!-- 7. Налог с продажи авто -->
 <a href="prodazha-avto-nalog.html" class="blog-card">
-<img src="../blog-auto.jpg" alt="Продажа авто"> <!-- ИСПРАВЛЕН ПУТЬ ../ -->
+<img src="../blog-auto.jpg" alt="Продажа авто">
 <div class="blog-content">
-<div class="blog-title">Налог с продажи автомобиля: вычет или доходы минус расходы?</div>
-<div class="blog-desc">Когда платить НДФЛ обязательно? Разбор случаев владения менее 3 лет и способы законной оптимизации налоговой базы.</div>
+<div class="blog-title">Налог с продажи автомобиля: вычет или расходы?</div>
+<div class="blog-desc">Когда платить НДФЛ обязательно.</div>
 <span class="read-more">Читать статью →</span>
 </div>
 </a>
 
 <!-- 8. Калории и похудение -->
 <a href="raschet-kaloriy-pohudenie.html" class="blog-card">
-<img src="../blog-health.jpg" alt="Здоровье"> <!-- ИСПРАВЛЕН ПУТЬ ../ -->
+<img src="../blog-health.jpg" alt="Здоровье">
 <div class="blog-content">
-<div class="blog-title">Расчет калорий для похудения: дефицит без вреда для здоровья</div>
-<div class="blog-desc">Как определить свою норму BMR и TDEE. Почему жесткие диеты приводят к срывам и как составить меню на основе науки.</div>
+<div class="blog-title">Расчет калорий для похудения: дефицит без вреда</div>
+<div class="blog-desc">BMR и TDEE: наука вместо диет.</div>
 <span class="read-more">Читать статью →</span>
 </div>
 </a>
 
 <!-- 9. Самозанятые -->
 <a href="samozanyatye-2026.html" class="blog-card">
-<img src="../blog-finance.jpg" alt="Налоги"> <!-- ИСПРАВЛЕН ПУТЬ ../ -->
+<img src="../blog-finance.jpg" alt="Налоги">
 <div class="blog-content">
-<div class="blog-title">Самозанятые в 2026 году: лимиты, ставки и подводные камни</div>
-<div class="blog-desc">Актуальные изменения в законе НПД. Кто рискует попасть под переквалификацию в сотрудников и как защитить свой статус.</div>
+<div class="blog-title">Самозанятые в 2026 году: лимиты и ставки</div>
+<div class="blog-desc">Подводные камни закона НПД.</div>
 <span class="read-more">Читать статью →</span>
 </div>
 </a>
 
 <!-- 10. Стоимость владения авто -->
 <a href="stoimost-vladeniya-avto-gaid.html" class="blog-card">
-<img src="../blog-auto.jpg" alt="Владение авто"> <!-- ИСПРАВЛЕН ПУТЬ ../ -->
+<img src="../blog-auto.jpg" alt="Владение авто">
 <div class="blog-content">
-<div class="blog-title">Стоимость владения автомобилем: сколько стоит километр пути</div>
-<div class="blog-desc">Учитываем бензин, страховку, ТО, амортизацию и шины. Сравнение бюджетного седана и премиального кроссовера за 5 лет.</div>
+<div class="blog-title">Стоимость владения автомобилем: цена километра</div>
+<div class="blog-desc">Бензин, страховка, ТО и амортизация.</div>
 <span class="read-more">Читать статью →</span>
 </div>
 </a>
