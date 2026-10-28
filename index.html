@@ -25,6 +25,27 @@
       "operatingSystem": "Any"
     }
     </script>
+    
+    <style>
+        /* ЖЕСТКАЯ ФИКСАЦИЯ РАЗМЕРОВ КАРТИНОК ВНУТРИ КАРТОЧЕК */
+        .grid-container .card img {
+            width: 100%;
+            height: 140px !important; /* Фиксированная высота */
+            object-fit: cover !important; /* Обрезка по центру без искажений */
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .grid-container .card {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Карточки одинаковой высоты */
+        }
+        .grid-container .card-desc {
+            flex-grow: 1; /* Описание занимает свободное место */
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 
 <body>
@@ -56,11 +77,11 @@
     <button onclick="filterCards('repair')" class="filter-btn" id="btn-repair" style="padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-border); background: transparent; color: var(--color-text-muted); cursor: pointer;">🔨 Ремонт</button>
     <button onclick="filterCards('auto')" class="filter-btn" id="btn-auto" style="padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-border); background: transparent; color: var(--color-text-muted); cursor: pointer;">🚗 Авто</button>
     <button onclick="filterCards('health')" class="filter-btn" id="btn-health" style="padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-border); background: transparent; color: var(--color-text-muted); cursor: pointer;">❤️ Здоровье</button>
-    <button onclick="filterCards('home')" class="filter-btn" id="btn-home" style="padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-border); background: transparent; color: var(--color-text-muted); cursor: pointer;"> Быт</button>
+    <button onclick="filterCards('home')" class="filter-btn" id="btn-home" style="padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-border); background: transparent; color: var(--color-text-muted); cursor: pointer;">🏠 Быт</button>
     <button onclick="filterCards('blog')" class="filter-btn" id="btn-blog" style="padding: 8px 16px; border-radius: 20px; border: 1px solid var(--color-accent-purple); background: transparent; color: var(--color-accent-purple); cursor: pointer;">📚 Статьи</button>
 </div>
 
-<!-- СЕТКА ВСЕХ КАЛЬКУЛЯТОРОВ (ИСПРАВЛЕННАЯ) -->
+<!-- СЕТКА ВСЕХ КАЛЬКУЛЯТОРОВ -->
 <div class="grid-container" id="cardsGrid">
     
     <!-- === ФИНАНСЫ === -->
@@ -73,7 +94,7 @@
 
     <a href="zarplata.html" class="card" data-category="finance">
         <img src="zarplata-npd-usn.jpg" alt="">
-        <div class="card-title">💰 Зарплата «на руки»</div>
+        <div class="card-title"> Зарплата «на руки»</div>
         <div class="card-desc">Расчет чистого дохода после вычета НДФЛ 13%. Учитывает стандартные вычеты и прогрессивную шкалу.</div>
         <span class="btn-link">Открыть →</span>
     </a>
@@ -108,7 +129,7 @@
 
     <a href="ipoteka-matkapital.html" class="card" data-category="finance">
         <img src="ipoteka-calc.jpg" alt="">
-        <div class="card-title"> Ипотека + Маткапитал</div>
+        <div class="card-title">👶 Ипотека + Маткапитал</div>
         <div class="card-desc">Расчет платежа с учетом господдержки. Сравнение семейной, IT и рыночной программ.</div>
         <span class="btn-link">Открыть →</span>
     </a>
@@ -130,7 +151,7 @@
 
     <a href="stoimost-vladeniya-avto.html" class="card" data-category="auto">
         <img src="auto-kredit-calc.jpg" alt="">
-        <div class="card-title"> Стоимость владения авто</div>
+        <div class="card-title">⛽ Стоимость владения авто</div>
         <div class="card-desc">Сколько рублей стоит 1 км пробега? Топливо, страховка, ТО и амортизация в одном отчете.</div>
         <span class="btn-link">Рассчитать →</span>
     </a>
@@ -152,7 +173,7 @@
 
     <a href="vannaya.html" class="card" data-category="repair">
         <img src="vannaya-calc.jpg" alt="">
-        <div class="card-title"> Ремонт ванной комнаты</div>
+        <div class="card-title">🚿 Ремонт ванной комнаты</div>
         <div class="card-desc">Смета от демонтажа до сантехники. График распределения затрат по этапам.</div>
         <span class="btn-link">Рассчитать →</span>
     </a>
